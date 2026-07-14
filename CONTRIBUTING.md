@@ -5,7 +5,7 @@ Thank you for offering your flesh-hours to the Rite. This document describes how
 ## Golden rules
 
 1. **`main` is sacred** — no direct pushes. Every change enters through a pull request.
-2. **CI must be green** — all three Python versions (3.10, 3.11, 3.12) must pass `make proba`.
+2. **CI must be green** — Python 3.10/3.11/3.12 on Linux plus macOS, Windows, and Linux platform probations must pass `make proba`.
 3. **One concern per PR** — a bugfix, a feature, or a doc fix; not all three.
 4. **Spec is law** — language changes must match the [Codex](https://adeptusprogus.github.io/vox-gothica/). If the Codex and code disagree, fix whichever is wrong and note it in the PR.
 5. **No drive-by refactors** — touch only what your change requires.

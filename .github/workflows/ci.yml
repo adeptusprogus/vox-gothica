@@ -17,8 +17,10 @@ jobs:
   proba:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
+    name: proba (${{ matrix.python-version }})
     steps:
       - uses: actions/checkout@v4
 
@@ -33,4 +35,31 @@ jobs:
 
       - name: Run sacred probations
         working-directory: vox-gothica
-        run: make proba
+        run: python scripts/run_proba.py
+
+  proba-platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform: macos
+          - os: windows-latest
+            platform: windows
+    runs-on: ${{ matrix.os }}
+    name: proba (${{ matrix.platform }})
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install toolchain
+        working-directory: vox-gothica
+        run: pip install -e .
+
+      - name: Run sacred probations
+        working-directory: vox-gothica
+        run: python scripts/run_proba.py

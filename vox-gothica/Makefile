@@ -4,12 +4,7 @@ PY ?= python3
 .PHONY: proba pyz binarium docker clean
 
 proba:                      ## run the language test-suite (demo project)
-	$(PY) -m gothica proba --dir demo/probationes
-	$(PY) -m gothica invoco exempla/salutatio.vg --silens
-	$(PY) -m gothica invoco exempla/litania_numerorum.vg --silens >/dev/null
-	$(PY) -m gothica invoco exempla/census_servitorum.vg --silens >/dev/null
-	$(PY) -m gothica scribe-solum exempla/fabrica_interretialis.vg --silens
-	@echo "++ omnia sancta ++"
+	$(PY) scripts/run_proba.py
 
 pyz:                        ## single-file gothica.pyz (needs any Python 3.10+)
 	rm -rf build/zapp && mkdir -p build/zapp dist
