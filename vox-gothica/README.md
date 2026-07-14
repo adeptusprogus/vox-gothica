@@ -83,6 +83,6 @@ Makefile            proba / pyz / binarium / docker
 
 Core language: Roman & Arabic numerals, interpolation, DECLARO/SANCTUM/FIAT, SI/DUM/PRO OMNI, RITUS incl. anonymous rites & closures, SCHEMA records, TEMPTA/heresies per the Codex Hereticus, modules (`INVOCO`, `UT`, `EX`), stdlib (mathematica, scriptura, ordo_opera, tempus, archivum, imperium, machina_cogitans, codex_json, fortuna, notarius, probatio). Fabrica: FOEDUS/SEDES/EXSTRUATUR/SCRUTOR/POSTULO/PROFITEOR/ARCANUM, deferred references, alias table, Terraform JSON emission, plan/apply/destroy driver.
 
-Not yet: full lustro rule set, LSP. Shipped: `purga` formatter, `lustro` linter (L-I–L-X), `censura` static checker (P-XV, C-I/C-II), `codex` search.
+Not yet: full lustro rule set, full LSP server. Shipped: `purga`, `lustro`, `censura` (cross-module), `speculum` JSONL, `codex`.
 
 *The flesh is weak; the toolchain is versioned.*

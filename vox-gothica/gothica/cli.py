@@ -22,6 +22,9 @@ from . import purga as lit_purga
 from . import lustro as lit_lustro
 from . import censura as lit_censura
 from . import codex as lit_codex
+from . import speculum as lit_speculum
+from .diagnostic_records import lint as lint_record, censura as censura_record
+import json
 
 
 def _say(msg, args):
@@ -301,6 +304,10 @@ def cmd_lustro(args) -> int:
     if not hits:
         _say("++ lustro finds no blemish — the scrolls are worthy ++", args)
         return 0
+    if args.profanum:
+        for h in hits:
+            print(json.dumps(lint_record(h)), flush=True)
+        return 1
     for h in hits:
         loc = f"{h.archivum}:{h.line}" if h.archivum else str(h.line)
         _say(f"  ⚠ {h.code}  {loc} — {h.message}", args)
@@ -310,14 +317,31 @@ def cmd_lustro(args) -> int:
 
 def cmd_censura(args) -> int:
     target = args.path or "."
-    hits = lit_censura.censura(target)
+    root = _find_root(os.path.abspath(target if os.path.isdir(target)
+                                      else os.path.dirname(target) or "."))
+    hits = lit_censura.censura(target, root_dir=root)
     if not hits:
         _say("++ censura finds no profanation — the scrolls are sound ++", args)
         return 0
+    if args.profanum:
+        for h in hits:
+            print(json.dumps(censura_record(h)), flush=True)
+        return 1
     for h in hits:
         loc = f"{h.archivum}:{h.line}" if h.archivum else str(h.line)
         _say(f"  ⚙ {h.code} [{h.genus}]  {loc} — {h.message}", args)
     _say(f"++ censura: {len(hits)} finding(s) ++", args)
+    return 1
+
+
+def cmd_speculum(args) -> int:
+    records = lit_speculum.analyze(args.file, root_dir=_find_root(
+        os.path.dirname(os.path.abspath(args.file)) or "."))
+    if not records:
+        _say("++ speculum finds no blemish — the scroll reflects truly ++", args)
+        return 0
+    for rec in records:
+        print(json.dumps(rec), flush=True)
     return 1
 
 
@@ -444,6 +468,10 @@ def main(argv=None) -> int:
                        parents=[common])
     p.add_argument("path", nargs="?", help="file or directory")
 
+    p = sub.add_parser("speculum", help="LSP diagnostics JSONL (lustro+censura)",
+                       parents=[common])
+    p.add_argument("file", help=".vg scroll to analyze")
+
     p = sub.add_parser("codex", help="search or list Codex documentation",
                        parents=[common])
     p.add_argument("quaesitum", nargs="?", help="search term")
@@ -486,6 +514,8 @@ def main(argv=None) -> int:
             return cmd_lustro(args)
         if args.cmd == "censura":
             return cmd_censura(args)
+        if args.cmd == "speculum":
+            return cmd_speculum(args)
         if args.cmd == "codex":
             return cmd_codex(args)
         if args.cmd == "versio":

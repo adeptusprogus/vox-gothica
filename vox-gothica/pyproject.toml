@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vox-gothica"
-version = "0.2.8"
+version = "0.2.9"
 description = "Vox Gothica — a High Gothic programming language for canticles and infrastructure"
 readme = "README.md"
 requires-python = ">=3.10"

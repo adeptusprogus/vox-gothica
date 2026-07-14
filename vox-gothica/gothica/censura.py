@@ -6,16 +6,13 @@ from pathlib import Path
 from typing import Any
 
 from . import arbor as A
+from .modularis import ModRef, ModuleResolver, _rt as _rite_type
 from .parser import parse_source
 
 PRIMITIVES = frozenset(
     {"NUMERUS", "FRACTIO", "SCRIPTUM", "VERITAS", "NIHIL", "RITUS", "HERESIS",
      "RELATIO"}
 )
-
-
-def _rite_type(params, ret, line: int) -> A.TRitus:
-    return A.TRitus(line=line, params=list(params), ret=ret)
 
 
 @dataclass
@@ -73,6 +70,8 @@ def _type_eq(a: Any, b: Any) -> bool:
 def _binds(got: Any, want: Any) -> bool:
     if _type_eq(got, want):
         return True
+    if isinstance(want, A.TOrdo) and isinstance(got, A.TOrdo):
+        return True
     if isinstance(want, A.TName) and want.name == "RITUS":
         return isinstance(got, A.TRitus)
     return False
@@ -83,8 +82,9 @@ def _is_nihil_type(t: Any) -> bool:
 
 
 class _Checker:
-    def __init__(self, prog: A.Program):
+    def __init__(self, prog: A.Program, *, resolver: ModuleResolver):
         self.prog = prog
+        self.resolver = resolver
         self.schemas: set[str] = set()
         self.rites: dict[str, A.TRitus] = {}
         self.hits: list[Finding] = []
@@ -94,10 +94,15 @@ class _Checker:
             if isinstance(st, A.SchemaDef):
                 self.schemas.add(st.name)
             if isinstance(st, A.RiteDef):
-                self.rites[st.name] = _rite_type(st.params, st.ret, st.line)
+                self.rites[st.name] = _rite_type(st.params, st.ret)
+        self.schemas |= self.resolver.schemas_for(self.prog)
+        env = self._hoist_env()
+        for st in self.prog.body:
+            if isinstance(st, A.Import):
+                self._resolve_import(st, env)
         for st in self.prog.body:
             self._check_type_ref(st)
-        self._walk_block(self.prog.body, env=self._hoist_env())
+        self._walk_block(self.prog.body, env=env)
         return self.hits
 
     def _hoist_env(self) -> dict[str, Any]:
@@ -246,7 +251,7 @@ class _Checker:
         elif isinstance(st, A.ExprStmt):
             self._infer(st.expr, env)
         elif isinstance(st, (A.Foedus, A.Sedes, A.Exstruatur, A.Scrutor,
-                             A.Profiteor, A.Import, A.SchemaDef)):
+                             A.Profiteor, A.SchemaDef)):
             for attr in getattr(st, "attrs", []) or []:
                 if isinstance(attr.value, list):
                     for sub in attr.value:
@@ -257,6 +262,44 @@ class _Checker:
                 self._infer(st.name_expr, env)
         elif isinstance(st, A.Postulo):
             self._resolve_type(st.type, st.line)
+
+    def _resolve_import(self, st: A.Import, env: dict[str, Any]) -> None:
+        try:
+            info = self.resolver.load(st.path, st)
+        except FileNotFoundError:
+            self._warn(
+                "P-XVIII",
+                "invocatio_vana",
+                f"the invocation of '{st.path}' went unanswered",
+                st.line,
+            )
+            return
+        except ValueError as exc:
+            self._warn("P-XVI", "modus_pravus", str(exc), st.line)
+            return
+        if st.names:
+            for n in st.names:
+                if n not in info.exports:
+                    self._warn(
+                        "P-XVII",
+                        "nomen_non_exportatum",
+                        f"'{st.path}' does not export '{n}'",
+                        st.line,
+                    )
+                else:
+                    env[n] = info.exports[n]
+        else:
+            binding = st.alias or st.path.split("/")[-1]
+            env[binding] = ModRef(st.path, st.line)
+
+    def _fn_type(self, fn, env: dict[str, Any]) -> Any | None:
+        if isinstance(fn, A.Ident):
+            return self.rites.get(fn.name) or env.get(fn.name)
+        if isinstance(fn, A.Attr) and isinstance(fn.obj, A.Ident):
+            bound = env.get(fn.obj.name)
+            if isinstance(bound, ModRef):
+                return self.resolver.export_type(bound.path, fn.name)
+        return self._infer(fn, env)
 
     def _check_bind(self, got: Any, want: Any, line: int, what: str) -> None:
         if not _binds(got, want):
@@ -284,6 +327,10 @@ class _Checker:
             if not e.items:
                 return None
             inner = self._infer(e.items[0], env)
+            for item in e.items[1:]:
+                got = self._infer(item, env)
+                if inner is not None and got is not None:
+                    self._check_bind(got, inner, item.line, "ORDO element")
             if inner is None:
                 return None
             return A.TOrdo(line=e.line, inner=inner)
@@ -326,11 +373,7 @@ class _Checker:
                 return A.TName(line=e.line, name="VERITAS")
             return None
         if isinstance(e, A.Call):
-            ft = None
-            if isinstance(e.fn, A.Ident):
-                ft = self.rites.get(e.fn.name) or env.get(e.fn.name)
-            if ft is None:
-                ft = self._infer(e.fn, env)
+            ft = self._fn_type(e.fn, env)
             if isinstance(ft, A.TRitus):
                 if len(e.args) != len(ft.params):
                     self._warn(
@@ -360,6 +403,10 @@ class _Checker:
                     return ot.v
             return None
         if isinstance(e, A.Attr):
+            if isinstance(e.obj, A.Ident):
+                bound = env.get(e.obj.name)
+                if isinstance(bound, ModRef):
+                    return self.resolver.export_type(bound.path, e.name)
             self._infer(e.obj, env)
             return None
         if isinstance(e, A.Str):
@@ -379,7 +426,7 @@ class _Checker:
                     e.line,
                 )
             self._walk_block(e.body, env=local, ret_type=e.ret)
-            return _rite_type(e.params, e.ret, e.line)
+            return _rite_type(e.params, e.ret)
         if isinstance(e, A.SchemaLit):
             if e.name in self.schemas:
                 return A.TName(line=e.line, name=e.name)
@@ -387,15 +434,36 @@ class _Checker:
         return None
 
 
-def check_source(src: str, archivum: str) -> list[Finding]:
+def _default_root(start: Path) -> str:
+    probe = start.resolve()
+    while True:
+        if (probe / "litania.toml").is_file():
+            return str(probe)
+        parent = probe.parent
+        if parent == probe:
+            return str(start.resolve())
+        probe = parent
+
+
+def check_source(
+    src: str,
+    archivum: str,
+    *,
+    resolver: ModuleResolver | None = None,
+) -> list[Finding]:
     prog = parse_source(src, archivum)
-    return _Checker(prog).run()
+    if resolver is None:
+        root = _default_root(Path(archivum).parent)
+        resolver = ModuleResolver(root)
+    return _Checker(prog, resolver=resolver).run()
 
 
-def censura(target: str | Path) -> list[Finding]:
-    root = Path(target).resolve()
+def censura(target: str | Path, *, root_dir: str | None = None) -> list[Finding]:
+    root_path = Path(target).resolve()
+    start = root_path.parent if root_path.is_file() else root_path
+    resolver = ModuleResolver(root_dir or _default_root(start))
     all_hits: list[Finding] = []
-    for fp in _collect_vg(root):
+    for fp in _collect_vg(root_path):
         text = fp.read_text(encoding="utf-8")
-        all_hits.extend(check_source(text, str(fp)))
+        all_hits.extend(check_source(text, str(fp), resolver=resolver))
     return all_hits

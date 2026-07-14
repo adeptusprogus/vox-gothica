@@ -23,9 +23,12 @@ def main() -> int:
     run(["-m", "gothica", "purga", "exempla", "--proba", "--silens"])
     run(["-m", "gothica", "lustro", "exempla", "--silens"])
     run(["-m", "gothica", "censura", "exempla", "--silens"])
+    run(["-m", "gothica", "censura", "demo/fons/tributum.vg", "--silens"])
+    run(["-m", "gothica", "speculum", "exempla/census_servitorum.vg", "--silens"])
     run(["-m", "gothica", "codex", "lustro", "--silens"])
     run(["-m", "gothica", "codex", "--silens"])
-    for bad in ("typus_pravus", "reditus_pravus", "typus_ignotus", "ritus_pravus"):
+    for bad in ("typus_pravus", "reditus_pravus", "typus_ignotus", "ritus_pravus",
+                "ordo_pravus", "modulus_pravus"):
         r = subprocess.run(
             [sys.executable, "-m", "gothica", "censura",
              f"probationes/censura/{bad}.vg", "--silens"],

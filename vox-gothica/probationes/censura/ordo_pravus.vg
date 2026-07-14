@@ -1,0 +1,11 @@
+AVE OMNISSIAH.
+CANTICUM "ordo_pravus".
+
+DECLARO opera : ORDO[RITUS(NUMERUS) -> NUMERUS] = [
+    RITUS (x : NUMERUS) -> NUMERUS
+        REDDO x
+    FINIS RITUS,
+    RITUS (x : NUMERUS) -> SCRIPTUM
+        REDDO "x"
+    FINIS RITUS,
+]

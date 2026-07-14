@@ -294,7 +294,8 @@ gothica invoco meum.vg
 | `gothica librarium inspice <via>` | Show index metadata and git tags |
 | `gothica purga [file\|dir] [--proba] [--latinizat]` | Canonical 4-space formatter |
 | `gothica lustro [file\|dir] [--serius]` | Linter (L-I–L-X) |
-| `gothica censura [file\|dir]` | Static checker — P-XV, typus, reditus (M5) |
+| `gothica censura [file\|dir]` | Static checker — P-XV, typus, reditus, cross-module |
+| `gothica speculum <file>` | LSP JSONL diagnostics (lustro + censura) |
 | `gothica codex [quaesitum]` | Search or list Codex documentation |
 | `gothica scribe-solum fabrica.vg` | Emit `.tf.json` only |
 | `gothica auguro fabrica.vg` | `terraform plan` |
@@ -368,17 +369,14 @@ vox-gothica/
 
 ## Status
 
-**v0.2.8 — Censura (M5 continued)**
+**v0.2.9 — Speculum (M5 continued)**
 
 | ✅ Shipped (M1–M5 partial) | 🚧 Planned (M5–M6) |
 |---------------------------|---------------------|
-| Lexer, parser, interpreter | Full conformance coverage |
-| Modules, stdlib, test runner | Deeper static analysis |
-| Fabrica → Terraform JSON | Go/Rust port |
-| Plan / apply / destroy driver | Hosted registry UI (M6) |
-| M4 litaniae + librarium | LSP (`--profanum=json`) |
-| **purga / lustro / censura / codex** | `RITUS(T)->U` call checking expansion |
-| **TRitus types + RELATIO** | |
+| **TRitus + RELATIO + censura** | Full conformance coverage |
+| **Cross-module censura** | Strict ORDO covariance |
+| **`gothica speculum`** LSP JSONL stub | Full LSP server |
+| purga / lustro / codex | Go/Rust port |
 | HERETECH Immaterium page | |
 
 <p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
