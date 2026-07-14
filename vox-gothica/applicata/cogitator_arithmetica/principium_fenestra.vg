@@ -1,0 +1,26 @@
+AVE OMNISSIAH.
+CANTICUM "principium_fenestra".
+
+INVOCO "fons/cogitatio" UT cog
+INVOCO crea_cogitator, rotula, campus, nuntius, lege_campo, lege_rotula, pulsor, circulo EX "fenestra"
+
+DECLARO vid : SCRIPTUM = crea_cogitator("Cogitator Arithmetica — Administratum")
+rotula(vid, "Ritus", ["ADDITIO", "SUBTRACTIO", "MULTIPLICATIO", "DIVISIO", "TRIBUTUM", "POTENTIA", "RADIX"])
+campus(vid, "Operandum A", "VII")
+campus(vid, "Operandum B", "III")
+nuntius(vid, "Awaiting operands. The ledger accepts no dispute.")
+
+RITUS computa() -> NIHIL
+    DECLARO ritus : SCRIPTUM = lege_rotula(vid, "Ritus")
+    DECLARO a : NUMERUS = cog.libera(lege_campo(vid, "Operandum A"))
+    DECLARO b : NUMERUS = cog.libera(lege_campo(vid, "Operandum B"))
+    TEMPTA
+        DECLARO r : responsum_sacrum = cog.invoca_ritus(ritus, a, b)
+        nuntius(vid, "++ {r.nuntius} ++")
+    SI HERESIS (delictum)
+        nuntius(vid, "++ HERESY: [{delictum.genus}] {delictum.nuntius} ++")
+    FINIS TEMPTA
+FINIS RITUS
+
+pulsor(vid, "⚙ INVOCARE RITUM", computa)
+circulo(vid)

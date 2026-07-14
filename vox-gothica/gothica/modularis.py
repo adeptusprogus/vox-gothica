@@ -125,6 +125,17 @@ _STDLIB: dict[str, dict[str, Any]] = {
         "error": _rt([(None, _ORDO_ANY)], _NH),
         "gradus_pone": _rt([(None, _STR)], _NH),
     },
+    "fenestra": {
+        "crea": _rt([(None, _STR)], _STR),
+        "crea_cogitator": _rt([(None, _STR)], _STR),
+        "rotula": _rt([(None, _STR), (None, _STR), (None, _ORDO_ANY)], _NH),
+        "campus": _rt([(None, _STR), (None, _STR), (None, _STR)], _NH),
+        "nuntius": _rt([(None, _STR), (None, _STR)], _NH),
+        "lege_campo": _rt([(None, _STR), (None, _STR)], _STR),
+        "lege_rotula": _rt([(None, _STR), (None, _STR)], _STR),
+        "pulsor": _rt([(None, _STR), (None, _STR), (None, _RT)], _NH),
+        "circulo": _rt([(None, _STR)], _NH),
+    },
 }
 
 

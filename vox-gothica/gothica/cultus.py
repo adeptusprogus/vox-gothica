@@ -541,7 +541,217 @@ def m_probatio(call):
     })
 
 
-FABRICA_FORBIDDEN = {"fortuna", }   # module-level ban (docs 10 §8)
+def m_fenestra(call):
+    try:
+        import tkinter as tk
+        from tkinter import ttk
+    except ImportError as exc:
+        raise _h("fenestra_indisponibilis",
+                 f"the Machine Spirit lacks a windowing cultus ({exc})")
+
+    _COG = {
+        "bg": "#120c08",
+        "panel": "#1e1410",
+        "brass": "#b8860b",
+        "gold": "#d4af37",
+        "parchment": "#e8dcc8",
+        "rust": "#6b2f1a",
+        "phosphor": "#9acd32",
+        "ink": "#2b1810",
+        "font": ("Menlo", 11),
+        "font_bold": ("Menlo", 11, "bold"),
+        "font_title": ("Menlo", 13, "bold"),
+    }
+
+    _windows: dict[str, dict] = {}
+    _seq = 0
+
+    def _new_id() -> str:
+        nonlocal _seq
+        _seq += 1
+        return f"fenestra:{_seq}"
+
+    def _win(wid):
+        w = _windows.get(_str(wid, "fenestra"))
+        _need(w is not None, "vas_ignotum", f"unknown fenestra '{wid}'")
+        return w
+
+    def _style_cogitator(root, frame):
+        c = _COG
+        root.configure(bg=c["bg"])
+        root.geometry("520x560")
+        root.minsize(480, 520)
+        try:
+            root.iconphoto(False, tk.PhotoImage(
+                data="R0lGODlhEAAQAIABAAAAAP///yH5BAEAAAAALAAAAAAQABAAAAIxhI+py+0Po5y02ouz3rz7"
+                     "D4biSJbmiabqyrbuC8fyTNf2jef6zvf+DwwKh8SiHgAAOw=="))
+        except tk.TclError:
+            pass
+        style = ttk.Style(root)
+        style.theme_use("clam")
+        style.configure("Cog.TFrame", background=c["panel"])
+        style.configure("Cog.TLabel", background=c["panel"], foreground=c["gold"],
+                        font=c["font"])
+        style.configure("CogTitle.TLabel", background=c["panel"],
+                        foreground=c["brass"], font=c["font_title"])
+        style.configure("CogSub.TLabel", background=c["panel"],
+                        foreground=c["parchment"], font=c["font"])
+        style.configure("Cog.TButton", background=c["rust"], foreground=c["parchment"],
+                        font=c["font_bold"], padding=(12, 8), borderwidth=2)
+        style.map("Cog.TButton",
+                  background=[("active", c["brass"]), ("pressed", c["gold"])],
+                  foreground=[("active", c["bg"])])
+        style.configure("Cog.TCombobox", fieldbackground=c["ink"],
+                        background=c["rust"], foreground=c["parchment"],
+                        arrowcolor=c["gold"])
+        style.configure("Cog.TEntry", fieldbackground=c["ink"],
+                        foreground=c["phosphor"], insertcolor=c["phosphor"])
+        frame.configure(style="Cog.TFrame", padding=16)
+        banner = ttk.Label(
+            frame,
+            text="⚙ COGITATOR ARITHMETICA ⚙\nAdeptus Administratum — ledger sanctum",
+            style="CogTitle.TLabel", justify="center")
+        banner.grid(row=0, column=0, columnspan=2, sticky="ew", pady=(0, 12))
+        sep = tk.Frame(frame, height=2, bg=c["brass"])
+        sep.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(0, 12))
+        return 2  # next row after banner + separator
+
+    def crea(titulus):
+        wid = _new_id()
+        root = tk.Tk()
+        root.title(_str(titulus, "crea"))
+        root.configure(bg="#1a1210")
+        frame = ttk.Frame(root, padding=12)
+        frame.grid(sticky="nsew")
+        root.columnconfigure(0, weight=1)
+        root.rowconfigure(0, weight=1)
+        frame.columnconfigure(1, weight=1)
+        _windows[wid] = {
+            "root": root, "frame": frame, "row": 0,
+            "vars": {}, "output": None, "theme": None,
+        }
+        return wid
+
+    def crea_cogitator(titulus):
+        wid = _new_id()
+        root = tk.Tk()
+        root.title(_str(titulus, "crea_cogitator"))
+        frame = ttk.Frame(root)
+        frame.grid(sticky="nsew")
+        root.columnconfigure(0, weight=1)
+        root.rowconfigure(0, weight=1)
+        frame.columnconfigure(1, weight=1)
+        start_row = _style_cogitator(root, frame)
+        _windows[wid] = {
+            "root": root, "frame": frame, "row": start_row,
+            "vars": {}, "output": None, "theme": "cogitator",
+        }
+        return wid
+
+    def _label_style(w):
+        return "Cog.TLabel" if w.get("theme") == "cogitator" else "TLabel"
+
+    def rotula(wid, nomen, optiones):
+        w = _win(wid)
+        nm = _str(nomen, "rotula")
+        opts = _list(optiones, "rotula")
+        row = w["row"]
+        ttk.Label(w["frame"], text=nm, style=_label_style(w)).grid(
+            row=row, column=0, sticky="w", pady=4)
+        var = tk.StringVar(value=_str(opts[0], "rotula default") if opts else "")
+        w["vars"][nm] = var
+        box_kw = {"textvariable": var,
+                  "values": [_str(x, "rotula opt") for x in opts],
+                  "state": "readonly", "width": 28}
+        if w.get("theme") == "cogitator":
+            box_kw["style"] = "Cog.TCombobox"
+        box = ttk.Combobox(w["frame"], **box_kw)
+        box.grid(row=row, column=1, sticky="ew", pady=4)
+        w["row"] += 1
+
+    def campus(wid, nomen, defectus):
+        w = _win(wid)
+        nm = _str(nomen, "campus")
+        row = w["row"]
+        ttk.Label(w["frame"], text=nm, style=_label_style(w)).grid(
+            row=row, column=0, sticky="w", pady=4)
+        var = tk.StringVar(value=_str(defectus, "campus"))
+        w["vars"][nm] = var
+        entry_kw = {"textvariable": var, "width": 30}
+        if w.get("theme") == "cogitator":
+            entry_kw["style"] = "Cog.TEntry"
+        ttk.Entry(w["frame"], **entry_kw).grid(
+            row=row, column=1, sticky="ew", pady=4)
+        w["row"] += 1
+
+    def nuntius(wid, textum):
+        w = _win(wid)
+        txt = _str(textum, "nuntius")
+        c = _COG
+        if w["output"] is None:
+            row = w["row"]
+            if w.get("theme") == "cogitator":
+                ttk.Label(w["frame"], text="— SCRIBEUM —",
+                          style="CogSub.TLabel").grid(
+                    row=row, column=0, columnspan=2, sticky="w", pady=(8, 2))
+                row += 1
+            out = tk.Text(
+                w["frame"], height=7, width=48, wrap="word",
+                bg=c["ink"] if w.get("theme") == "cogitator" else "#2b1810",
+                fg=c["phosphor"] if w.get("theme") == "cogitator" else "#e8dcc8",
+                insertbackground=c["phosphor"],
+                relief="sunken", borderwidth=3,
+                font=c["font"])
+            out.grid(row=row, column=0, columnspan=2, sticky="nsew", pady=8)
+            w["frame"].rowconfigure(row, weight=1)
+            w["output"] = out
+            w["row"] += 1
+        w["output"].delete("1.0", "end")
+        w["output"].insert("1.0", txt)
+
+    def lege_campo(wid, nomen):
+        w = _win(wid)
+        nm = _str(nomen, "lege_campo")
+        var = w["vars"].get(nm)
+        _need(var is not None, "clavis_ignota", f"no field '{nm}' on fenestra")
+        return var.get()
+
+    def lege_rotula(wid, nomen):
+        return lege_campo(wid, nomen)
+
+    def pulsor(wid, titulus, ritus):
+        w = _win(wid)
+        row = w["row"]
+
+        def _invoke():
+            try:
+                call(ritus, [])
+            except Heresis as h:
+                nuntius(wid, f"⚙ HERESY [{h.genus}] {h.nuntius}")
+            except Exception as exc:
+                nuntius(wid, f"⚙ {exc}")
+
+        btn_kw = {"text": _str(titulus, "pulsor"), "command": _invoke}
+        if w.get("theme") == "cogitator":
+            btn_kw["style"] = "Cog.TButton"
+        ttk.Button(w["frame"], **btn_kw).grid(
+            row=row, column=0, columnspan=2, pady=12, sticky="ew")
+        w["row"] += 1
+
+    def circulo(wid):
+        w = _win(wid)
+        w["root"].mainloop()
+        return None
+
+    return _mod("fenestra", {
+        "crea": crea, "crea_cogitator": crea_cogitator,
+        "rotula": rotula, "campus": campus, "nuntius": nuntius,
+        "lege_campo": lege_campo, "lege_rotula": lege_rotula,
+        "pulsor": pulsor, "circulo": circulo,
+    })
+
+
+FABRICA_FORBIDDEN = {"fortuna", "fenestra", }
 
 
 def stdlib_module(name: str, interp) -> Module | None:
@@ -558,6 +768,7 @@ def stdlib_module(name: str, interp) -> Module | None:
         "fortuna": m_fortuna,
         "notarius": m_notarius,
         "probatio": lambda: m_probatio(call),
+        "fenestra": lambda: m_fenestra(call),
     }
     fn = table.get(name)
     return fn() if fn else None

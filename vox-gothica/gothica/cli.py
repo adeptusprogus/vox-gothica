@@ -67,6 +67,8 @@ def _postulata(args) -> dict:
 def _censura_preflight(path: str, args) -> int:
     if os.environ.get("GOTHICA_CENSURA") == "N":
         return 0
+    if not os.path.isfile(path):
+        return 0
     hits = lit_censura.check_file(
         path,
         root_dir=_find_root(os.path.dirname(os.path.abspath(path)) or "."),
@@ -94,7 +96,8 @@ def cmd_invoco(args) -> int:
         print(f"⚙ invoco requires a CANTICUM ('{prog.name}' is a {prog.mode}; "
               f"use auguro/consecro for fabricae)", file=sys.stderr)
         return 2
-    interp = Interpres(argv=args.args or [],
+    argv = args.args or []
+    interp = Interpres(argv=argv,
                        max_depth=args.profunditas,
                        root_dir=_find_root(os.path.dirname(
                            os.path.abspath(args.file))))
@@ -377,6 +380,24 @@ def cmd_speculum(args) -> int:
     return 1
 
 
+def cmd_sigillum(args) -> int:
+    from .sigillum_app import seal
+    try:
+        import PyInstaller  # noqa: F401
+    except ImportError:
+        _say("++ sigillum requires PyInstaller: pip install pyinstaller ++", args)
+        return 2
+    binary = seal(
+        args.file,
+        nomine=args.nomine,
+        fenestra=args.fenestra,
+        out_dir=args.out,
+        work_dir=args.work,
+    )
+    _say(f"++ sealed: {binary} ++", args)
+    return 0
+
+
 def cmd_codex(args) -> int:
     if args.quaesitum:
         hits = lit_codex.quaere(args.quaesitum)
@@ -511,6 +532,15 @@ def main(argv=None) -> int:
                        parents=[common])
     p.add_argument("quaesitum", nargs="?", help="search term")
 
+    p = sub.add_parser("sigillum", help="seal a CANTICUM into a standalone binary",
+                       parents=[common])
+    p.add_argument("file", help="principium.vg (CANTICUM entry)")
+    p.add_argument("--fenestra", action="store_true",
+                   help="windowed GUI binary (no console)")
+    p.add_argument("--nomine", help="output binary name (default: app folder)")
+    p.add_argument("--out", help="dist directory (default: dist/)")
+    p.add_argument("--work", help="build work directory (default: build/sigillum/)")
+
     sub.add_parser("versio", help="print version", parents=[common])
 
     args = ap.parse_args(argv)
@@ -553,6 +583,8 @@ def main(argv=None) -> int:
             return cmd_speculum(args)
         if args.cmd == "codex":
             return cmd_codex(args)
+        if args.cmd == "sigillum":
+            return cmd_sigillum(args)
         if args.cmd == "versio":
             return cmd_versio(args)
     except Profanatio as p_:

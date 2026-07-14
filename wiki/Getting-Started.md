@@ -93,6 +93,28 @@ Static check before run (automatic on `invoco`):
 gothica censura applicata/cogitator_arithmetica
 ```
 
+### GUI Cogitator (fenestra)
+
+```bash
+gothica invoco applicata/cogitator_arithmetica/principium_fenestra.vg
+```
+
+Pure Vox Gothica — module `fenestra`, themed with `crea_cogitator`. See [Applicata README](../vox-gothica/applicata/README.md#troubleshooting) for fenestra/tkinter/PATH issues.
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| `invocatio_vana` for `fenestra` | Old PyInstaller binary — `./install.sh --from-source` or use `.venv/bin/gothica` |
+| `fenestra_indisponibilis` / `_tkinter` | `brew install python-tk@3.14` (Homebrew Python) |
+| `gothica: command not found` | `./install.sh --fix-path` and `source ~/.zshrc` |
+| Wrong path / missing `applicata/` | `cd vox-gothica/vox-gothica` before `gothica invoco` |
+| `pip: command not found` | Use `python3 -m pip` |
+
+```bash
+which gothica && file "$(which gothica)"   # script = source install; Mach-O = release binary
+```
+
 ## Docker (for Fabricae)
 
 ```bash

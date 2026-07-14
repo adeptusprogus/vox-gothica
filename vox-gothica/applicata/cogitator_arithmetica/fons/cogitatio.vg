@@ -95,3 +95,23 @@ RITUS radix_reliquiae(radicandus : NUMERUS) -> responsum_sacrum
         nuntius: "The square reliquary of {radicandus} opens to reveal {radix_sacra} — if the Machine Spirit approves."
     }
 FINIS RITUS
+
+RITUS invoca_ritus(ritus : SCRIPTUM, a : NUMERUS, b : NUMERUS) -> responsum_sacrum
+    SI ritus == "ADDITIO" TUNC
+        REDDO additio_sacra(a, b)
+    ALITER SI ritus == "SUBTRACTIO" TUNC
+        REDDO subtractio_mortis(a, b)
+    ALITER SI ritus == "MULTIPLICATIO" TUNC
+        REDDO multiplicatio_belli(a, b)
+    ALITER SI ritus == "DIVISIO" TUNC
+        REDDO divisio_cohortis(a, b)
+    ALITER SI ritus == "TRIBUTUM" TUNC
+        REDDO tributum_ecclesiarchiae(a)
+    ALITER SI ritus == "POTENTIA" TUNC
+        REDDO potentia_exterminatus(a, b)
+    ALITER SI ritus == "RADIX" TUNC
+        REDDO radix_reliquiae(a)
+    ALITER
+        PROCLAMO HERESIM "Unknown rite '{ritus}'." GENERIS "ritus_ignotus"
+    FINIS SI
+FINIS RITUS
