@@ -99,11 +99,14 @@ curl -fsSL https://raw.githubusercontent.com/adeptusprogus/vox-gothica/main/vox-
 irm https://raw.githubusercontent.com/adeptusprogus/vox-gothica/main/vox-gothica/install.ps1 | iex
 ```
 
-**Verify:**
+**Verify** (after `~/.local/bin` is on PATH — the installer prints steps if not):
 
 ```console
+export PATH="$HOME/.local/bin:$PATH"   # if needed, this session
 gothica versio
 ```
+
+Permanent PATH: `cd vox-gothica && ./install.sh --fix-path && source ~/.zshrc`
 
 Pin a version: `bash install.sh --version v0.2.0` · Windows: `.\install.ps1 -Version v0.2.0`
 

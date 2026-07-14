@@ -19,11 +19,27 @@ Ave, Imperium!
 
 ## Install
 
-**macOS / Linux**
+**macOS / Linux** — default installs the release binary to `~/.local/bin/gothica`:
 
 ```console
-$ ./install.sh          # pipx/pip install → `gothica` command
-$ ./install.sh --pyz    # or: single-file ~/.local/bin/gothica (zipapp)
+$ ./install.sh
+```
+
+**Important:** many shells do not include `~/.local/bin` on `PATH`. Until you fix that,
+`gothica` will print `command not found` even though the install succeeded.
+The installer prints an **ACTION REQUIRED** block with exact steps. Permanent fix:
+
+```console
+$ ./install.sh --fix-path    # append PATH to ~/.zshrc (or ~/.bashrc)
+$ source ~/.zshrc
+$ gothica versio
+```
+
+Other modes:
+
+```console
+$ ./install.sh --from-source # pipx/pip editable install (developers)
+$ ./install.sh --pyz         # single-file zipapp in ~/.local/bin
 ```
 
 **Windows**

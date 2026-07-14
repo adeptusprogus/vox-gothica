@@ -91,6 +91,10 @@ In the divide by naught — <span class='responsum'>we shall know the enemy.</sp
 <h3>macOS / Linux</h3>
 <p>One-liner — fetches the latest binary from GitHub Releases into <code>~/.local/bin</code>:</p>
 <pre><code>curl -fsSL https://raw.githubusercontent.com/adeptusprogus/vox-gothica/main/vox-gothica/install.sh | bash</code></pre>
+<p><strong>PATH:</strong> the binary is <em>not</em> on PATH until you add <code>~/.local/bin</code>.
+If <code>gothica versio</code> fails with <code>command not found</code>, run
+<code>export PATH="$HOME/.local/bin:$PATH"</code> (this session) or
+<code>./install.sh --fix-path &amp;&amp; source ~/.zshrc</code> (permanent).</p>
 </div>
 <div class='installatio-carta'>
 <h3>Windows</h3>
@@ -107,9 +111,11 @@ gothica-windows-amd64.exe Windows</code></pre>
 </div>
 <div class='installatio-carta'>
 <h3>Verify the rite</h3>
-<p>After install, anywhere on your PATH:</p>
+<p>After PATH is set (see above):</p>
 <pre><code>gothica versio
 gothica invoco salutatio.vg</code></pre>
+<p>Or invoke by full path without editing PATH:
+<code>~/.local/bin/gothica versio</code></p>
 </div>
 </div>
 <p class='installatio-nota'>For *fabricae* (Terraform plan/apply) you also need <code>terraform</code> on PATH, or use the

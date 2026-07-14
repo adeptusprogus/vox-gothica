@@ -13,6 +13,14 @@ cd vox-gothica/vox-gothica
 ./install.sh
 ```
 
+The binary lands in `~/.local/bin/gothica`. **If `gothica versio` says command not found**, PATH is not set — the installer prints an **ACTION REQUIRED** block. Permanent fix:
+
+```bash
+./install.sh --fix-path
+source ~/.zshrc   # or ~/.bashrc
+gothica versio
+```
+
 **Windows:**
 ```powershell
 powershell -ExecutionPolicy Bypass -File install.ps1
@@ -20,7 +28,12 @@ powershell -ExecutionPolicy Bypass -File install.ps1
 
 **Single-file binary (zipapp):**
 ```bash
-./install.sh --pyz    # → ~/.local/bin/gothica
+./install.sh --pyz    # → ~/.local/bin/gothica (still needs PATH)
+```
+
+**Developers (editable install):**
+```bash
+./install.sh --from-source
 ```
 
 Verify:
