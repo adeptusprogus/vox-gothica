@@ -23,6 +23,12 @@ pick_message() {
   printf '%s' "${wrath[$idx]}"
 }
 
+if [[ "$BRANCH" =~ ^dependabot/ ]]; then
+  echo "verdict=machine-spirit" >> "${GITHUB_OUTPUT:-/dev/null}"
+  echo "⚙ Branch \`${BRANCH}\` — the **Machine Spirit** (Dependabot) tends the sacred pins. *Ordo Branchium* waived by cult dispensation for \`dependabot/*\`."
+  exit 0
+fi
+
 if [[ "$BRANCH" =~ $FORBIDDEN ]]; then
   MSG=$(pick_message "$BRANCH" "Sacred trunk names (\`main\`, \`master\`, …) are reserved.")
   echo "verdict=heresy" >> "${GITHUB_OUTPUT:-/dev/null}"

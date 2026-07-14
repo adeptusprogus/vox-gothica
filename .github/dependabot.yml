@@ -1,0 +1,25 @@
+# Machine Spirit — Dependabot version updates for the sacred pins.
+# Branches: dependabot/<ecosystem>/<dependency> (blessed dispensation in Ordo Branchium)
+# Commits/PR titles: cogitator: bump …
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      timezone: Europe/Moscow
+    labels:
+      - cogitator
+      - machine-spiritus
+      - dependencies
+    commit-message:
+      prefix: cogitator
+      include: scope
+    groups:
+      actions:
+        patterns:
+          - "*"
+    pull-request-branch-name:
+      separator: "/"
+    open-pull-requests-limit: 5

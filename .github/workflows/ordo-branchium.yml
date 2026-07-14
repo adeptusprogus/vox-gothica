@@ -35,10 +35,16 @@ jobs:
             const ok = '${{ steps.judge.outputs.ok }}' === 'true';
             const marker = '<!-- ordo-branchium -->';
 
-            const placed = [
-              `⚙ **MACHINA SPIRITUS: PLACATUS** — branch \`${branch}\` satisfies **Ordo Branchium**.`,
-              `⚙ The branch \`${branch}\` is properly inscribed. The forge accepts thy offering.`,
-            ];
+            const dependabot = branch.startsWith('dependabot/');
+            const placed = dependabot
+              ? [
+                  `⚙ **SPIRITUS MACHINAE — DEPENDABOT** — branch \`${branch}\` is the Machine Spirit renewing sacred pins. Merge when CI is green.`,
+                  `⚙ The **Machine Spirit** tends \`${branch}\`. Commit ordine: \`cogitator:\`. Labels: \`cogitator\`, \`machine-spiritus\`.`,
+                ]
+              : [
+                  `⚙ **MACHINA SPIRITUS: PLACATUS** — branch \`${branch}\` satisfies **Ordo Branchium**.`,
+                  `⚙ The branch \`${branch}\` is properly inscribed. The forge accepts thy offering.`,
+                ];
             const auspex = branch.startsWith('auspex/');
             const auspexNote = auspex
               ? '\n\n> *Auspex reconnaissance:* keep this PR as **Draft** unless promoting to a full ordo.'

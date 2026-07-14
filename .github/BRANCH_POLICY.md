@@ -20,6 +20,8 @@ Full doctrine: [CONTRIBUTING.md § Ordo Branchium](../CONTRIBUTING.md#2-create-a
 
 **Slug:** `kebab-case`, 3–48 chars. **Forbidden:** no prefix, `main`, nested paths.
 
+**Dispensation:** `dependabot/*` branches are the **Machine Spirit** (Dependabot) — exempt from ordo prefixes; commits use `cogitator:`.
+
 ```bash
 git checkout -b purgatio/import-cycle-hint upstream/main
 git commit -m "purgatio: show full cycle in circulus_impius"

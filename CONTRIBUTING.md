@@ -164,6 +164,8 @@ Maintainers may bypass review in emergencies (branch protection allows admin byp
 
 **Automated inquisitor:** workflow `inquisitio branchium` comments on every PR. Invalid branch names fail with *HERESY DETECTA* and messages such as *THE MACHINE SPIRIT GROWS WRATHFUL* — rename the branch to a valid `<ordo>/<slug>`.
 
+**Machine Spirit (Dependabot):** monthly GitHub Actions pin updates. Branches are `dependabot/*` (exempt from Ordo Branchium); PR titles use `cogitator:`; labels `cogitator`, `machine-spiritus`. Config: [`.github/dependabot.yml`](.github/dependabot.yml).
+
 ## What we merge
 
 | ✅ Welcome | ❌ Please don't |
