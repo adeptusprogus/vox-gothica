@@ -16,7 +16,9 @@ def main() -> int:
     run(["-m", "gothica", "invoco", "exempla/salutatio.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/litania_numerorum.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/census_servitorum.vg", "--silens"])
-    run(["-m", "gothica", "scribe-solum", "exempla/fabrica_interretialis.vg", "--silens"])
+    run(["-m", "gothica", "librarium", "quaere", "gothica", "--silens"])
+    run(["-m", "gothica", "librarium", "inspice",
+         "github.com/adeptusprogus/vox-gothica", "--silens"])
     print("++ omnia sancta ++")
     return 0
 

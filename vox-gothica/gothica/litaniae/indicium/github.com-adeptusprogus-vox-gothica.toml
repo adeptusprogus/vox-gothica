@@ -1,0 +1,4 @@
+via = "github.com/adeptusprogus/vox-gothica"
+descriptio = "Vox Gothica reference toolchain and standard library (meta-litania)"
+licentia = "GPL-3.0-or-later"
+alia = ["vox-gothica", "gothica", "stdlib"]

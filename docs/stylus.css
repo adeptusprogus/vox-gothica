@@ -756,7 +756,19 @@ body.warp::before {
         transparent 3px);
 }
 
-.abyssus { padding: 2.2rem 0 4rem; text-align: center; }
+.abyssus {
+    position: relative;
+    min-height: 100vh;
+    padding: 2.2rem 0 4rem;
+    text-align: center;
+    z-index: 1;
+}
+.abyssus > .fuga,
+.abyssus > h1.glitch,
+.abyssus > .monitum-warp {
+    position: relative;
+    z-index: 12;
+}
 
 a.fuga {
     display: inline-block;
@@ -837,32 +849,88 @@ h1.glitch::after {
 }
 .monitum-warp.infra { margin-top: 2.4rem; animation-duration: 3.7s; }
 
-/* the endless ribbons of corrupted scripture */
+/* corrupted scripture — corpus hidden; shards roam the breach */
+#campus-chaos {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 3;
+}
+.corpus-occultus {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
 .vitta {
     white-space: nowrap;
-    overflow: hidden;
-    border-top: 1px solid rgba(157, 77, 255, 0.18);
-    padding: 0.32rem 0;
     font-family: 'Share Tech Mono', monospace;
     font-size: 0.86rem;
-    text-align: left;
 }
-.vitta span {
-    display: inline-block;
-    padding-right: 3em;
-    animation-name: fluxus;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    will-change: transform;
+.shard {
+    position: absolute;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(0.62rem, 1.15vw, 0.88rem);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    opacity: 0;
+    animation: chaos-drift linear forwards;
+    will-change: transform, opacity;
+    transform: translate(-50%, -50%);
+    max-width: min(92vw, 48rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.vitta.retro span { animation-direction: reverse; }
-.vitta:nth-child(4n)   { color: var(--wp-flesh); text-shadow: 0 0 7px rgba(255,47,214,0.55); }
-.vitta:nth-child(4n+1) { color: var(--wp-sick);  text-shadow: 0 0 7px rgba(157,77,255,0.55); }
-.vitta:nth-child(4n+2) { color: var(--wp-bile);  text-shadow: 0 0 7px rgba(89,255,200,0.45); font-size: 0.74rem; opacity: 0.85; }
-.vitta:nth-child(4n+3) { color: var(--wp-blood); text-shadow: 0 0 7px rgba(255,34,68,0.55); font-size: 1rem; }
-.vitta:hover span { animation-play-state: paused; }
-.vitta:hover { background: rgba(255, 47, 214, 0.05); }
-@keyframes fluxus { to { transform: translateX(-50%); } }
+.shard--corner { animation-name: chaos-burst; }
+.shard--flesh { color: var(--wp-flesh); text-shadow: 0 0 9px rgba(255,47,214,0.65); }
+.shard--sick  { color: var(--wp-sick);  text-shadow: 0 0 9px rgba(157,77,255,0.65); }
+.shard--bile  { color: var(--wp-bile);  text-shadow: 0 0 9px rgba(89,255,200,0.55); font-size: 0.74em; }
+.shard--blood { color: var(--wp-blood); text-shadow: 0 0 9px rgba(255,34,68,0.65); }
+.shard--static {
+    opacity: 0.55;
+    animation: none;
+    transform: translate(-50%, -50%) rotate(var(--rot0));
+}
+@keyframes chaos-drift {
+    0% {
+        transform: translate(-50%, -50%) rotate(var(--rot0)) scale(0.55);
+        opacity: 0;
+        filter: blur(2px);
+    }
+    7%  { opacity: var(--op); filter: blur(0); }
+    72% { opacity: calc(var(--op) * 0.75); }
+    100% {
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+                  rotate(var(--rot1)) scale(1.08);
+        opacity: 0;
+        filter: blur(1px);
+    }
+}
+@keyframes chaos-burst {
+    0% {
+        transform: translate(-50%, -50%) rotate(var(--rot0)) scale(0.2);
+        opacity: 0;
+        filter: blur(4px) hue-rotate(40deg);
+    }
+    4%  { opacity: var(--op); filter: blur(0); }
+    65% { opacity: calc(var(--op) * 0.8); }
+    100% {
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy)))
+                  rotate(var(--rot1)) scale(1.12);
+        opacity: 0;
+        filter: blur(2px) hue-rotate(-30deg);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    body.warp { animation: none; }
+    .shard:not(.shard--static) { display: none; }
+}
 
 @media (max-width: 900px) {
     .templum { flex-direction: column; }

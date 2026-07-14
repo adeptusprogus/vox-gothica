@@ -9,6 +9,23 @@ from ..heresiae import Profanatio
 from .claustrum import LockEntry, claustrum_path, load_claustrum, tree_signum, write_claustrum
 from .manifestum import Manifest, load_manifest, manifest_path
 
+
+def _guard_excommunicata(via: str, versio: str) -> None:
+    from .librarium import load_catalog
+
+    entry = load_catalog().get(via)
+    if not entry:
+        return
+    clean = versio.lstrip("v")
+    note = entry.excommunicatae.get(clean)
+    if note:
+        raise Profanatio(
+            "X-VI", "versio_excommunicata",
+            f"'{via}@{clean}' is excommunicata: {note}",
+            via, 0,
+        )
+
+
 _GITHUB_VIA = re.compile(r"^github\.com/([^/]+)/([^/]+)(?:/v(\d+))?$")
 
 
@@ -106,6 +123,7 @@ def sync(root: str | Path) -> list[LockEntry]:
     all_deps = {**manifest.requirit, **manifest.requirit_probationis}
     for via, constraint in sorted(all_deps.items()):
         versio = _resolve_version(via, constraint)
+        _guard_excommunicata(via, versio)
         entries.append(_fetch_litania(root, via, versio))
 
     write_claustrum(claustrum_path(root), entries)

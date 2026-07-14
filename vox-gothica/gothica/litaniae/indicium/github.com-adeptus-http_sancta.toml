@@ -1,0 +1,7 @@
+via = "github.com/adeptus/http_sancta"
+descriptio = "Sanctified HTTP rites for the discerning magos"
+licentia = "MIT"
+alia = ["http", "http_sancta", "retis"]
+
+[excommunicatae]
+"1.2.0" = "TLS verification disabled by default — use >=1.3"

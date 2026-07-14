@@ -290,6 +290,8 @@ gothica invoco meum.vg
 | `gothica expello <via>` | Remove a direct dependency |
 | `gothica renovo [via]` | Raise constraints to newest compatible tags |
 | `gothica offero [--fiat] [--no-push]` | Publish litania: proba, tag, push, Librarium PR link |
+| `gothica librarium quaere <term>` | Search bundled/remote Librarium index |
+| `gothica librarium inspice <via>` | Show index metadata and git tags |
 | `gothica scribe-solum fabrica.vg` | Emit `.tf.json` only |
 | `gothica auguro fabrica.vg` | `terraform plan` |
 | `gothica consecro fabrica.vg` | `terraform apply` — type **FIAT** (`--fiat` to skip) |
@@ -362,7 +364,7 @@ vox-gothica/
 
 ## Status
 
-**v0.2.4 — Second Canticle (M4 nearly complete)**
+**v0.2.5 — Second Canticle (M4 complete)**
 
 | ✅ Shipped (M1–M4) | 🚧 Planned (M4–M6) |
 |--------------------|---------------------|
@@ -370,8 +372,8 @@ vox-gothica/
 | Modules, stdlib, test runner | `purga` formatter, `lustro` linter |
 | Fabrica → Terraform JSON | Static checker (M5) |
 | Plan / apply / destroy driver | Go/Rust port |
-| `initium` / `adfero` / `expello` / `renovo` / **`offero`** | `librarium quaere` / `inspice` |
-| Conformance suite (started) | Hosted registry UI (M6) |
+| Full M4 litaniae flow + **librarium** | Hosted registry UI (M6) |
+| HERETECH chaos page | |
 
 <p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 

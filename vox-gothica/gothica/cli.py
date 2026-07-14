@@ -16,6 +16,7 @@ from .litaniae import initium as lit_initium
 from .litaniae import expello as lit_expello
 from .litaniae import renovo as lit_renovo
 from .litaniae import offero as lit_offero
+from .litaniae import librarium as lit_librarium
 from .litaniae.manifestum import load_manifest, manifest_path
 
 
@@ -247,6 +248,29 @@ def cmd_offero(args) -> int:
     return 0
 
 
+def cmd_librarium(args) -> int:
+    refresh = args.renova
+    if args.librarium_cmd == "quaere":
+        hits = lit_librarium.quaere(args.term, refresh=refresh)
+        if not hits:
+            print(f"⚙ no litaniae match '{args.term}' in the Librarium",
+                  file=sys.stderr)
+            return 1
+        _say(f"++ quaere — {len(hits)} hit(s) for '{args.term}' ++", args)
+        for entry in hits:
+            _say(lit_librarium.format_quaere_line(entry), args)
+        return 0
+    if args.librarium_cmd == "inspice":
+        data = lit_librarium.inspice(args.via, refresh=refresh)
+        _say(lit_librarium.format_inspice(data), args)
+        if not data["indexed"] and not data["versiones"]:
+            print(f"⚙ '{args.via}' is unknown to the Librarium and has no "
+                  f"reachable tags", file=sys.stderr)
+            return 4
+        return 0
+    return 2
+
+
 def main(argv=None) -> int:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--silens", action="store_true")
@@ -313,6 +337,20 @@ def main(argv=None) -> int:
     p.add_argument("--no-push", action="store_true",
                    help="validate and tag locally only")
 
+    lib = sub.add_parser("librarium", help="search and inspect the Librarium",
+                         parents=[common])
+    lib_sub = lib.add_subparsers(dest="librarium_cmd", required=True)
+    p = lib_sub.add_parser("quaere", help="search index by name or topic",
+                           parents=[common])
+    p.add_argument("term", help="search term")
+    p.add_argument("--renova", action="store_true",
+                   help="refresh remote index cache before search")
+    p = lib_sub.add_parser("inspice", help="show litania metadata and tags",
+                           parents=[common])
+    p.add_argument("via", help="litania via (github.com/owner/repo)")
+    p.add_argument("--renova", action="store_true",
+                   help="refresh remote index cache before inspect")
+
     sub.add_parser("versio", help="print version", parents=[common])
 
     args = ap.parse_args(argv)
@@ -343,6 +381,8 @@ def main(argv=None) -> int:
             return cmd_renovo(args)
         if args.cmd == "offero":
             return cmd_offero(args)
+        if args.cmd == "librarium":
+            return cmd_librarium(args)
         if args.cmd == "versio":
             return cmd_versio(args)
     except Profanatio as p_:

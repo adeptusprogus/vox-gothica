@@ -1,0 +1,7 @@
+via = "github.com/adeptus/codex_json"
+descriptio = "Sanctified JSON rites — codex_json for the discerning magos"
+licentia = "MIT"
+alia = ["codex_json", "json", "codex"]
+
+[excommunicatae]
+"0.8.0" = "pre-1.0 API removed — migrate to ^1.0"
