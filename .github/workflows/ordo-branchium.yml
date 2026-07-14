@@ -12,7 +12,7 @@ jobs:
     name: inquisitio branchium
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Judge branch name
         id: judge
@@ -28,7 +28,7 @@ jobs:
 
       - name: Proclaim judgement on PR
         if: always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const branch = context.payload.pull_request.head.ref;
