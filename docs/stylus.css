@@ -286,6 +286,28 @@ em::before { content: '‹'; color: var(--amber-dim); }
 em::after  { content: '›'; color: var(--amber-dim); }
 a { color: var(--phos-bright); text-decoration: none; border-bottom: 1px dotted var(--phos-dim); }
 a:hover { color: var(--amber); border-bottom: 1px solid var(--amber); text-shadow: var(--glow-amber); }
+/* ── crypta hero + transectus dividers (README parity) ─── */
+.crypta-hero {
+    margin: 0 0 1.8rem;
+    border: 1px solid var(--phos-faint);
+    background: var(--void);
+    box-shadow: 0 0 24px rgba(77, 255, 124, 0.08);
+}
+.crypta-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+}
+.transectus-divider {
+    display: block;
+    width: 100%;
+    max-width: 920px;
+    height: auto;
+    margin: 2.2rem auto;
+    border: none;
+    opacity: 0.95;
+}
 hr {
     border: none;
     text-align: center;
@@ -298,6 +320,7 @@ hr::after {
     font-size: 0.8rem;
     text-shadow: none;
 }
+
 
 /* ── litanies (blockquotes): amber vox-transmissions ────── */
 blockquote {

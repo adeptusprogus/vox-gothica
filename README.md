@@ -24,7 +24,7 @@ Terraform-backed *fabricae*.
   <a href="https://github.com/adeptusprogus/vox-gothica/releases"><img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey" alt="Platform"></a>
 </p>
 
----
+<p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 
 ## Table of contents
 
@@ -43,7 +43,7 @@ Terraform-backed *fabricae*.
 - [Contributing](#contributing)
 - [License](#license)
 
----
+<p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 
 ## What is this?
 
@@ -81,7 +81,7 @@ The toolchain **`gothica`** ships as a **self-contained binary** (~8–20 MB) �
 | **Terraform** | only for *fabricae* | only for *fabricae* |
 | **Disk** | ~20 MB | ~5 MB + Python |
 
----
+<p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 
 ## Install
 
@@ -294,7 +294,7 @@ gothica invoco meum.vg
 
 Full spec: [Mandata (Ch. XII)](https://adeptusprogus.github.io/vox-gothica/12-cli.html)
 
----
+<p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 
 ## Documentation
 
@@ -365,7 +365,7 @@ vox-gothica/
 | Fabrica → Terraform JSON | Static checker, conformance suite |
 | Plan / apply / destroy driver | Go/Rust port |
 
----
+<p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 
 ## Collegium Magorum
 
@@ -376,7 +376,7 @@ vox-gothica/
 | [**EduardL**](https://github.com/adeptusprogus/vox-gothica) | Archmagos Auctor — Founder of the Rite |
 <!-- collegium:end -->
 
----
+<p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 
 ## Contributing
 
@@ -388,7 +388,7 @@ Pull requests welcome. Read **[CONTRIBUTING.md](CONTRIBUTING.md)** for:
 
 Quick ref: [.github/BRANCH_POLICY.md](.github/BRANCH_POLICY.md)
 
----
+<p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 
 ## License
 

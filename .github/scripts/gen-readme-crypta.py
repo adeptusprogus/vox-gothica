@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import random
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -154,6 +156,8 @@ def main() -> None:
 '''
     OUT.write_text(svg, encoding="utf-8")
     print(f"generated: {OUT.relative_to(ROOT)}")
+    divider = ROOT / ".github" / "scripts" / "gen-transectus-divider.py"
+    subprocess.run([sys.executable, str(divider)], check=True)
 
 
 if __name__ == "__main__":
