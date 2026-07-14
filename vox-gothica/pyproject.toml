@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "GPL-3.0-or-later" }
 authors = [{ name = "EduardL", email = "adeptusprogus@users.noreply.github.com" }]
-keywords = ["esolang", "terraform", "infrastructure-as-code", "warhammer"]
+keywords = ["Vox Gothica", "vox-gothica", "gothica", "esolang", "terraform", "infrastructure-as-code", "warhammer", "programming-language", "adeptus-mechanicus"]
 
 [project.scripts]
 gothica = "gothica.cli:main"

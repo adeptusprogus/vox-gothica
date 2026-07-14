@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inject SEO meta tags into Codex HTML pages (idempotent)."""
+"""Normalize SEO/meta tags so every Codex page names Vox Gothica explicitly."""
 from __future__ import annotations
 
 import re
@@ -9,10 +9,10 @@ BASE = "https://adeptusprogus.github.io/vox-gothica"
 KEYWORDS = (
     "Vox Gothica, vox-gothica, vox gothica language, gothica, gothica programming language, "
     "programming language, esolang, esoteric language, Warhammer 40K, Adeptus Mechanicus, "
-    "High Gothic, Terraform, infrastructure as code, canticle, fabrica, litania"
+    "High Gothic, Terraform, infrastructure as code, canticle, fabrica, litania, Adeptus Mechanicus language"
 )
 
-PAGE_META: dict[str, tuple[str, str]] = {
+PAGES: dict[str, tuple[str, str]] = {
     "index.html": (
         "Vox Gothica — Codex & Librarium Sanctum",
         "Vox Gothica — official specification of the High Gothic programming language for canticles and fabricae.",
@@ -83,65 +83,61 @@ PAGE_META: dict[str, tuple[str, str]] = {
     ),
 }
 
-
-def seo_block(path: str, title: str, desc: str) -> str:
-    url = f"{BASE}/{path}" if path != "index.html" else f"{BASE}/"
-    esc_t, esc_d = title.replace('"', "&quot;"), desc.replace('"', "&quot;")
-    return f"""<meta name="description" content="{esc_d}">
-<meta name="keywords" content="{KEYWORDS}">
-<meta name="application-name" content="Vox Gothica">
+APP_META = """<meta name="application-name" content="Vox Gothica">
 <meta name="apple-mobile-web-app-title" content="Vox Gothica">
 <meta name="language" content="English">
-<meta name="robots" content="index, follow">
-<meta name="author" content="adeptusprogus">
-<link rel="canonical" href="{url}">
-<meta property="og:title" content="{esc_t}">
-<meta property="og:description" content="{esc_d}">
-<meta property="og:url" content="{url}">
-<meta property="og:type" content="article">
-<meta property="og:site_name" content="Vox Gothica">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="{esc_t}">
-<meta name="twitter:description" content="{esc_d}">
-<link rel="sitemap" type="application/xml" href="{BASE}/sitemap.xml">"""
+"""
 
 
-def inject(path: Path) -> bool:
+def patch_file(path: Path, title: str, desc: str) -> None:
     text = path.read_text(encoding="utf-8")
-    if 'name="description"' in text:
-        return False
-    meta = PAGE_META.get(path.name)
-    if not meta:
-        return False
-    title, desc = meta
-    block = seo_block(path.name, title, desc)
-    new = re.sub(
-        r"(<meta name='viewport'[^>]*>)",
-        r"\1\n" + block,
-        text,
-        count=1,
-    )
-    if new == text:
-        new = re.sub(
-            r'(<meta name="viewport"[^>]*>)',
-            r"\1\n" + block,
+    url = f"{BASE}/{path.name}" if path.name != "index.html" else f"{BASE}/"
+    esc_t, esc_d = title.replace('"', "&quot;"), desc.replace('"', "&quot;")
+
+    text = re.sub(r"<title>[^<]*</title>", f"<title>{title}</title>", text)
+    text = re.sub(r'<meta name="description" content="[^"]*"', f'<meta name="description" content="{esc_d}"', text)
+    text = re.sub(r'<meta name="keywords" content="[^"]*"', f'<meta name="keywords" content="{KEYWORDS}"', text)
+    text = re.sub(r'<meta property="og:title" content="[^"]*"', f'<meta property="og:title" content="{esc_t}"', text)
+    text = re.sub(r'<meta property="og:description" content="[^"]*"', f'<meta property="og:description" content="{esc_d}"', text)
+    text = re.sub(r'<meta property="og:site_name" content="[^"]*"', '<meta property="og:site_name" content="Vox Gothica"', text)
+    text = re.sub(r'<meta name="twitter:title" content="[^"]*"', f'<meta name="twitter:title" content="{esc_t}"', text)
+    text = re.sub(r'<meta name="twitter:description" content="[^"]*"', f'<meta name="twitter:description" content="{esc_d}"', text)
+    text = re.sub(r'<link rel="canonical" href="[^"]*"', f'<link rel="canonical" href="{url}"', text)
+    text = re.sub(r'<meta property="og:url" content="[^"]*"', f'<meta property="og:url" content="{url}"', text)
+
+    if 'name="application-name"' not in text:
+        text = re.sub(
+            r'(<meta name="keywords" content="[^"]*">)',
+            r"\1\n" + APP_META,
             text,
             count=1,
         )
-    new = re.sub(
-        r"<title>[^<]*</title>",
-        f"<title>{title}</title>",
-        new,
-        count=1,
+
+    path.write_text(text, encoding="utf-8")
+
+
+def patch_json_ld_index(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    new_ld = (
+        '{"@context":"https://schema.org","@type":"SoftwareSourceCode",'
+        '"name":"Vox Gothica","alternateName":["vox-gothica","gothica"],'
+        '"description":"High Gothic programming language for canticles and Terraform fabricae",'
+        '"codeRepository":"https://github.com/adeptusprogus/vox-gothica",'
+        '"image":"https://adeptusprogus.github.io/vox-gothica/heraldry.png",'
+        '"programmingLanguage":["Vox Gothica","Python"],'
+        '"license":"https://spdx.org/licenses/GPL-3.0-only.html",'
+        '"keywords":["Vox Gothica","vox-gothica","gothica","esolang","Warhammer 40K","Terraform","Adeptus Mechanicus"]}'
     )
-    path.write_text(new, encoding="utf-8")
-    return True
+    text = re.sub(r"<script type=\"application/ld\+json\">.*?</script>", f"<script type=\"application/ld+json\">\n{new_ld}\n</script>", text, flags=re.DOTALL)
+    path.write_text(text, encoding="utf-8")
 
 
 def main() -> None:
     docs = Path(__file__).resolve().parents[2] / "docs"
-    changed = sum(inject(p) for p in sorted(docs.glob("*.html")) if p.name != "heretech.html")
-    print(f"SEO injected into {changed} pages")
+    for name, (title, desc) in PAGES.items():
+        patch_file(docs / name, title, desc)
+        print(f"tags: {name}")
+    patch_json_ld_index(docs / "index.html")
 
 
 if __name__ == "__main__":
