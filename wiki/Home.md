@@ -34,7 +34,7 @@ This wiki provides a **quick-reference layer** for contributors and newcomers.
 
 | Name | Title |
 |------|-------|
-| [EduardL](https://github.com/adeptusprogus) | Archmagos Auctor — Founder of the Rite |
+| [EduardL](https://github.com/adeptusprogus/vox-gothica) | Archmagos Auctor — Founder of the Rite |
 <!-- collegium:end -->
 
 *AVE OMNISSIAH.*

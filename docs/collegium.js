@@ -119,7 +119,7 @@
   }
 
   Promise.all([
-    fetch("contributors.json").then(function (r) {
+    fetch("contributors.json?v=4").then(function (r) {
       if (!r.ok) throw new Error("contributors.json");
       return r.json();
     }),

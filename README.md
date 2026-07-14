@@ -364,7 +364,7 @@ vox-gothica/
 
 | | |
 |---|---|
-| [**EduardL**](https://github.com/adeptusprogus) | Archmagos Auctor — Founder of the Rite |
+| [**EduardL**](https://github.com/adeptusprogus/vox-gothica) | Archmagos Auctor — Founder of the Rite |
 <!-- collegium:end -->
 
 ---
