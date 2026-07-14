@@ -19,14 +19,16 @@ pyz:                        ## single-file gothica.pyz (needs any Python 3.10+)
 	chmod +x dist/gothica.pyz
 	@echo "++ dist/gothica.pyz forged ++"
 
-binarium:                   ## true native-ish binary via PyInstaller (like Go, one file, no Python needed)
+binarium:                   ## self-contained binary via PyInstaller (no Python on target)
 	$(PY) -m pip install --quiet pyinstaller
+	$(PY) -m pip install --quiet -e .
 	$(PY) -m PyInstaller --onefile --name gothica \
 	    --collect-submodules gothica \
 	    --distpath dist --workpath build/pyi --specpath build/pyi \
-	    gothica/__main__.py
+	    gothica_entry.py
+	./dist/gothica versio
+	./dist/gothica invoco exempla/salutatio.vg --silens
 	@echo "++ dist/gothica (self-contained binary for THIS platform) ++"
-	@echo "++ build on each OS you target: macOS/Linux/Windows ++"
 
 docker:                     ## fabrica execution image (gothica + terraform)
 	docker build -t vox-gothica:latest .

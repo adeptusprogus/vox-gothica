@@ -5,9 +5,9 @@ tradition of the Adeptus Mechanicus, with a real Python toolchain (`gothica`) an
 Terraform-backed *fabricae*.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10+-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Release](https://img.shields.io/github/v/release/adeptusprogus/vox-gothica?label=release)](https://github.com/adeptusprogus/vox-gothica/releases)
 [![Docs](https://img.shields.io/badge/docs-Codex%20Vox%20Gothica-8B0000)](https://adeptusprogus.github.io/vox-gothica/)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey)](https://github.com/adeptusprogus/vox-gothica)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey)](https://github.com/adeptusprogus/vox-gothica/releases)
 
 > *From the weakness of the flesh — the Machine delivers us.*
 
@@ -18,12 +18,9 @@ Terraform-backed *fabricae*.
 - [What is this?](#what-is-this)
 - [Requirements](#requirements)
 - [Install](#install)
-  - [macOS](#macos)
-  - [Linux](#linux)
-  - [Windows](#windows)
+  - [One-liner (recommended)](#one-liner-recommended)
+  - [Manual download](#manual-download)
   - [Docker (all platforms)](#docker-all-platforms)
-  - [Portable / standalone binary](#portable--standalone-binary)
-  - [Run without installing](#run-without-installing)
 - [Quick start](#quick-start)
 - [CLI reference](#cli-reference)
 - [Documentation](#documentation)
@@ -58,195 +55,112 @@ Ave, Imperium!
 ++ The rite concludes. The Machine Spirit is appeased. ++
 ```
 
-The reference toolchain **`gothica`** is pure Python ≥ 3.10 with **zero runtime dependencies**.
+The toolchain **`gothica`** ships as a **self-contained binary** (~8–20 MB) — **no Python required** to run programs.
 
 ---
 
 ## Requirements
 
-| | macOS | Linux | Windows |
-|---|-------|-------|---------|
-| **Python** | 3.10+ ([python.org](https://www.python.org/downloads/) or `brew install python`) | 3.10+ (`apt install python3` / `dnf install python3`) | 3.10+ ([python.org](https://www.python.org/downloads/) or `winget install Python.Python.3.12`) |
-| **pip** | included with Python | `python3 -m ensurepip` | included with Python |
-| **Terraform** | only for *fabricae* | only for *fabricae* | only for *fabricae* (`winget install Hashicorp.Terraform`) |
-| **Disk** | ~5 MB (toolchain) | ~5 MB | ~5 MB |
-
-Optional but recommended: **[pipx](https://pipx.pypa.io/)** — installs `gothica` into an isolated environment on any OS.
+| | Default install (binary) | Build from source |
+|---|---------------------------|-------------------|
+| **Python** | not needed | 3.10+ |
+| **curl** (macOS/Linux) or **PowerShell** (Windows) | yes | — |
+| **Terraform** | only for *fabricae* | only for *fabricae* |
+| **Disk** | ~20 MB | ~5 MB + Python |
 
 ---
 
 ## Install
 
-Clone once, then follow your platform:
+### One-liner (recommended)
+
+**macOS / Linux** — downloads the latest [GitHub Release](https://github.com/adeptusprogus/vox-gothica/releases) binary:
 
 ```console
-git clone https://github.com/adeptusprogus/vox-gothica.git
-cd vox-gothica/vox-gothica
+curl -fsSL https://raw.githubusercontent.com/adeptusprogus/vox-gothica/main/vox-gothica/install.sh | bash
 ```
 
-All install methods place a `gothica` command on your `PATH`.
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/adeptusprogus/vox-gothica/main/vox-gothica/install.ps1 | iex
+```
+
+**Verify:**
+
+```console
+gothica versio
+```
+
+Pin a version: `bash install.sh --version v0.2.0` · Windows: `.\install.ps1 -Version v0.2.0`
 
 ---
 
-### macOS
+### Manual download
 
-**1. Install Python** (if needed):
+Get the binary for your platform from **[Releases](https://github.com/adeptusprogus/vox-gothica/releases)**:
 
-```console
-brew install python pipx
-pipx ensurepath
-```
-
-Restart the terminal after `pipx ensurepath`.
-
-**2. Install gothica:**
+| File | Platform |
+|------|----------|
+| `gothica-darwin-arm64` | macOS Apple Silicon |
+| `gothica-darwin-amd64` | macOS Intel |
+| `gothica-linux-amd64` | Linux x86_64 |
+| `gothica-windows-amd64.exe` | Windows x86_64 |
 
 ```console
-./install.sh
-```
-
-**3. Verify:**
-
-```console
-gothica versio
-gothica invoco exempla/salutatio.vg
-```
-
-<details>
-<summary>Alternative: single-file zipapp (no pip)</summary>
-
-```console
-./install.sh --pyz
-export PATH="$PATH:$HOME/.local/bin"   # add to ~/.zshrc to persist
-gothica versio
-```
-
-</details>
-
-<details>
-<summary>Alternative: manual venv</summary>
-
-```console
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .
-gothica versio
-```
-
-</details>
-
----
-
-### Linux
-
-**1. Install Python** (Debian/Ubuntu example):
-
-```console
-sudo apt update && sudo apt install -y python3 python3-pip python3-venv
-pipx install pipx && pipx ensurepath   # optional but recommended
-```
-
-Fedora/RHEL: `sudo dnf install python3 python3-pip`  
-Arch: `sudo pacman -S python python-pip`
-
-**2. Install gothica:**
-
-```console
-chmod +x install.sh
-./install.sh
-```
-
-**3. Ensure `~/.local/bin` is on PATH** (if the installer says so):
-
-```console
-echo 'export PATH="$PATH:$HOME/.local/bin"' >> ~/.bashrc
-source ~/.bashrc
-gothica versio
-```
-
-<details>
-<summary>Alternative: single-file zipapp</summary>
-
-```console
-./install.sh --pyz
+chmod +x gothica-darwin-arm64    # macOS/Linux
+mv gothica-darwin-arm64 ~/.local/bin/gothica
 export PATH="$PATH:$HOME/.local/bin"
 gothica versio
 ```
 
-</details>
-
-<details>
-<summary>Alternative: manual venv</summary>
+On macOS, if Gatekeeper blocks the binary:
 
 ```console
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .
-gothica versio
+xattr -dr com.apple.quarantine ~/.local/bin/gothica
 ```
-
-</details>
 
 ---
 
-### Windows
-
-**1. Install Python** (if needed):
-
-```powershell
-winget install Python.Python.3.12
-```
-
-During setup, check **“Add python.exe to PATH”**. Open a **new** PowerShell window afterwards.
-
-**2. Install gothica:**
-
-```powershell
-cd vox-gothica\vox-gothica
-powershell -ExecutionPolicy Bypass -File install.ps1
-```
-
-**3. Verify** (new terminal if `gothica` is not found):
-
-```powershell
-gothica versio
-gothica invoco exempla\salutatio.vg
-```
+### Platform notes
 
 <details>
-<summary>If gothica is not recognized</summary>
+<summary><strong>macOS</strong> — install.sh details</summary>
 
-The installer prints a `Scripts` folder path. Add it to your user PATH:
+Installs to `~/.local/bin/gothica`. Add to `~/.zshrc`:
 
-```powershell
-# Example — use the path printed by install.ps1
-[Environment]::SetEnvironmentVariable(
-  'PATH',
-  $env:PATH + ';C:\Users\YOU\AppData\Roaming\Python\Python312\Scripts',
-  'User'
-)
-```
-
-Open a **new** terminal, then run `gothica versio`.
-
-</details>
-
-<details>
-<summary>Alternative: manual venv</summary>
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -e .
-gothica versio
+```console
+export PATH="$PATH:$HOME/.local/bin"
 ```
 
 </details>
 
 <details>
-<summary>Git Bash / WSL</summary>
+<summary><strong>Linux</strong> — install.sh details</summary>
 
-On **WSL** or **Git Bash**, use the [Linux](#linux) / [macOS](#macos) `install.sh` path instead.
+Same as macOS. Requires `curl`. For ARM Linux, use `--from-source` until an ARM build is published.
+
+</details>
+
+<details>
+<summary><strong>Windows</strong> — install.ps1 details</summary>
+
+Installs to `%LOCALAPPDATA%\Programs\gothica\gothica.exe` and adds it to user PATH.
+
+</details>
+
+<details>
+<summary><strong>Build from source</strong> (needs Python 3.10+)</summary>
+
+```console
+git clone https://github.com/adeptusprogus/vox-gothica.git
+cd vox-gothica/vox-gothica
+./install.sh --from-source          # macOS/Linux
+```
+
+```powershell
+.\install.ps1 -FromSource           # Windows
+```
 
 </details>
 
@@ -286,14 +200,14 @@ docker run --rm -it -v "$PWD:/opus" \
 
 ### Portable / standalone binary
 
-Build on the **target OS** (no cross-compilation):
+Official binaries are built on every [release tag](https://github.com/adeptusprogus/vox-gothica/releases) for macOS (arm64 + amd64), Linux, and Windows.
+
+To build locally from source (developers):
 
 | Tier | Command | Result |
 |------|---------|--------|
-| Zipapp | `make pyz` | `dist/gothica.pyz` (~240 KB, needs Python 3.10+ on host) |
-| Native-ish | `make binarium` | `dist/gothica` (~15–20 MB, **no Python** on target) |
-
-Works on macOS, Linux, and Windows — run `make` from `vox-gothica/` on each platform you ship to.
+| Release binary | `make binarium` | `dist/gothica` — no Python on target |
+| Zipapp | `make pyz` | `dist/gothica.pyz` — needs Python 3.10+ |
 
 ---
 
