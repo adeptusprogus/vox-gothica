@@ -40,16 +40,35 @@ def fetch_contributors(repo: str) -> list[dict]:
         return json.loads(resp.read().decode())
 
 
+def pinned_logins(pinned: dict) -> list[str]:
+    logins: list[str] = []
+    github = pinned.get("github")
+    if isinstance(github, list):
+        logins.extend(login.lower() for login in github if login)
+    elif github:
+        logins.append(str(github).lower())
+    for alias in pinned.get("aliases", []):
+        if alias:
+            logins.append(str(alias).lower())
+    return logins
+
+
+def api_for_pinned(pinned: dict, by_login: dict[str, dict]) -> dict | None:
+    for login in pinned_logins(pinned):
+        if login in by_login:
+            return by_login[login]
+    return None
+
+
 def merge_roll(config: dict, api_contributors: list[dict]) -> list[dict]:
     by_login = {c["login"].lower(): c for c in api_contributors}
     seen: set[str] = set()
     out: list[dict] = []
 
     for pinned in config.get("pinned", []):
-        login = (pinned.get("github") or "").lower() or None
-        if login:
+        for login in pinned_logins(pinned):
             seen.add(login)
-        api = by_login.get(login) if login else None
+        api = api_for_pinned(pinned, by_login)
         out.append(
             {
                 "display": pinned.get("display")
@@ -57,7 +76,7 @@ def merge_roll(config: dict, api_contributors: list[dict]) -> list[dict]:
                 or pinned.get("github")
                 or "Unknown",
                 "title": pinned.get("title") or config.get("default_title", "Contributor"),
-                "url": (api and api.get("html_url")) or pinned.get("url"),
+                "url": pinned.get("url") or (api and api.get("html_url")),
             }
         )
 

@@ -46,6 +46,30 @@
     return "<div class='magus-carta'>" + inner + "</div>";
   }
 
+  function pinnedLogins(p) {
+    var logins = [];
+    var github = p.github;
+    if (Array.isArray(github)) {
+      github.forEach(function (g) {
+        if (g) logins.push(String(g).toLowerCase());
+      });
+    } else if (github) {
+      logins.push(String(github).toLowerCase());
+    }
+    (p.aliases || []).forEach(function (a) {
+      if (a) logins.push(String(a).toLowerCase());
+    });
+    return logins;
+  }
+
+  function apiForPinned(p, byLogin) {
+    var logins = pinnedLogins(p);
+    for (var i = 0; i < logins.length; i++) {
+      if (byLogin[logins[i]]) return byLogin[logins[i]];
+    }
+    return null;
+  }
+
   function mergeRoll(config, apiContributors) {
     var byLogin = {};
     (apiContributors || []).forEach(function (c) {
@@ -56,14 +80,15 @@
     var out = [];
 
     (config.pinned || []).forEach(function (p) {
-      var login = p.github ? p.github.toLowerCase() : null;
-      if (login) seen[login] = true;
-      var api = login ? byLogin[login] : null;
+      pinnedLogins(p).forEach(function (login) {
+        seen[login] = true;
+      });
+      var api = apiForPinned(p, byLogin);
       out.push({
         display: p.display || (api && api.login) || p.github || "Unknown",
         title: p.title || config.default_title || "Contributor",
         avatar: api && api.avatar_url,
-        url: (api && api.html_url) || p.url,
+        url: p.url || (api && api.html_url),
       });
     });
 

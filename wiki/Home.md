@@ -36,7 +36,6 @@ This wiki provides a **quick-reference layer** for contributors and newcomers.
 |------|-------|
 | [EduardL](https://github.com/adeptusprogus) | Archmagos Auctor — Founder of the Rite |
 | Claude Fable | Magos Errant — Cogitator-Artisan of the First Canticle |
-| [abyssmemes](https://github.com/abyssmemes) | Magos — Contributor to the Rite |
 <!-- collegium:end -->
 
 *AVE OMNISSIAH.*
