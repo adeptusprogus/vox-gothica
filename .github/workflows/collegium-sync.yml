@@ -28,6 +28,11 @@ jobs:
         run: python3 .github/scripts/sync-collegium.py
 
       - name: Commit roll updates
+        env:
+          COMMIT_MSG: |
+            chore: sync Collegium Magorum from GitHub contributors.
+
+            Regenerated README/wiki roll and docs/contributors.json from contributors.json.
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -35,11 +40,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No collegium changes."
           else
-            git commit -m "$(cat <<'EOF'
-chore: sync Collegium Magorum from GitHub contributors.
-
-Regenerated README/wiki roll and docs/contributors.json from contributors.json.
-EOF
-)"
+            git commit -m "$COMMIT_MSG"
             git push
           fi
