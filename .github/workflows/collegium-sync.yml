@@ -1,0 +1,45 @@
+name: Collegium Sync
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - contributors.json
+      - .github/scripts/sync-collegium.py
+      - .github/workflows/collegium-sync.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collegium-sync-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync Collegium Magorum roll
+        run: python3 .github/scripts/sync-collegium.py
+
+      - name: Commit roll updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add contributors.json docs/contributors.json README.md wiki/Home.md
+          if git diff --staged --quiet; then
+            echo "No collegium changes."
+          else
+            git commit -m "$(cat <<'EOF'
+chore: sync Collegium Magorum from GitHub contributors.
+
+Regenerated README/wiki roll and docs/contributors.json from contributors.json.
+EOF
+)"
+            git push
+          fi

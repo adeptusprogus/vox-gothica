@@ -1,0 +1,15 @@
+{
+  "repository": "adeptusprogus/vox-gothica",
+  "default_title": "Magos — Contributor to the Rite",
+  "pinned": [
+    {
+      "github": "adeptusprogus",
+      "display": "EduardL",
+      "title": "Archmagos Auctor — Founder of the Rite"
+    },
+    {
+      "display": "Claude Fable",
+      "title": "Magos Errant — Cogitator-Artisan of the First Canticle"
+    }
+  ]
+}
