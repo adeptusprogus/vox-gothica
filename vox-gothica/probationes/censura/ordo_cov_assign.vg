@@ -1,0 +1,9 @@
+AVE OMNISSIAH.
+CANTICUM "ordo_cov_assign".
+
+SCHEMA miles
+    nomen : SCRIPTUM
+FINIS SCHEMA
+
+DECLARO cohors : ORDO[miles] = [miles { nomen: "Kane" }]
+DECLARO census : ORDO[NUMERUS] = cohors

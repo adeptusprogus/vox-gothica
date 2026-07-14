@@ -335,6 +335,12 @@ def cmd_censura(args) -> int:
 
 
 def cmd_speculum(args) -> int:
+    if args.stdio:
+        root = args.root or None
+        return lit_speculum.serve_stdio(root_dir=root)
+    if not args.file:
+        print("⚙ speculum requires a scroll path or --stdio", file=sys.stderr)
+        return 2
     records = lit_speculum.analyze(args.file, root_dir=_find_root(
         os.path.dirname(os.path.abspath(args.file)) or "."))
     if not records:
@@ -470,7 +476,10 @@ def main(argv=None) -> int:
 
     p = sub.add_parser("speculum", help="LSP diagnostics JSONL (lustro+censura)",
                        parents=[common])
-    p.add_argument("file", help=".vg scroll to analyze")
+    p.add_argument("file", nargs="?", help=".vg scroll to analyze")
+    p.add_argument("--stdio", action="store_true",
+                   help="NDJSON RPC on stdin (analyze/shutdown methods)")
+    p.add_argument("--root", help="project root for cross-module censura")
 
     p = sub.add_parser("codex", help="search or list Codex documentation",
                        parents=[common])

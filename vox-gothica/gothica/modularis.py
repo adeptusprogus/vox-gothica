@@ -13,6 +13,8 @@ _FR = A.TName(name="FRACTIO")
 _VR = A.TName(name="VERITAS")
 _NH = A.TName(name="NIHIL")
 _RT = A.TName(name="RITUS")
+_WILD = A.TName(name="*")
+_ORDO_ANY = A.TOrdo(inner=_WILD)
 
 
 def _rt(params, ret) -> A.TRitus:
@@ -34,9 +36,6 @@ class ModuleInfo:
     exports: dict[str, Any] = field(default_factory=dict)
 
 
-_ORDO = A.TOrdo(inner=A.TName(name="NUMERUS"))
-
-
 _STDLIB: dict[str, dict[str, Any]] = {
     "mathematica": {
         "fractio_integra": _rt([(None, _FR)], _NUM),
@@ -51,11 +50,11 @@ _STDLIB: dict[str, dict[str, Any]] = {
         "praetermitte": _rt([(None, _NH)], _NH),
     },
     "ordo_opera": {
-        "excerne": _rt([(None, _ORDO), (None, _RT)], _ORDO),
-        "transmuta": _rt([(None, _ORDO), (None, _RT)], _ORDO),
-        "redige": _rt([(None, _ORDO), (None, _RT), (None, _NUM)], _NUM),
-        "ordina": _rt([(None, _ORDO)], _ORDO),
-        "summa": _rt([(None, _ORDO)], _NUM),
+        "excerne": _rt([(None, _ORDO_ANY), (None, _RT)], _ORDO_ANY),
+        "transmuta": _rt([(None, _ORDO_ANY), (None, _RT)], _ORDO_ANY),
+        "redige": _rt([(None, _ORDO_ANY), (None, _RT), (None, _NUM)], _NUM),
+        "ordina": _rt([(None, _ORDO_ANY)], _ORDO_ANY),
+        "summa": _rt([(None, _ORDO_ANY)], _NUM),
     },
 }
 

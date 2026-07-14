@@ -296,6 +296,7 @@ gothica invoco meum.vg
 | `gothica lustro [file\|dir] [--serius]` | Linter (L-I–L-X) |
 | `gothica censura [file\|dir]` | Static checker — P-XV, typus, reditus, cross-module |
 | `gothica speculum <file>` | LSP JSONL diagnostics (lustro + censura) |
+| `gothica speculum --stdio` | NDJSON RPC transport for editor plugins |
 | `gothica codex [quaesitum]` | Search or list Codex documentation |
 | `gothica scribe-solum fabrica.vg` | Emit `.tf.json` only |
 | `gothica auguro fabrica.vg` | `terraform plan` |
@@ -369,14 +370,13 @@ vox-gothica/
 
 ## Status
 
-**v0.2.9 — Speculum (M5 continued)**
+**v0.2.10 — Typi (M5 continued)**
 
-| ✅ Shipped (M1–M5 partial) | 🚧 Planned (M5–M6) |
-|---------------------------|---------------------|
-| **TRitus + RELATIO + censura** | Full conformance coverage |
-| **Cross-module censura** | Strict ORDO covariance |
-| **`gothica speculum`** LSP JSONL stub | Full LSP server |
-| purga / lustro / codex | Go/Rust port |
+| ✅ Shipped | 🚧 Planned |
+|-----------|------------|
+| Strict `ORDO[T]` covariance + `*` wildcard for stdlib | Full LSP server |
+| `typi.py` shared type algebra | TABULA strict variance |
+| `speculum --stdio` NDJSON RPC + optional LSP shape | Go/Rust port |
 | HERETECH Immaterium page | |
 
 <p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>

@@ -8,6 +8,7 @@ from typing import Any
 from . import arbor as A
 from .modularis import ModRef, ModuleResolver, _rt as _rite_type
 from .parser import parse_source
+from . import typi as T
 
 PRIMITIVES = frozenset(
     {"NUMERUS", "FRACTIO", "SCRIPTUM", "VERITAS", "NIHIL", "RITUS", "HERESIS",
@@ -31,50 +32,15 @@ def _collect_vg(path: Path) -> list[Path]:
 
 
 def _tname(t: Any) -> str:
-    if isinstance(t, A.TName):
-        return t.name
-    if isinstance(t, A.TOrdo):
-        return f"ORDO[{_tname(t.inner)}]"
-    if isinstance(t, A.TTabula):
-        return f"TABULA[{_tname(t.k)}, {_tname(t.v)}]"
-    if isinstance(t, A.TRitus):
-        ps = ", ".join(
-            f"{n}: {_tname(pt)}" if n else _tname(pt)
-            for n, pt in t.params
-        )
-        return f"RITUS({ps}) -> {_tname(t.ret)}"
-    return "?"
+    return T.tname(t)
 
 
 def _type_eq(a: Any, b: Any) -> bool:
-    if a is None or b is None:
-        return a is b
-    if type(a) is not type(b):
-        return False
-    if isinstance(a, A.TName):
-        return a.name == b.name
-    if isinstance(a, A.TOrdo):
-        return _type_eq(a.inner, b.inner)
-    if isinstance(a, A.TTabula):
-        return _type_eq(a.k, b.k) and _type_eq(a.v, b.v)
-    if isinstance(a, A.TRitus):
-        if len(a.params) != len(b.params):
-            return False
-        for (_, pa), (_, pb) in zip(a.params, b.params):
-            if not _type_eq(pa, pb):
-                return False
-        return _type_eq(a.ret, b.ret)
-    return False
+    return T.type_eq(a, b)
 
 
 def _binds(got: Any, want: Any) -> bool:
-    if _type_eq(got, want):
-        return True
-    if isinstance(want, A.TOrdo) and isinstance(got, A.TOrdo):
-        return True
-    if isinstance(want, A.TName) and want.name == "RITUS":
-        return isinstance(got, A.TRitus)
-    return False
+    return T.binds(got, want)
 
 
 def _is_nihil_type(t: Any) -> bool:
@@ -387,7 +353,16 @@ class _Checker:
                         got = self._infer(arg, env)
                         if got is not None:
                             self._check_bind(got, pt, e.line, "offering")
-                return ft.ret
+                ret = ft.ret
+                if (
+                    isinstance(ret, A.TOrdo)
+                    and T.is_wildcard(ret.inner)
+                    and e.args
+                ):
+                    arg0 = self._infer(e.args[0], env)
+                    if isinstance(arg0, A.TOrdo):
+                        return arg0
+                return ret
             for a in e.args:
                 self._infer(a, env)
             self._infer(e.fn, env)
