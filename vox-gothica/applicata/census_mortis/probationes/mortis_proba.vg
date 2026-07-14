@@ -1,0 +1,23 @@
+AVE OMNISSIAH.
+LITANIA "mortis_proba".
+
+INVOCO adfirma_aequalia, adfirma_heresim EX "probatio"
+INVOCO "fons/mortis"
+
+RITUS proba_census_moderatus () -> NIHIL
+    DECLARO r : relatio_perditarum = mortis.census_post_pugnam(D, X, V, III)
+    adfirma_aequalia(r.mortui, L, "10% of 500 dead")
+    adfirma_aequalia(r.superstites, CDX, "410 survivors on the roll")
+FINIS RITUS
+
+RITUS proba_census_falsus () -> NIHIL
+    adfirma_heresim("census_falsus", RITUS () -> NIHIL
+        DECLARO _r : relatio_perditarum = mortis.census_post_pugnam(-I, X, V, III)
+    FINIS RITUS)
+FINIS RITUS
+
+RITUS proba_surmenage () -> NIHIL
+    adfirma_heresim("census_falsus", RITUS () -> NIHIL
+        DECLARO _r : relatio_perditarum = mortis.census_post_pugnam(C, L, L, L)
+    FINIS RITUS)
+FINIS RITUS

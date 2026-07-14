@@ -1,0 +1,7 @@
+[litania]
+via = "applicata/census_mortis"
+descriptio = "Census Mortis — post-battle casualty ledger for the Departmento Munitorum"
+gothica = ">=0.2"
+
+[canticum]
+principium = "principium.vg"

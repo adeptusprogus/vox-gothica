@@ -14,6 +14,7 @@ def main() -> int:
     run(["-m", "gothica", "proba", "--dir", "demo/probationes"])
     run(["-m", "gothica", "proba", "--dir", "applicata/cogitator_arithmetica/probationes"])
     run(["-m", "gothica", "proba", "--dir", "applicata/auspex_impietatis/probationes"])
+    run(["-m", "gothica", "proba", "--dir", "applicata/census_mortis/probationes"])
     run(["-m", "gothica", "proba", "--dir", "probationes/conformitas"])
     run(["-m", "gothica", "invoco", "exempla/salutatio.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/litania_numerorum.vg", "--silens"])
@@ -24,8 +25,11 @@ def main() -> int:
          "additio", "VII", "III"])
     run(["-m", "gothica", "invoco",
          "applicata/auspex_impietatis/principium.vg", "--silens", "OMNISSIAH"])
+    run(["-m", "gothica", "invoco",
+         "applicata/census_mortis/principium.vg", "--silens", "census", "D", "X", "V", "III"])
     run(["-m", "gothica", "censura", "applicata/cogitator_arithmetica", "--silens"])
     run(["-m", "gothica", "censura", "applicata/auspex_impietatis", "--silens"])
+    run(["-m", "gothica", "censura", "applicata/census_mortis", "--silens"])
     run(["-m", "gothica", "librarium", "quaere", "gothica", "--silens"])
     run(["-m", "gothica", "librarium", "inspice",
          "github.com/adeptusprogus/vox-gothica", "--silens"])

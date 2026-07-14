@@ -1,0 +1,66 @@
+AVE OMNISSIAH.
+LITANIA "mortis".
+
+INVOCO fractio_integra EX "mathematica"
+
+SCHEMA relatio_perditarum
+    initiales : NUMERUS
+    mortui : NUMERUS
+    mutilati : NUMERUS
+    deserteres : NUMERUS
+    superstites : NUMERUS
+    gradus_sanguinis : SCRIPTUM
+    nuntius : SCRIPTUM
+FINIS SCHEMA
+
+RITUS percentum_de_census(census : NUMERUS, percentum : NUMERUS) -> NUMERUS
+    REDDO fractio_integra(fractio(census) * fractio(percentum) / fractio(C))
+FINIS RITUS
+
+RITUS gradus_sanguinis(perdita_totalis : NUMERUS, initiales : NUMERUS) -> SCRIPTUM
+    SI initiales == N TUNC
+        REDDO "NULLUS — the regiment was already ash"
+    FINIS SI
+    DECLARO ratio : NUMERUS = fractio_integra(fractio(perdita_totalis) * fractio(C) / fractio(initiales))
+    SI ratio >= L TUNC
+        REDDO "EXTINCTIO — the banner is struck; only names remain on the memorial wall"
+    ALITER SI ratio >= XX TUNC
+        REDDO "CRITICALIS — the Commissariat requests fresh corpses and louder hymns"
+    ALITER SI ratio >= X TUNC
+        REDDO "GRAVIS — the Munitorum will deny this ever happened"
+    ALITER SI ratio >= V TUNC
+        REDDO "MODERATUS — acceptable losses, for a Tuesday"
+    ALITER
+        REDDO "LEVIS — the God-Emperor nods; refill the las-packs"
+    FINIS SI
+FINIS RITUS
+
+RITUS census_post_pugnam(
+    effectifs : NUMERUS,
+    percentum_mortis : NUMERUS,
+    percentum_mutilationis : NUMERUS,
+    percentum_desertionis : NUMERUS
+) -> relatio_perditarum
+    SI effectifs < N TUNC
+        PROCLAMO HERESIM "Negative muster-roll defies the Munitorum" GENERIS "census_falsus"
+    FINIS SI
+    DECLARO mortui : NUMERUS = percentum_de_census(effectifs, percentum_mortis)
+    DECLARO mutilati : NUMERUS = percentum_de_census(effectifs, percentum_mutilationis)
+    DECLARO deserteres : NUMERUS = percentum_de_census(effectifs, percentum_desertionis)
+    DECLARO perdita : NUMERUS = mortui + mutilati + deserteres
+    DECLARO superstites : NUMERUS = effectifs - perdita
+    SI superstites < N TUNC
+        PROCLAMO HERESIM "The arithmetic exceeds the muster-roll — heretical bookkeeping" GENERIS "census_falsus"
+    FINIS SI
+    DECLARO gradus : SCRIPTUM = gradus_sanguinis(perdita, effectifs)
+    DECLARO nuntius : SCRIPTUM = "Of {effectifs} souls committed, {mortui} fell, {mutilati} crawl, {deserteres} fled, {superstites} still stand."
+    REDDO relatio_perditarum {
+        initiales: effectifs,
+        mortui: mortui,
+        mutilati: mutilati,
+        deserteres: deserteres,
+        superstites: superstites,
+        gradus_sanguinis: gradus,
+        nuntius: nuntius
+    }
+FINIS RITUS

@@ -57,6 +57,27 @@ cd vox-gothica
 gothica invoco exempla/salutatio.vg
 gothica invoco exempla/litania_numerorum.vg
 gothica proba --dir demo/probationes
+make proba    # full CI suite
+```
+
+## Sample applications (Applicata Sancta)
+
+Grotesque WH40K utilities in `applicata/`:
+
+```bash
+# Sacred calculator
+gothica invoco applicata/cogitator_arithmetica/principium.vg -- additio VII III
+
+# Heresy scanner
+gothica invoco applicata/auspex_impietatis/principium.vg -- DCLXVI
+
+# Post-battle casualty ledger (500 troops, 10% dead, 5% maimed, 3% deserters)
+gothica invoco applicata/census_mortis/principium.vg -- census D X V III
+```
+
+Static check before run (automatic on `invoco`):
+```bash
+gothica censura applicata/cogitator_arithmetica
 ```
 
 ## Docker (for Fabricae)
@@ -69,5 +90,5 @@ docker run --rm -v "$PWD:/opus" vox-gothica auguro /opus/exempla/fabrica_interre
 ## Next steps
 
 - Read the [Language Overview](Language-Overview)
-- Browse [Exempla Sancta](https://adeptusprogus.github.io/vox-gothica/13-examples.html) in the Codex
-- See [CLI Reference](CLI-Reference) for all commands
+- Browse [Exempla Sancta](https://adeptusprogus.github.io/vox-gothica/13-examples.html) in the Codex (§7 = applicata)
+- See [CLI Reference](CLI-Reference) for `censura`, `speculum`, and all commands

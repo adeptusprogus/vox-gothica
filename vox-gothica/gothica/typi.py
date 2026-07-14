@@ -1,4 +1,8 @@
-"""Static type compatibility (M5 Censura)."""
+"""Static type compatibility (M5 Censura).
+
+``type_eq`` / ``binds`` / ``tname`` operate on type AST nodes (censura).
+Runtime value checking lives in ``interpres.Interpres._conforms``.
+"""
 from __future__ import annotations
 
 from typing import Any

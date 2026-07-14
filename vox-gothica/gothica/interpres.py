@@ -9,6 +9,7 @@ from .valores import (Cell, Env, Rite, NativeRite, SchemaType, Instance,
                       genus_valoris, INT64_MIN, INT64_MAX)
 from . import cultus
 from .parser import parse_source, SPECIES
+from . import typi as T
 
 
 class BreakSig(Exception):
@@ -668,39 +669,10 @@ class Interpres:
                          f"consecrated for {self._tname(t)}", node)
 
     def _tname(self, t):
-        if isinstance(t, A.TName):
-            return t.name
-        if isinstance(t, A.TOrdo):
-            return f"ORDO[{self._tname(t.inner)}]"
-        if isinstance(t, A.TTabula):
-            return f"TABULA[{self._tname(t.k)}, {self._tname(t.v)}]"
-        if isinstance(t, A.TRitus):
-            ps = ", ".join(
-                f"{n}: {self._tname(pt)}" if n else self._tname(pt)
-                for n, pt in t.params
-            )
-            return f"RITUS({ps}) -> {self._tname(t.ret)}"
-        return "?"
+        return T.tname(t)
 
     def _type_ast_eq(self, a, b) -> bool:
-        if a is None or b is None:
-            return a is b
-        if type(a) is not type(b):
-            return False
-        if isinstance(a, A.TName):
-            return a.name == b.name
-        if isinstance(a, A.TOrdo):
-            return self._type_ast_eq(a.inner, b.inner)
-        if isinstance(a, A.TTabula):
-            return self._type_ast_eq(a.k, b.k) and self._type_ast_eq(a.v, b.v)
-        if isinstance(a, A.TRitus):
-            if len(a.params) != len(b.params):
-                return False
-            for (_, pa), (_, pb) in zip(a.params, b.params):
-                if not self._type_ast_eq(pa, pb):
-                    return False
-            return self._type_ast_eq(a.ret, b.ret)
-        return False
+        return T.type_eq(a, b)
 
     def _rite_matches_type(self, rite: Rite, t: A.TRitus) -> bool:
         if len(rite.params) != len(t.params):

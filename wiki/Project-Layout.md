@@ -14,6 +14,7 @@ vox-gothica/
 ├── vox-gothica/           # Reference toolchain
 │   ├── gothica/           # Python package
 │   ├── exempla/           # Runnable doc examples
+│   ├── applicata/         # Sample apps (calculator, auspex, census mortis)
 │   ├── demo/              # Sample project with tests
 │   ├── install.sh         # macOS/Linux installer
 │   ├── Dockerfile         # gothica + terraform image

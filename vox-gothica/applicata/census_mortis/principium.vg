@@ -1,0 +1,39 @@
+AVE OMNISSIAH.
+CANTICUM "principium".
+
+INVOCO "fons/mortis" UT mortis
+INVOCO argumenta EX "imperium"
+INVOCO maiuscula EX "scriptura"
+
+DECLARO args : ORDO[SCRIPTUM] = argumenta()
+
+SI longitudo(args) < I TUNC
+    VOCIFERO "++ CENSUS MORTIS — Departmento Munitorum post-battle ledger ++"
+    VOCIFERO "Usage: gothica invoco principium.vg -- census <effectifs> <%mortis> <%mutilati> <%deserteres>"
+    VOCIFERO "Percents are NUMERUS (e.g. XX = 20%). Example: census D XX V III"
+FINIS SI
+
+SI longitudo(args) >= I TUNC
+    DECLARO ritus : SCRIPTUM = maiuscula(args[N])
+    SI ritus == "CENSUS" TUNC
+        SI longitudo(args) < V TUNC
+            VOCIFERO "CENSUS demands effectifs and three percent operands."
+        ALITER
+            TEMPTA
+                DECLARO r : relatio_perditarum = mortis.census_post_pugnam(
+                    numerus(args[I]),
+                    numerus(args[II]),
+                    numerus(args[III]),
+                    numerus(args[IV])
+                )
+                VOCIFERO "++ GRADUS SANGUINIS: {r.gradus_sanguinis} ++"
+                VOCIFERO "{r.nuntius}"
+                VOCIFERO "Muster-roll: {r.superstites}/{r.initiales} superstites."
+            SI HERESIS (delictum)
+                VOCIFERO "++ HERESY: [{delictum.genus}] {delictum.nuntius} ++"
+            FINIS TEMPTA
+        FINIS SI
+    ALITER
+        VOCIFERO "Unknown rite '{ritus}'. The Munitorum stamps your scroll INVALIDUS."
+    FINIS SI
+FINIS SI
