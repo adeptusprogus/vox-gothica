@@ -215,6 +215,12 @@ class Emitter:
             return f"ORDO[{self._type(ty.inner)}]"
         if isinstance(ty, A.TTabula):
             return f"TABULA[{self._type(ty.k)}, {self._type(ty.v)}]"
+        if isinstance(ty, A.TRitus):
+            ps = ", ".join(
+                f"{n}: {self._type(pt)}" if n else self._type(pt)
+                for n, pt in ty.params
+            )
+            return f"RITUS({ps}) -> {self._type(ty.ret)}"
         return "?"
 
     def _expr(self, e) -> str:

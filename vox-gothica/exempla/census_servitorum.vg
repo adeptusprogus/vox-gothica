@@ -8,7 +8,7 @@ SCHEMA servitor
     gradus : NUMERUS = I
 FINIS SCHEMA
 
-RITUS promotio_facta(minimus_gradus : NUMERUS) -> RITUS
+RITUS promotio_facta(minimus_gradus : NUMERUS) -> RITUS(s: servitor) -> VERITAS
     REDDO RITUS(s : servitor) -> VERITAS
         REDDO s.gradus >= minimus_gradus
     FINIS RITUS

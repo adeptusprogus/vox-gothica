@@ -9,8 +9,13 @@ from . import arbor as A
 from .parser import parse_source
 
 PRIMITIVES = frozenset(
-    {"NUMERUS", "FRACTIO", "SCRIPTUM", "VERITAS", "NIHIL", "RITUS", "HERESIS"}
+    {"NUMERUS", "FRACTIO", "SCRIPTUM", "VERITAS", "NIHIL", "RITUS", "HERESIS",
+     "RELATIO"}
 )
+
+
+def _rite_type(params, ret, line: int) -> A.TRitus:
+    return A.TRitus(line=line, params=list(params), ret=ret)
 
 
 @dataclass
@@ -35,6 +40,12 @@ def _tname(t: Any) -> str:
         return f"ORDO[{_tname(t.inner)}]"
     if isinstance(t, A.TTabula):
         return f"TABULA[{_tname(t.k)}, {_tname(t.v)}]"
+    if isinstance(t, A.TRitus):
+        ps = ", ".join(
+            f"{n}: {_tname(pt)}" if n else _tname(pt)
+            for n, pt in t.params
+        )
+        return f"RITUS({ps}) -> {_tname(t.ret)}"
     return "?"
 
 
@@ -49,6 +60,21 @@ def _type_eq(a: Any, b: Any) -> bool:
         return _type_eq(a.inner, b.inner)
     if isinstance(a, A.TTabula):
         return _type_eq(a.k, b.k) and _type_eq(a.v, b.v)
+    if isinstance(a, A.TRitus):
+        if len(a.params) != len(b.params):
+            return False
+        for (_, pa), (_, pb) in zip(a.params, b.params):
+            if not _type_eq(pa, pb):
+                return False
+        return _type_eq(a.ret, b.ret)
+    return False
+
+
+def _binds(got: Any, want: Any) -> bool:
+    if _type_eq(got, want):
+        return True
+    if isinstance(want, A.TName) and want.name == "RITUS":
+        return isinstance(got, A.TRitus)
     return False
 
 
@@ -60,16 +86,22 @@ class _Checker:
     def __init__(self, prog: A.Program):
         self.prog = prog
         self.schemas: set[str] = set()
+        self.rites: dict[str, A.TRitus] = {}
         self.hits: list[Finding] = []
 
     def run(self) -> list[Finding]:
         for st in self.prog.body:
             if isinstance(st, A.SchemaDef):
                 self.schemas.add(st.name)
+            if isinstance(st, A.RiteDef):
+                self.rites[st.name] = _rite_type(st.params, st.ret, st.line)
         for st in self.prog.body:
             self._check_type_ref(st)
-        self._walk_block(self.prog.body, env={})
+        self._walk_block(self.prog.body, env=self._hoist_env())
         return self.hits
+
+    def _hoist_env(self) -> dict[str, Any]:
+        return dict(self.rites)
 
     def _warn(self, code: str, genus: str, message: str, line: int) -> None:
         self.hits.append(Finding(code, genus, message, line, self.prog.archivum))
@@ -91,6 +123,11 @@ class _Checker:
             return self._resolve_type(t.inner, line)
         if isinstance(t, A.TTabula):
             return self._resolve_type(t.k, line) and self._resolve_type(t.v, line)
+        if isinstance(t, A.TRitus):
+            ok = True
+            for _, pt in t.params:
+                ok = self._resolve_type(pt, line) and ok
+            return self._resolve_type(t.ret, line) and ok
         return True
 
     def _check_type_ref(self, st) -> None:
@@ -152,7 +189,7 @@ class _Checker:
         ret_type: Any | None = None,
     ) -> None:
         for st in stmts:
-            self._walk_stmt(st, env=dict(env), ret_type=ret_type)
+            self._walk_stmt(st, env=env, ret_type=ret_type)
 
     def _walk_stmt(
         self,
@@ -222,7 +259,7 @@ class _Checker:
             self._resolve_type(st.type, st.line)
 
     def _check_bind(self, got: Any, want: Any, line: int, what: str) -> None:
-        if not _type_eq(got, want):
+        if not _binds(got, want):
             self._warn(
                 "C-I",
                 "typus_profanus",
@@ -242,7 +279,7 @@ class _Checker:
         if isinstance(e, A.Nihil):
             return A.TName(line=e.line, name="NIHIL")
         if isinstance(e, A.Ident):
-            return env.get(e.name)
+            return self.rites.get(e.name) or env.get(e.name)
         if isinstance(e, A.ListLit):
             if not e.items:
                 return None
@@ -289,6 +326,25 @@ class _Checker:
                 return A.TName(line=e.line, name="VERITAS")
             return None
         if isinstance(e, A.Call):
+            ft = None
+            if isinstance(e.fn, A.Ident):
+                ft = self.rites.get(e.fn.name) or env.get(e.fn.name)
+            if ft is None:
+                ft = self._infer(e.fn, env)
+            if isinstance(ft, A.TRitus):
+                if len(e.args) != len(ft.params):
+                    self._warn(
+                        "C-III",
+                        "argumentum_pravum",
+                        f"rite expects {len(ft.params)} offerings, got {len(e.args)}",
+                        e.line,
+                    )
+                else:
+                    for arg, (_, pt) in zip(e.args, ft.params):
+                        got = self._infer(arg, env)
+                        if got is not None:
+                            self._check_bind(got, pt, e.line, "offering")
+                return ft.ret
             for a in e.args:
                 self._infer(a, env)
             self._infer(e.fn, env)
@@ -323,7 +379,7 @@ class _Checker:
                     e.line,
                 )
             self._walk_block(e.body, env=local, ret_type=e.ret)
-            return A.TName(line=e.line, name="RITUS")
+            return _rite_type(e.params, e.ret, e.line)
         if isinstance(e, A.SchemaLit):
             if e.name in self.schemas:
                 return A.TName(line=e.line, name=e.name)

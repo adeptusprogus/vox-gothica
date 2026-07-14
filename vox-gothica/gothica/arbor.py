@@ -26,6 +26,12 @@ class TTabula(Node):
     v: Any = None
 
 
+@dataclass
+class TRitus(Node):
+    params: list = field(default_factory=list)   # [(name|None, type)]
+    ret: Any = None
+
+
 # ----- expressions -----
 @dataclass
 class Num(Node):

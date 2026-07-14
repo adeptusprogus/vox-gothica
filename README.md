@@ -368,16 +368,17 @@ vox-gothica/
 
 ## Status
 
-**v0.2.7 — Censura (M5 continued)**
+**v0.2.8 — Censura (M5 continued)**
 
 | ✅ Shipped (M1–M5 partial) | 🚧 Planned (M5–M6) |
 |---------------------------|---------------------|
 | Lexer, parser, interpreter | Full conformance coverage |
-| Modules, stdlib, test runner | Typed `RITUS(T)->U`, `RELATIO` type |
+| Modules, stdlib, test runner | Deeper static analysis |
 | Fabrica → Terraform JSON | Go/Rust port |
 | Plan / apply / destroy driver | Hosted registry UI (M6) |
 | M4 litaniae + librarium | LSP (`--profanum=json`) |
-| **purga / lustro / censura / codex** | Deeper static analysis |
+| **purga / lustro / censura / codex** | `RITUS(T)->U` call checking expansion |
+| **TRitus types + RELATIO** | |
 | HERETECH Immaterium page | |
 
 <p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>

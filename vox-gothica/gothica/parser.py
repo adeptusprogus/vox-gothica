@@ -5,7 +5,7 @@ from .heresiae import Profanatio
 from .lexicon import Lexer, Tok, StrPart
 
 PRIMITIVES = {"NUMERUS", "FRACTIO", "SCRIPTUM", "VERITAS", "NIHIL",
-              "RITUS", "HERESIS"}
+              "RITUS", "HERESIS", "RELATIO"}
 SPECIES = {"machina", "retiaculum", "horreum", "custodia", "nuntius",
            "codex", "res"}
 
@@ -470,6 +470,10 @@ class Parser:
 
     # ---------- types ----------
     def type_expr(self):
+        t = self.peek()
+        if t.kind == "KW" and t.value == "RITUS" and self.peek(1).kind == "OP" and self.peek(1).value == "(":
+            self.next()
+            return self._rite_type()
         t = self.next()
         if t.kind == "KW" and t.value in PRIMITIVES:
             return A.TName(line=t.line, name=t.value)
@@ -488,6 +492,30 @@ class Parser:
         if t.kind == "IDENT":
             return A.TName(line=t.line, name=t.value)
         self.err(f"Expected a type (found {t.value!r}).", t.line)
+
+    def _rite_type(self) -> A.TRitus:
+        line = self.peek().line
+        self.expect_op("(")
+        params = []
+        if not self.at_op(")"):
+            while True:
+                if (self.peek().kind == "IDENT" and self.peek(1).kind == "OP"
+                        and self.peek(1).value == ":"):
+                    pn = self.expect_ident()
+                    self.expect_op(":")
+                    pt = self.type_expr()
+                    params.append((pn, pt))
+                else:
+                    pt = self.type_expr()
+                    params.append((None, pt))
+                if self.at_op(","):
+                    self.next()
+                    continue
+                break
+        self.expect_op(")")
+        self.expect_op("->")
+        ret = self.type_expr()
+        return A.TRitus(line=line, params=params, ret=ret)
 
     # ---------- expressions ----------
     def expr(self):

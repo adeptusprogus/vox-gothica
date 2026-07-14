@@ -674,11 +674,51 @@ class Interpres:
             return f"ORDO[{self._tname(t.inner)}]"
         if isinstance(t, A.TTabula):
             return f"TABULA[{self._tname(t.k)}, {self._tname(t.v)}]"
+        if isinstance(t, A.TRitus):
+            ps = ", ".join(
+                f"{n}: {self._tname(pt)}" if n else self._tname(pt)
+                for n, pt in t.params
+            )
+            return f"RITUS({ps}) -> {self._tname(t.ret)}"
         return "?"
 
+    def _type_ast_eq(self, a, b) -> bool:
+        if a is None or b is None:
+            return a is b
+        if type(a) is not type(b):
+            return False
+        if isinstance(a, A.TName):
+            return a.name == b.name
+        if isinstance(a, A.TOrdo):
+            return self._type_ast_eq(a.inner, b.inner)
+        if isinstance(a, A.TTabula):
+            return self._type_ast_eq(a.k, b.k) and self._type_ast_eq(a.v, b.v)
+        if isinstance(a, A.TRitus):
+            if len(a.params) != len(b.params):
+                return False
+            for (_, pa), (_, pb) in zip(a.params, b.params):
+                if not self._type_ast_eq(pa, pb):
+                    return False
+            return self._type_ast_eq(a.ret, b.ret)
+        return False
+
+    def _rite_matches_type(self, rite: Rite, t: A.TRitus) -> bool:
+        if len(rite.params) != len(t.params):
+            return False
+        for (_, pt), (_, tt) in zip(rite.params, t.params):
+            if not self._type_ast_eq(pt, tt):
+                return False
+        return self._type_ast_eq(rite.ret, t.ret)
+
     def _conforms(self, v, t, node, allow_nihil=False):
+        if isinstance(t, A.TRitus):
+            if not isinstance(v, Rite):
+                return False
+            return self._rite_matches_type(v, t)
         if isinstance(v, (Relatio, RelatioRoot)):
-            return True     # deferred references ride as SCRIPTUM (docs 10 §9)
+            if isinstance(t, A.TName) and t.name in ("SCRIPTUM", "RELATIO"):
+                return True
+            return False
         if isinstance(t, A.TName):
             n = t.name
             if n == "NUMERUS":
@@ -693,6 +733,8 @@ class Interpres:
                 return v is None
             if n == "RITUS":
                 return isinstance(v, (Rite, NativeRite))
+            if n == "RELATIO":
+                return isinstance(v, (Relatio, RelatioRoot))
             if n == "HERESIS":
                 return isinstance(v, HeresyValue)
             # schema
