@@ -92,4 +92,8 @@ vox-gothica/       Reference toolchain (Python): gothica package, exempla, demo
 
 [GNU General Public License v3.0](LICENSE).
 
+## Contributing
+
+Pull requests welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for branch rules, testing requirements, and the sacred workflow around `main`.
+
 *The flesh is weak; the toolchain is versioned.*

@@ -1,0 +1,4 @@
+# Default reviewers for all changes.
+# @adeptusprogus members are auto-requested on every PR.
+
+* @adeptusprogus
