@@ -21,12 +21,13 @@ def main() -> int:
     run(["-m", "gothica", "invoco", "exempla/census_servitorum.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/auspex_lectio.vg", "--silens"])
     run(["-m", "gothica", "invoco",
-         "applicata/cogitator_arithmetica/principium.vg", "--silens",
-         "additio", "VII", "III"])
+         "applicata/cogitator_arithmetica/principium.vg",
+         "additio", "VII", "III", "--silens"])
     run(["-m", "gothica", "invoco",
-         "applicata/auspex_impietatis/principium.vg", "--silens", "OMNISSIAH"])
+         "applicata/auspex_impietatis/principium.vg", "OMNISSIAH", "--silens"])
     run(["-m", "gothica", "invoco",
-         "applicata/census_mortis/principium.vg", "--silens", "census", "D", "X", "V", "III"])
+         "applicata/census_mortis/principium.vg",
+         "census", "D", "X", "V", "III", "--silens"])
     run(["-m", "gothica", "censura", "applicata/cogitator_arithmetica", "--silens"])
     run(["-m", "gothica", "censura", "applicata/auspex_impietatis", "--silens"])
     run(["-m", "gothica", "censura", "applicata/census_mortis", "--silens"])
