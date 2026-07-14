@@ -586,9 +586,9 @@ class Parser:
 
     def primary(self):
         t = self.peek()
-        if t.kind == "INT":
+        if t.kind in ("INT", "ROMAN"):
             self.next()
-            return A.Num(line=t.line, v=t.value)
+            return A.Num(line=t.line, v=t.value, arabic=(t.kind == "INT"))
         if t.kind == "FLOAT":
             self.next()
             return A.Flo(line=t.line, v=t.value)

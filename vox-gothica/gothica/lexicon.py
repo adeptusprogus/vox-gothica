@@ -184,7 +184,7 @@ class Lexer:
                 return
             r = roman_to_int(w)
             if r is not None:
-                self.toks.append(Tok("INT", r, self.line))
+                self.toks.append(Tok("ROMAN", r, self.line))
                 return
             if w.isupper() and all(ch in "IVXLCDMN" for ch in w):
                 self.err("P-V", "numerus_barbarus",

@@ -293,7 +293,9 @@ gothica invoco meum.vg
 | `gothica librarium quaere <term>` | Search bundled/remote Librarium index |
 | `gothica librarium inspice <via>` | Show index metadata and git tags |
 | `gothica purga [file\|dir] [--proba] [--latinizat]` | Canonical 4-space formatter |
-| `gothica lustro [file\|dir] [--serius]` | Linter (L-I–L-X subset) |
+| `gothica lustro [file\|dir] [--serius]` | Linter (L-I–L-X) |
+| `gothica censura [file\|dir]` | Static checker — P-XV, typus, reditus (M5) |
+| `gothica codex [quaesitum]` | Search or list Codex documentation |
 | `gothica scribe-solum fabrica.vg` | Emit `.tf.json` only |
 | `gothica auguro fabrica.vg` | `terraform plan` |
 | `gothica consecro fabrica.vg` | `terraform apply` — type **FIAT** (`--fiat` to skip) |
@@ -366,16 +368,17 @@ vox-gothica/
 
 ## Status
 
-**v0.2.6 — Disciplina (M5 started)**
+**v0.2.7 — Censura (M5 continued)**
 
 | ✅ Shipped (M1–M5 partial) | 🚧 Planned (M5–M6) |
 |---------------------------|---------------------|
 | Lexer, parser, interpreter | Full conformance coverage |
-| Modules, stdlib, test runner | Static checker (M5) |
+| Modules, stdlib, test runner | Typed `RITUS(T)->U`, `RELATIO` type |
 | Fabrica → Terraform JSON | Go/Rust port |
 | Plan / apply / destroy driver | Hosted registry UI (M6) |
-| M4 litaniae + librarium + **purga/lustro** | Full lustro rules, LSP |
-| HERETECH chaos page | |
+| M4 litaniae + librarium | LSP (`--profanum=json`) |
+| **purga / lustro / censura / codex** | Deeper static analysis |
+| HERETECH Immaterium page | |
 
 <p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 

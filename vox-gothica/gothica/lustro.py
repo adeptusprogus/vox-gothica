@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from . import arbor as A
+from .lexicon import int_to_roman
 from .parser import parse_source
 
 
@@ -236,6 +237,14 @@ class _LintWalker:
     def _walk_expr(self, e, env: dict[str, int]) -> None:
         if e is None:
             return
+        if isinstance(e, A.Num) and e.arabic and not self.serius:
+            if 0 <= e.v <= 3999:
+                self._warn(
+                    "L-VII",
+                    f"Arabic literal {e.v} — prefer Roman "
+                    f"({int_to_roman(e.v) if e.v else 'N'})",
+                    e.line,
+                )
         if isinstance(e, A.BinOp):
             if e.op == "/":
                 denom = _const_num(e.r)

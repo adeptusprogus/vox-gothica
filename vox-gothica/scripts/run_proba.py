@@ -22,6 +22,17 @@ def main() -> int:
     run(["-m", "gothica", "purga", "exempla", "--silens"])
     run(["-m", "gothica", "purga", "exempla", "--proba", "--silens"])
     run(["-m", "gothica", "lustro", "exempla", "--silens"])
+    run(["-m", "gothica", "censura", "exempla", "--silens"])
+    run(["-m", "gothica", "codex", "lustro", "--silens"])
+    run(["-m", "gothica", "codex", "--silens"])
+    for bad in ("typus_pravus", "reditus_pravus", "typus_ignotus"):
+        r = subprocess.run(
+            [sys.executable, "-m", "gothica", "censura",
+             f"probationes/censura/{bad}.vg", "--silens"],
+            check=False,
+        )
+        if r.returncode != 1:
+            raise SystemExit(f"censura should reject {bad}.vg")
     run(["-m", "gothica", "scribe-solum", "exempla/fabrica_interretialis.vg", "--silens"])
     print("++ omnia sancta ++")
     return 0

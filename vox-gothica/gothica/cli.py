@@ -20,6 +20,8 @@ from .litaniae import librarium as lit_librarium
 from .litaniae.manifestum import load_manifest, manifest_path
 from . import purga as lit_purga
 from . import lustro as lit_lustro
+from . import censura as lit_censura
+from . import codex as lit_codex
 
 
 def _say(msg, args):
@@ -306,6 +308,45 @@ def cmd_lustro(args) -> int:
     return 1
 
 
+def cmd_censura(args) -> int:
+    target = args.path or "."
+    hits = lit_censura.censura(target)
+    if not hits:
+        _say("++ censura finds no profanation — the scrolls are sound ++", args)
+        return 0
+    for h in hits:
+        loc = f"{h.archivum}:{h.line}" if h.archivum else str(h.line)
+        _say(f"  ⚙ {h.code} [{h.genus}]  {loc} — {h.message}", args)
+    _say(f"++ censura: {len(hits)} finding(s) ++", args)
+    return 1
+
+
+def cmd_codex(args) -> int:
+    if args.quaesitum:
+        hits = lit_codex.quaere(args.quaesitum)
+        if not hits:
+            print(f"⚙ codex finds no mention of '{args.quaesitum}'",
+                  file=sys.stderr)
+            _say(f"++ see {lit_codex.CODEX_URL} ++", args)
+            return 1
+        _say(f"++ codex quaere — {len(hits)} hit(s) for "
+             f"'{args.quaesitum}' ++", args)
+        for h in hits:
+            _say(f"  {h.page}:{h.line}  {h.excerpt}", args)
+        return 0
+    pages = lit_codex.index_pages()
+    if not pages:
+        print("⚙ local codex not found — open the hosted sanctum",
+              file=sys.stderr)
+        _say(f"++ {lit_codex.CODEX_URL} ++", args)
+        return 2
+    _say("++ codex index ++", args)
+    for name, title in pages:
+        _say(f"  {name}  — {title}", args)
+    _say(f"++ hosted: {lit_codex.CODEX_URL} ++", args)
+    return 0
+
+
 def main(argv=None) -> int:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--silens", action="store_true")
@@ -397,7 +438,15 @@ def main(argv=None) -> int:
     p = sub.add_parser("lustro", help="lint .vg scrolls", parents=[common])
     p.add_argument("path", nargs="?", help="file or directory")
     p.add_argument("--serius", action="store_true",
-                   help="enable jocular rules (L-VII) and strict elige (L-X)")
+                   help="disable jocular L-VII; enable strict elige (L-X)")
+
+    p = sub.add_parser("censura", help="static-check .vg scrolls (M5)",
+                       parents=[common])
+    p.add_argument("path", nargs="?", help="file or directory")
+
+    p = sub.add_parser("codex", help="search or list Codex documentation",
+                       parents=[common])
+    p.add_argument("quaesitum", nargs="?", help="search term")
 
     sub.add_parser("versio", help="print version", parents=[common])
 
@@ -435,6 +484,10 @@ def main(argv=None) -> int:
             return cmd_purga(args)
         if args.cmd == "lustro":
             return cmd_lustro(args)
+        if args.cmd == "censura":
+            return cmd_censura(args)
+        if args.cmd == "codex":
+            return cmd_codex(args)
         if args.cmd == "versio":
             return cmd_versio(args)
     except Profanatio as p_:

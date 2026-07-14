@@ -30,6 +30,7 @@ class TTabula(Node):
 @dataclass
 class Num(Node):
     v: int = 0
+    arabic: bool = True   # False when lexed as canonical Roman numeral
 
 
 @dataclass
