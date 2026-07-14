@@ -1,0 +1,90 @@
+name: "Purgatio — Denuntiatio Heresis"
+description: Report a bug; expunge impurity from the Machine Spirit
+title: "[purgatio]: "
+labels:
+  - purgatio
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Codex Hereticus — bug report
+
+        Describe the **heresy** (unexpected behavior). A good report names the genus if known
+        (`divisio_nihili`, `circulus_impius`, …) and gives steps to reproduce.
+
+        Before filing: search [existing issues](https://github.com/adeptusprogus/vox-gothica/issues).
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Essentia
+      description: One sentence — what went wrong?
+      placeholder: "gothica invoco foo.vg raises divisio_nihili on valid input"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Ritus reproductionis
+      description: Exact steps to summon the heresy
+      placeholder: |
+        1. `pip install -e .` in vox-gothica/
+        2. `gothica invoco exempla/foo.vg`
+        3. Observe error …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expectatum (sanctum)
+      description: What should have happened per the Codex?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actum (hereticum)
+      description: What actually happened — full error output welcome
+      render: shell
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - macOS
+        - Linux
+        - Windows
+        - Other / unknown
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Gothica version
+      description: Output of `gothica versio` or commit hash
+      placeholder: "0.2.0 / main @ abc1234"
+
+  - type: textarea
+    id: canticle
+    attributes:
+      label: Canticle (minimal repro)
+      description: Smallest `.vg` snippet that triggers the bug, if any
+      render: shell
+
+  - type: checkboxes
+    id: ordines
+    attributes:
+      label: Offering checklist
+      options:
+        - label: I searched existing issues for duplicates
+          required: true
+        - label: I can reproduce on latest `main`
+          required: false

@@ -140,7 +140,14 @@ Legacy prefixes (`feat:`, `fix:`, `docs:`) are still understood by maintainers b
 git push origin <ordo>/<slug>
 ```
 
-Open a PR against `adeptusprogus/vox-gothica:main`. Fill in the PR template.
+Open a PR against `adeptusprogus/vox-gothica:main`. Choose a template:
+
+| Template | When |
+|----------|------|
+| **Rata Capitulare** | Normal PR — fix, feature, codex |
+| **Auspex — Reconnaissance** | Draft spike only (`auspex/<slug>`) |
+
+**Issues:** use the themed forms (**Purgatio**, **Cantica**, **Codex**, **Consultatio**) so maintainers know the ordo before you branch.
 
 **PR title:** same ordine as the branch (e.g. `cantica: add lustro linter stub`).
 

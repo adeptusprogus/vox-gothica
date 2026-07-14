@@ -1,0 +1,60 @@
+name: "Consultatio Magorum"
+description: Ask before a large change, crusade, or design decision
+title: "[consultatio]: "
+labels:
+  - consultatio
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Consultatio Magorum
+
+        Use this **before** opening a crusade or a large PR. Maintainers will answer
+        whether the proposed liturgy fits the Rite.
+
+        For bugs → **Purgatio**. For docs typos → **Codex**. For spikes → `auspex/` draft PR.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Quaestio
+      description: What do you need guidance on?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contextus
+      description: Background, links, prior art, related issues
+    validations:
+      required: true
+
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      options:
+        - Language design / syntax
+        - Fabrica / Terraform integration
+        - Litaniae / package system
+        - Toolchain / distribution (binaries, install)
+        - Governance / contributing
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: readiness
+    attributes:
+      label: After consultatio
+      options:
+        - label: I plan to open a PR if approved
+        - label: I plan a multi-PR crusade (will link this issue)
+        - label: Seeking direction only — no PR yet
+
+  - type: textarea
+    id: draft
+    attributes:
+      label: Draft proposal (optional)
+      description: Rough design, sketch, or branch name you intend to use

@@ -1,0 +1,70 @@
+name: "Cantica — Petitio Ritus"
+description: Propose a new language feature, stdlib module, or behavior change
+title: "[cantica]: "
+labels:
+  - cantica
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Petitio Cantici — feature request
+
+        New keywords, rites, stdlib, or semantics require a **consultatio** before code.
+        Large changes must align with the [Codex](https://adeptusprogus.github.io/vox-gothica/).
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Quaestio / dolor
+      description: What problem does this solve? Who chants this canticle and why?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Propositum
+      description: Proposed syntax or API — sketch in Vox Gothica if possible
+      render: shell
+      placeholder: |
+        RITUS novus_ritus (param: TYPUS) -> NIHIL
+          ...
+        FINIS
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativae consideratae
+      description: Other ways to achieve the same liturgy without changing the language
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - Stdlib only (no syntax change)
+        - Syntax / semantics change
+        - Fabrica / Terraform surface
+        - Litaniae / package manager
+        - Unsure — need consultatio
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: codex
+    attributes:
+      label: Codex impact
+      options:
+        - label: This would require a Codex chapter update
+        - label: This would add or change a heresy genus
+        - label: Willing to author the Codex amendment in the PR
+        - label: I read the relevant Codex chapters before filing
+
+  - type: textarea
+    id: exemplum
+    attributes:
+      label: Exemplum sanctum
+      description: Example program showing the feature in use (even if pseudocode)

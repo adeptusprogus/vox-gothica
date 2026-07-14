@@ -1,0 +1,71 @@
+name: "Codex — Emendatio Capituli"
+description: Fix or improve documentation, wiki, or README
+title: "[codex]: "
+labels:
+  - codex
+  - documentation
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Emendatio Codicis
+
+        Normative chapters (`docs/01`–`15`) are **law**. Informative fixes welcome;
+        normative changes may require a linked `cantica/` issue or PR.
+
+        Live Codex: https://adeptusprogus.github.io/vox-gothica/
+
+  - type: dropdown
+    id: location
+    attributes:
+      label: Locus
+      options:
+        - docs/ Codex chapter (GitHub Pages)
+        - wiki/
+        - README.md
+        - vox-gothica/README.md (toolchain)
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: chapter
+    attributes:
+      label: Capitulum / file
+      placeholder: "docs/06-heresies.html or wiki/Glossary.md"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Type
+      options:
+        - Typo / formatting
+        - Clarification (informative)
+        - Normative error (spec contradicts implementation)
+        - Missing section
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Textus praesens (wrong or unclear)
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Textus emendatus (suggested fix)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: offer
+    attributes:
+      label: Offering
+      options:
+        - label: I can open a PR myself (branch `codex/<slug>`)
+        - label: This is normative — needs maintainer review before merge

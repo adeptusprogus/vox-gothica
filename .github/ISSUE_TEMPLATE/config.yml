@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "📜 Codex Vox Gothica"
+    url: https://adeptusprogus.github.io/vox-gothica/
+    about: Normative language specification — read before a consultatio.
+  - name: "⚙ Ordo Branchium"
+    url: https://github.com/adeptusprogus/vox-gothica/blob/main/CONTRIBUTING.md#2-create-a-branch--ordo-branchium
+    about: Sacred branch naming for pull requests.
+  - name: "🔧 Contributing"
+    url: https://github.com/adeptusprogus/vox-gothica/blob/main/CONTRIBUTING.md
+    about: Full doctrine for offerings to the Rite.
