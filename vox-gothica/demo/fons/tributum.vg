@@ -1,0 +1,13 @@
+AVE OMNISSIAH.
+LITANIA "tributum".
+
+INVOCO fractio_integra EX "mathematica"
+
+SANCTUM pars_decima : FRACTIO = 0.1
+
+RITUS summa_tributi (census : NUMERUS) -> NUMERUS
+    SI census < N TUNC
+        PROCLAMO HERESIM "Negative census defies the Administratum" GENERIS "census_falsus"
+    FINIS SI
+    REDDO census + fractio_integra(fractio(census) * pars_decima)
+FINIS RITUS

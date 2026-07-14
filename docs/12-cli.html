@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Mandata · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class=' activa' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>12 — CLI Toolchain and Diagnostics</h1>
+<p>The binary is <code>gothica</code>. Every command honors <code>--profanum</code> (plain diagnostics, Arabic line numbers, machine-readable JSON on <code>--profanum=json</code> — for CI and editors) and <code>--silens</code> (results only, no liturgy).</p>
+<h2>1. Commands</h2>
+<h3>Execution</h3>
+<table>
+<tr><th>Command</th><th>Act</th></tr>
+<tr><td><code>gothica invoco [file.vg] [-- args…]</code></td><td>run a CANTICUM (default: manifest's <code>[canticum].principium</code>); <code>-- args</code> reach <code>imperium.argumenta()</code></td></tr>
+<tr><td><code>gothica invoco --profunditas N</code></td><td>override recursion limit</td></tr>
+<tr><td><code>gothica proba [--unus &lt;name&gt;] [--ordinatio fortuita]</code></td><td>run <code>probationes/*_proba.vg</code> (09-stdlib §12)</td></tr>
+</table>
+<h3>Infrastructure</h3>
+<table>
+<tr><th>Command</th><th>Act</th></tr>
+<tr><td><code>gothica auguro fabrica.vg</code></td><td>compile → <code>.tf.json</code> → <code>terraform plan</code>; <code>--exi-si-mutatio</code> for drift CI</td></tr>
+<tr><td><code>gothica consecro fabrica.vg</code></td><td>plan + apply; interactive confirmation word <strong>FIAT</strong>; <code>--fiat</code> to skip</td></tr>
+<tr><td><code>gothica exterminatus fabrica.vg</code></td><td>destroy; confirmation word <strong>EXTERMINATUS</strong>; no skip flag exists — solemnity is non-negotiable</td></tr>
+<tr><td><code>gothica scribe-solum fabrica.vg</code></td><td>emit <code>.tf.json</code> only (for review / GitOps pipelines)</td></tr>
+<tr><td><code>-postulatum k=v</code> (repeatable)</td><td>supply POSTULO values (10-fabrica §6)</td></tr>
+</table>
+<h3>Packages (08-litaniae §8)</h3>
+<p><code>initium [--litania]</code>, <code>adfero [via[@versio]]</code>, <code>expello via</code>, <code>renovo [via]</code>, <code>offero</code>, <code>librarium quaere|inspice …</code></p>
+<h3>Hygiene</h3>
+<table>
+<tr><th>Command</th><th>Act</th></tr>
+<tr><td>gothica purga [file</td><td>dir]</td><td>canonical formatter (4-space indent, one blank line between rites, aligned attr colons). <code>--latinizat</code>: rewrite raw Terraform attrs to aliases. Idempotent; <code>--proba</code> = check-only exit code</td></tr>
+<tr><td>gothica lustro [file</td><td>dir]</td><td>linter — see §3</td></tr>
+<tr><td><code>gothica codex [quaesitum]</code></td><td>open/search this documentation</td></tr>
+<tr><td><code>gothica versio</code></td><td>toolchain version</td></tr>
+</table>
+<h2>2. Diagnostic format (normative)</h2>
+<pre><code>
+⚙ HERESIS DETECTA — CANTICUM "litania_numerorum", VERSUS XLII
+  genus: divisio_nihili
+  The cogitator was commanded to divide C by naught.
+
+    XLII │     DECLARO quotiens : NUMERUS = summa / divisor
+         │                                        ^^^^^^^^^
+  vestigium:
+    ritus divide_sancte — VERSUS XLII
+    &lt;top&gt; — VERSUS LVII
+  ++ hint: guard the divisor — SI divisor == N TUNC ...
+</code></pre>
+<p>Components in order: banner (<code>⚙ &lt;ORDER&gt; DETECTA</code> where ORDER ∈ PROFANATIO / HERESIS / HERESIS MAIORIS / IRA MACHINAE / EXCOMMUNICATIO), unit + Roman <code>VERSUS</code>, genus, message, source excerpt with caret, stack trace (runtime only), hint (if the genus defines one — hints live in one table in the implementation, keyed by genus).</p>
+<p><code>--profanum=json</code> emits one JSON object per diagnostic: <code>{"order", "genus", "file", "line", "col", "message", "hint", "trace": []}</code> — Arabic numbers, no glyphs. Editor/LSP integration consumes this.</p>
+<h2>3. Lustro (linter) rules <em>(informative but versioned)</em></h2>
+<table>
+<tr><th>Code</th><th>Warns about</th></tr>
+<tr><td>L-I</td><td>unused binding (unless <code>_</code>-prefixed)</td></tr>
+<tr><td>L-II</td><td>shadowing an outer binding</td></tr>
+<tr><td>L-III</td><td>mutable <code>DECLARO</code> at LITANIA top level</td></tr>
+<tr><td>L-IV</td><td>unpinned <code>FOEDUS</code> (no <code>versio_foederis</code>)</td></tr>
+<tr><td>L-V</td><td><code>custodia</code> resource with <code>0.0.0.0/0</code> ingress</td></tr>
+<tr><td>L-VI</td><td>network read in FABRICA (<code>machina_cogitans.*</code>)</td></tr>
+<tr><td>L-VII</td><td>magic Arabic numerals where a Roman literal would be liturgically superior *(warning level: jocular; disabled by <code>--serius</code>)*</td></tr>
+<tr><td>L-VIII</td><td>constant-foldable guaranteed heresy (e.g. literal <code>/ N</code>)</td></tr>
+<tr><td>L-IX</td><td>missing <code>SEDES</code> in a FABRICA that declares more than V resources</td></tr>
+<tr><td>L-X</td><td><code>elige</code> with effectful arguments (both branches evaluate)</td></tr>
+</table>
+<h2>4. Exit codes</h2>
+<table>
+<tr><th>Code</th><th>Meaning</th></tr>
+<tr><td><code>0</code></td><td>the rite concluded; the Machine Spirit is appeased</td></tr>
+<tr><td><code>1</code> (I)</td><td>uncaught heresy (minor or major) / failed tests / plan drift with <code>--exi-si-mutatio</code></td></tr>
+<tr><td><code>2</code> (II)</td><td>profanation (parse/load)</td></tr>
+<tr><td><code>3</code> (III)</td><td>ira machinae (Terraform failure)</td></tr>
+<tr><td><code>4</code> (IV)</td><td>excommunicatio (package operations)</td></tr>
+</table>
+<h2>5. Environment</h2>
+<p><code>GOTHICA_NOTARIUS</code> (log level), <code>GOTHICA_POSTULATUM_&lt;NOMEN&gt;</code> (demand values), <code>GOTHICA_SILENS=I</code>, <code>GOTHICA_PROFANUM=I</code>, <code>NO_COLOR</code> honored. Config file: <code>~/.gothica/configuratio.toml</code> (librarium mirrors, default flags); project config: <code>[gothica]</code> table in <code>litania.toml</code>.</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

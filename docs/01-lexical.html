@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Lexica Sacra · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class=' activa' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>01 — Lexical Structure</h1>
+<h2>1. Source files</h2>
+<ul>
+<li>Encoding: UTF-8, no BOM. A BOM is <code>PROFANATIO</code>.</li>
+<li>Extension: <code>.vg</code>.</li>
+<li>Line endings: <code>\n</code> or <code>\r\n</code>; the lexer normalizes to <code>\n</code>.</li>
+<li>Maximum nesting depth of blocks: 256 (deeper is <code>PROFANATIO</code>, code P-VII).</li>
+</ul>
+<h2>2. Comments</h2>
+<p>Vox-transmission markers:</p>
+<pre><code>
+++ line comment, to end of line
+
++++
+block comment
+may nest: +++ inner +++ is allowed and tracked
++++
+</code></pre>
+<p>Block comments nest (unlike C). An unterminated block comment is <code>PROFANATIO</code> (P-II).</p>
+<h2>3. Identifiers</h2>
+<pre><code>
+ident = [a-z_][a-z0-9_]*
+</code></pre>
+<ul>
+<li>Lowercase ASCII only. Keywords are uppercase, so collision is impossible by construction.</li>
+<li>Convention <em>(informative)</em>: <code>snake_case</code>; schema names are nouns (<code>servitor</code>); rite names are verbs or nouns of action (<code>benedictio</code>, <code>divide_sancte</code>).</li>
+<li>Identifiers beginning with <code>_</code> are "unhallowed": the <code>lustro</code> linter does not report them as unused.</li>
+<li>Maximum length: 128 bytes (<code>PROFANATIO</code> P-III beyond).</li>
+</ul>
+<h2>4. Keywords (reserved, complete list)</h2>
+<pre><code>
+AVE  OMNISSIAH  CANTICUM  FABRICA  LITANIA  FINIS
+DECLARO  SANCTUM  FIAT
+RITUS  REDDO  SCHEMA
+SI  TUNC  ALITER  DUM  PRO  OMNI  IN  AGE  RUMPO  PERGO
+ET  VEL  NON  VERUM  FALSUM  NIHIL
+NUMERUS  FRACTIO  SCRIPTUM  VERITAS  ORDO  TABULA
+VOCIFERO  SUSURRO  AUSCULTO
+TEMPTA  HERESIS  HERESIM  PROCLAMO  DENIQUE
+INVOCO  EX  UT  PALAM  GENERIS
+EXSTRUATUR  FOEDUS  POSTULO  PROFITEOR  SCRUTOR  SEDES  ARCANUM
+</code></pre>
+<p>Reserved for future use (using them is <code>PROFANATIO</code> P-IV): <code>CHORUS</code> (concurrency), <code>CAPITULUM</code> (Terraform modules), <code>LEGATUS</code> (FFI), <code>MUTATIO</code> (pattern matching).</p>
+<h2>5. Literals</h2>
+<h3>5.1 Integer literals — <code>NUMERUS</code></h3>
+<p>Two interchangeable numeral systems, resolved <strong>in the lexer</strong> (the parser sees only <code>INT</code> tokens):</p>
+<ul>
+<li><strong>Arabic:</strong> <code>0</code>, <code>42</code>, <code>1_000_000</code> (underscores as separators, not leading/trailing/doubled).</li>
+<li><strong>Roman:</strong> uppercase, strict subtractive notation: <code>XLII</code> (42), <code>MMXXVI</code> (2026), <code>N</code> (zero — <em>nulla</em>).</li>
+</ul>
+<p>Rules for Roman literals (normative):</p>
+<ol>
+<li>Symbols: <code>I V X L C D M</code>, values 1/5/10/50/100/500/1000.</li>
+<li>Only canonical subtractive forms: <code>IV IX XL XC CD CM</code>. <code>IIII</code> is <code>PROFANATIO</code> (P-V, <em>"Non-canonical numeral. The Machine God abhors sloppiness."</em>).</li>
+<li>Range: <code>N</code> to <code>MMMCMXCIX</code> (0–3999). Larger integers must be Arabic. <em>(informative: vinculum notation is a rejected extension — the ambiguity isn't worth it.)</em></li>
+<li>A Roman literal is recognized only where an expression is expected and only if the token is a valid numeral; otherwise the same characters parse as... nothing, since identifiers are lowercase. There is no ambiguity by construction.</li>
+<li>Roman literals are non-negative; write <code>-XII</code> (unary minus applied to <code>XII</code>).</li>
+</ol>
+<h3>5.2 Float literals — <code>FRACTIO</code></h3>
+<p><code>3.14</code>, <code>0.5</code>, <code>2.0e10</code>, <code>1_000.25</code>. A leading or trailing bare dot is <code>PROFANATIO</code> (<code>.5</code> and <code>5.</code> are invalid — write <code>0.5</code>, <code>5.0</code>). There are no Roman floats; the Omnissiah did not sanction fractional numerals.</p>
+<h3>5.3 String literals — <code>SCRIPTUM</code></h3>
+<p>Double-quoted, single-line by default:</p>
+<pre><code>
+"Ave, Imperator!"
+"Line\nbreak, tab\t, quote\", backslash\\, unicode\u{2620}"
+</code></pre>
+<p>Escapes: <code>\n \t \r \" \\ \0 \u{XXXXXX}</code>. Unknown escapes are <code>PROFANATIO</code> (P-VI).</p>
+<p><strong>Interpolation.</strong> <code>{expr}</code> embeds any expression; <code>{{</code> and <code>}}</code> are literal braces:</p>
+<pre><code>
+"Servitor {nomen} holds rank {gradus + I}"
+</code></pre>
+<p>Interpolated expressions are parsed by the main grammar (a string literal token is split by the lexer into text parts and expression parts). The value is converted with the same rules as <code>scriptum(x)</code> (§02-types, §8).</p>
+<p><strong>Multi-line strings</strong> ("great chants"): triple-quoted, leading indentation stripped to the closing delimiter's column:</p>
+<pre><code>
+DECLARO litania : SCRIPTUM = """
+    Praise the Omnissiah,
+    from whom all knowledge flows.
+    """
+</code></pre>
+<h3>5.4 Boolean and null</h3>
+<p><code>VERUM</code>, <code>FALSUM</code> (type <code>VERITAS</code>); <code>NIHIL</code> (type <code>NIHIL</code>).</p>
+<h3>5.5 Collection literals</h3>
+<pre><code>
+[I, II, III]                          ++ ORDO
+{ "terra": M, "mars": D }             ++ TABULA
+servitor { nomen: "Kane", gradus: VII }   ++ SCHEMA instance (see 02-types)
+</code></pre>
+<p>Trailing commas are permitted in all bracketed literals.</p>
+<h2>6. File header</h2>
+<pre><code>
+AVE OMNISSIAH.                 ++ salutation: optional, at most once, must be first
+CANTICUM "salutatio".          ++ or FABRICA "..." or LITANIA "..."
+</code></pre>
+<ul>
+<li>The header statement is mandatory and must precede all other statements. A file without one is <code>PROFANATIO</code> (P-I, <em>"This scroll bears no seal."</em>).</li>
+<li>Header statements are the <strong>only</strong> statements terminated by <code>.</code> — a deliberate liturgical flourish and a cheap way to make the header visually distinct.</li>
+<li>The header name must match <code>[a-z_][a-z0-9_]*</code> inside the quotes; it names the unit in logs, diagnostics, and (for FABRICA) the Terraform workspace directory.</li>
+</ul>
+<h2>7. Statement termination and line continuation</h2>
+<ul>
+<li>Statements terminate at newline.</li>
+<li>A newline does <strong>not</strong> terminate a statement when it occurs: inside unclosed <code>(</code>, <code>[</code>, <code>{</code>; immediately after a binary operator (<code>+ - * / % == != &lt; &lt;= &gt; &gt;= ET VEL</code>), after <code>FIAT</code>, after a comma, or after <code>-&gt;</code>.</li>
+<li>There is no explicit statement separator; two statements on one line are <code>PROFANATIO</code> (P-VIII). One line, one utterance.</li>
+</ul>
+<h2>8. Significant tokens summary <em>(informative)</em></h2>
+<p><code>INT FLOAT STRING_PARTS IDENT</code> + keywords + operators <code>+ - * / % == != &lt; &lt;= &gt; &gt;= ( ) [ ] { } , : . -&gt;</code> + <code>NEWLINE</code>. Indentation is <strong>not</strong> significant; blocks are delimited by keywords (<code>... FINIS X</code>). The <code>purga</code> formatter enforces four-space indentation as canon, but the parser ignores it.</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

@@ -1,0 +1,16 @@
+AVE OMNISSIAH.
+LITANIA "tributum_proba".
+
+INVOCO adfirma_aequalia, adfirma_heresim EX "probatio"
+INVOCO "fons/tributum"
+
+RITUS proba_summa () -> NIHIL
+    adfirma_aequalia(tributum.summa_tributi(C), CX, "tithe of C is CX")
+FINIS RITUS
+
+RITUS proba_census_falsus () -> NIHIL
+    adfirma_heresim("census_falsus", RITUS () -> NIHIL
+        DECLARO _x : NUMERUS = tributum.summa_tributi(-I)
+    FINIS RITUS)
+FINIS RITUS
+

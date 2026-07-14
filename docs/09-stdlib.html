@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Cultus Machinae · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class=' activa' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>09 — The Machine-Cult (Standard Library)</h1>
+<p>Stdlib names always win import resolution (07-modules §3) and cannot be shadowed by litaniae. Every heresy a stdlib rite can raise is listed; raising anything not listed is non-conformant.</p>
+<h2>1. Built-ins (no import; the "common prayers")</h2>
+<table>
+<tr><th>Rite</th><th>Signature</th><th>Heresies</th></tr>
+<tr><td><code>longitudo(x)</code></td><td>ORDO/TABULA/SCRIPTUM → NUMERUS</td><td><code>typus_profanus</code></td></tr>
+<tr><td><code>series(a, b)</code></td><td>half-open integer range → ORDO[NUMERUS]</td><td>— (empty if a ≥ b)</td></tr>
+<tr><td><code>series_gradu(a, b, g)</code></td><td>stepped range; negative g counts down</td><td><code>argumentum_pravum</code> (g = 0)</td></tr>
+<tr><td><code>adde(ordo, x)</code></td><td>append → NIHIL</td><td><code>typus_profanus</code>, <code>sigillum_fractum</code></td></tr>
+<tr><td><code>insere(ordo, i, x)</code></td><td>insert at i (0 ≤ i ≤ len)</td><td><code>index_extra_fines</code></td></tr>
+<tr><td><code>remove(ordo, i)</code></td><td>remove &amp; return element</td><td><code>index_extra_fines</code></td></tr>
+<tr><td><code>pars(x, a, b)</code></td><td>slice of ORDO/SCRIPTUM, clamped <code>[a,b)</code></td><td><code>typus_profanus</code></td></tr>
+<tr><td><code>habet(tabula, k)</code></td><td>key present? → VERITAS</td><td><code>typus_profanus</code></td></tr>
+<tr><td><code>accipe(tabula, k, defectus)</code></td><td>get with default</td><td><code>typus_profanus</code></td></tr>
+<tr><td><code>dele(tabula, k)</code></td><td>remove key (silent if absent)</td><td><code>sigillum_fractum</code></td></tr>
+<tr><td><code>claves(t)</code> / <code>valores(t)</code></td><td>keys/values → ORDO</td><td>—</td></tr>
+<tr><td><code>exemplar(x)</code></td><td>deep copy (02-types §2)</td><td><code>conversio_impossibilis</code> (rites)</td></tr>
+<tr><td><code>sigilla(x)</code></td><td>deep-freeze, returns x (04-statements §1)</td><td><code>typus_profanus</code> (value types)</td></tr>
+<tr><td><code>idem(a, b)</code></td><td>reference identity → VERITAS</td><td>—</td></tr>
+<tr><td><code>elige(c, a, b)</code></td><td>c ? a : b — both evaluated</td><td><code>typus_profanus</code></td></tr>
+<tr><td><code>numerus / fractio / scriptum / veritas / romanum</code></td><td>conversions (02-types §8)</td><td><code>conversio_impossibilis</code>, <code>excessus_numeri</code></td></tr>
+<tr><td><code>genus_valoris(x)</code></td><td>type name → SCRIPTUM ("NUMERUS", schema name, …)</td><td>—</td></tr>
+<tr><td><code>dormi(ms)</code></td><td>sleep → NIHIL</td><td><code>argumentum_pravum</code> (negative)</td></tr>
+</table>
+<h2>2. <code>mathematica</code></h2>
+<p><code>radix</code> (sqrt; negative → <code>argumentum_pravum</code>), <code>potentia(b, e)</code>, <code>modulus</code> (abs), <code>minimus(ordo)</code> / <code>maximus(ordo)</code> (empty → <code>argumentum_pravum</code>), <code>rotundo(f)</code> (half-to-even), <code>solum(f)</code> / <code>tectum(f)</code> (floor/ceil), <code>fractio_integra(f) -&gt; NUMERUS</code> (NaN/inf → <code>conversio_impossibilis</code>), <code>sinus cosinus tangens logarithmus exponens</code>; constants <code>PI</code>, <code>E</code>, <code>NAN</code>, <code>INFINITUM</code>, <code>MAXIMUS_NUMERUS</code>, <code>MINIMUS_NUMERUS</code>.</p>
+<h2>3. <code>scriptura</code></h2>
+<p><code>maiuscula minuscula</code> (case), <code>divide(s, sep) -&gt; ORDO</code>, <code>coniunge(ordo, sep)</code>, <code>substitue(s, vetus, novum)</code>, <code>incipit desinit continet -&gt; VERITAS</code>, <code>purga</code> (trim), <code>imple_sinistra(s, n, c)</code> (pad), <code>inveni(s, sub) -&gt; NUMERUS</code> (−1 if absent — the one sanctioned −1, documented loudly), <code>mensura_octetorum</code>, <code>ad_octetos</code> / <code>ex_octetis</code> (UTF-8 ↔ ORDO[NUMERUS]; invalid bytes → <code>forma_prava</code>).</p>
+<h2>4. <code>ordo_opera</code> (list rites — all take a RITUS and return new lists)</h2>
+<p><code>transmuta(ordo, f)</code> (map), <code>excerne(ordo, f)</code> (filter — <em>"separate the pure"</em>), <code>redige(ordo, f, initium)</code> (fold), <code>ordina(ordo)</code> / <code>ordina_per(ordo, f)</code> (sort, stable; mixed types → <code>typus_profanus</code>), <code>inverte(ordo)</code>, <code>summa(ordo)</code>, <code>quisque(ordo, f)</code> / <code>ullus(ordo, f)</code> (all/any), <code>compone(a, b) -&gt; ORDO[ORDO]</code> (zip, stops at shorter).</p>
+<h2>5. <code>tempus</code></h2>
+<p><code>nunc()</code> (epoch ms), <code>nunc_monotonicum()</code> (monotonic ns, for timing), <code>data_scriptum(epocha_ms, forma)</code> / <code>data_lege(s, forma)</code> (strftime-style; bad input → <code>forma_prava</code>). All UTC; timezones are Warp phenomena deferred to litania <code>tempus_extra</code>.</p>
+<h2>6. <code>archivum</code> (files)</h2>
+<p><code>lege(via) -&gt; SCRIPTUM</code>, <code>lege_octetos(via) -&gt; ORDO[NUMERUS]</code>, <code>scribe(via, textum)</code>, <code>attinge(via, textum)</code> (append), <code>existit(via) -&gt; VERITAS</code>, <code>dele(via)</code>, <code>enumera(via) -&gt; ORDO[SCRIPTUM]</code> (dir listing), <code>crea_directorium(via)</code>. Heresies: <code>archivum_ignotum</code>, <code>archivum_clausum</code>. Paths use <code>/</code> on all hosts; the runtime translates.</p>
+<h2>7. <code>imperium</code> (process)</h2>
+<p><code>argumenta() -&gt; ORDO[SCRIPTUM]</code>, <code>ambitus(nomen) -&gt; SCRIPTUM</code> (unset env var → <code>clavis_ignota</code>; use <code>ambitus_aut(nomen, defectus)</code>), <code>exi(codex)</code>, <code>impera(mandatum : ORDO[SCRIPTUM]) -&gt; TABULA</code> (run subprocess; returns <code>{"codex": N, "exitus": "...", "error": "..."}</code>; spawn failure → <code>archivum_ignotum</code>).</p>
+<h2>8. <code>machina_cogitans</code> (HTTP)</h2>
+<p><code>pete(url) -&gt; SCRIPTUM</code> (GET), <code>pete_plene(petitio : TABULA) -&gt; TABULA</code> (full request: method/headers/body; returns status/headers/body), <code>mitte(url, corpus) -&gt; SCRIPTUM</code> (POST). Heresies: <code>retis_fractum</code> (transport), <code>responsum_pravum</code> (status ≥ 400; <code>.gradus</code> carries it). Timeout default XXX s, override via <code>pete_plene</code>.</p>
+<h2>9. <code>codex_json</code></h2>
+<p><code>lege(s) -&gt; valor</code> (JSON → TABULA/ORDO/values; <code>null</code> → NIHIL — quarantine rules 02-types §7 apply on use; malformed → <code>forma_prava</code>), <code>scribe(valor) -&gt; SCRIPTUM</code>, <code>scribe_ornatum(valor)</code> (pretty, 4-space). Schema instances serialize as objects; rites are <code>conversio_impossibilis</code>.</p>
+<h2>10. <code>fortuna</code> (randomness)</h2>
+<p><code>inter(a, b)</code> (uniform inclusive NUMERUS), <code>fractio_fortunae()</code> ([0,1)), <code>elige_sortem(ordo)</code> (random element; empty → <code>argumentum_pravum</code>), <code>misce(ordo)</code> (shuffle in place), <code>semen(n)</code> (seed; unseeded = OS entropy). <em>(The dice are blessed but honest.)</em></p>
+<h2>11. <code>notarius</code> (logging)</h2>
+<p><code>nota(gradus, nuntius)</code> with gradus ∈ <code>"debug" "info" "monitum" "error"</code>; convenience <code>debug/info/monitum/error(nuntius)</code>. Output to stderr: <code>[GRADUS] tempus — nuntius</code>. Level via <code>GOTHICA_NOTARIUS</code> env var or <code>notarius.gradus_pone(g)</code>. Structured JSON mode: <code>notarius.modus_json(VERUM)</code>.</p>
+<h2>12. <code>probatio</code> (testing — normative)</h2>
+<p>Test files: <code>probationes/*_proba.vg</code>, mode LITANIA, run by <code>gothica proba</code>. Every exported zero-argument rite whose name starts with <code>proba_</code> is a test case.</p>
+<pre><code>
+AVE OMNISSIAH.
+LITANIA "mathematica_proba".
+
+INVOCO adfirma, adfirma_aequalia, adfirma_heresim EX "probatio"
+INVOCO "fons/logistics"
+
+RITUS proba_summa_recta () -&gt; NIHIL
+    adfirma_aequalia(logistics.summa_tributi(C), CX, "tithe of C must be CX")
+FINIS RITUS
+
+RITUS proba_divisio_nihili_capta () -&gt; NIHIL
+    adfirma_heresim("divisio_nihili", RITUS () -&gt; NIHIL
+        DECLARO x : NUMERUS = I / N
+    FINIS RITUS)
+FINIS RITUS
+</code></pre>
+<p>API: <code>adfirma(cond, nuntius)</code>, <code>adfirma_aequalia(actus, exspectatus, nuntius)</code>, <code>adfirma_heresim(genus, ritus)</code> (fails unless the rite raises exactly that genus), <code>praetermitte(nuntius)</code> (skip). A failed assertion raises genus <code>probatio_fracta</code> (Minor, catchable — the runner catches it). Runner output: one line per test, <code>SANCTUS</code> (pass) / <code>HERETICUS</code> (fail) / <code>PRAETERMISSUS</code> (skip); summary and exit <code>I</code> on any failure. <code>gothica proba --unus proba_summa_recta</code> runs one; <code>--ordinatio fortuita</code> randomizes order (seed printed).</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

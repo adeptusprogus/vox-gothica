@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Codex Hereticus · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class=' activa' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>06 — The Codex Hereticus (Error Taxonomy)</h1>
+<p><strong>This chapter is fully normative.</strong> For every condition below, a conforming implementation must raise exactly the stated genus. This is the doctrinal answer to the question <em>"what counts as heresy?"</em></p>
+<h2>1. The four orders of failure</h2>
+<table>
+<tr><th>Order</th><th>Latin</th><th>When detected</th><th>Catchable by <code>TEMPTA</code>?</th><th>Process exit code</th></tr>
+<tr><td><strong>Profanation</strong></td><td><code>PROFANATIO</code></td><td>parse / load time, before any code runs</td><td>no — the scroll itself is corrupt</td><td><code>II</code></td></tr>
+<tr><td><strong>Minor Heresy</strong></td><td><code>HERESIS MINORIS</code></td><td>runtime</td><td><strong>yes</strong></td><td><code>I</code> (if uncaught)</td></tr>
+<tr><td><strong>Major Heresy</strong></td><td><code>HERESIS MAIORIS</code></td><td>runtime / consecration</td><td><strong>no</strong> — execution is condemned</td><td><code>I</code></td></tr>
+<tr><td><strong>Wrath of the Machine</strong></td><td><code>IRA MACHINAE</code></td><td>Terraform subprocess failure</td><td>no (occurs outside the interpreter)</td><td><code>III</code></td></tr>
+</table>
+<p>Package-management failures form a fifth, tool-level order, <strong>Excommunication</strong> (<code>EXCOMMUNICATIO</code>) — they occur in <code>gothica adfero</code>/<code>offero</code>, never during program execution. Exit code <code>IV</code>.</p>
+<p>Doctrine of catchability: a heresy is catchable iff the program could plausibly recover and the interpreter's own invariants are intact. Structural corruption (duplicate resource names, import cycles, exhausted memory) is never catchable — recovery code would run inside a lie.</p>
+<h2>2. Profanations (compile/load-time rejections)</h2>
+<p>Codes are Roman-numbered <code>P-*</code>. Message texts are canonical but implementations may append hints.</p>
+<table>
+<tr><th>Code</th><th>Name</th><th>Condition</th></tr>
+<tr><td>P-I</td><td><code>sigillum_deest</code></td><td>file lacks the <code>CANTICUM</code>/<code>FABRICA</code>/<code>LITANIA</code> header</td></tr>
+<tr><td>P-II</td><td><code>commentarium_apertum</code></td><td>unterminated block comment</td></tr>
+<tr><td>P-III</td><td><code>nomen_nimium</code></td><td>identifier over 128 bytes</td></tr>
+<tr><td>P-IV</td><td><code>verbum_reservatum</code></td><td>use of a reserved future keyword (<code>CHORUS</code>, <code>CAPITULUM</code>, <code>LEGATUS</code>, <code>MUTATIO</code>)</td></tr>
+<tr><td>P-V</td><td><code>numerus_barbarus</code></td><td>non-canonical Roman numeral (<code>IIII</code>, <code>VX</code>, lowercase)</td></tr>
+<tr><td>P-VI</td><td><code>fuga_ignota</code></td><td>unknown string escape</td></tr>
+<tr><td>P-VII</td><td><code>profunditas_scripti</code></td><td>block nesting deeper than 256</td></tr>
+<tr><td>P-VIII</td><td><code>sermones_confusi</code></td><td>two statements on one line</td></tr>
+<tr><td>P-IX</td><td><code>comparatio_catenata</code></td><td>chained comparison (<code>a &lt; b &lt; c</code>)</td></tr>
+<tr><td>P-X</td><td><code>receptaculum_pravum</code></td><td>invalid assignment target</td></tr>
+<tr><td>P-XI</td><td><code>declaratio_geminata</code></td><td>redeclaration in the same scope</td></tr>
+<tr><td>P-XII</td><td><code>ruptura_vaga</code></td><td><code>RUMPO</code>/<code>PERGO</code> outside a loop</td></tr>
+<tr><td>P-XIII</td><td><code>ritus_absconditus</code></td><td>rite declaration inside a block</td></tr>
+<tr><td>P-XIV</td><td><code>syntaxis_profana</code></td><td>any other syntax error (generic; message must name the expected token and quote the offending line)</td></tr>
+<tr><td>P-XV</td><td><code>typus_ignotus</code></td><td>annotation names a type/schema that does not exist</td></tr>
+<tr><td>P-XVI</td><td><code>modus_pravus</code></td><td>mode violation: <code>EXSTRUATUR</code>/<code>FOEDUS</code>/<code>POSTULO</code>/<code>PROFITEOR</code>/<code>SCRUTOR</code>/<code>SEDES</code> outside FABRICA; imperative top-level code in LITANIA; importing a CANTICUM/FABRICA; import not at top of file</td></tr>
+<tr><td>P-XVII</td><td><code>nomen_non_exportatum</code></td><td><code>EX</code> import of a name the module does not export</td></tr>
+<tr><td>P-XVIII</td><td><code>invocatio_vana</code></td><td>import path resolves to nothing (message lists near-misses)</td></tr>
+</table>
+<h2>3. Minor Heresies (runtime, catchable)</h2>
+<p>The <code>.genus</code> value is the string in the Name column.</p>
+<h3>3.1 Heresies of arithmetic</h3>
+<table>
+<tr><th>Genus</th><th>Condition</th></tr>
+<tr><td><code>divisio_nihili</code></td><td>integer <code>/</code> or <code>%</code> by zero</td></tr>
+<tr><td><code>excessus_numeri</code></td><td>NUMERUS overflow (any operation, incl. unary minus on −2⁶³); <code>romanum(n)</code> outside 0–3999</td></tr>
+</table>
+<h3>3.2 Heresies of type</h3>
+<table>
+<tr><th>Genus</th><th>Condition</th></tr>
+<tr><td><code>typus_profanus</code></td><td>value bound/passed/returned/compared against wrong declared type; non-VERITAS condition; operator applied to unsupported types; non-NUMERUS index; NIHIL passed where a value is expected</td></tr>
+<tr><td><code>conversio_impossibilis</code></td><td><code>numerus</code>/<code>fractio</code>/<code>veritas</code> conversion of an unparseable value; <code>exemplar</code> of a rite; <code>fractio_integra</code> of NaN/inf</td></tr>
+</table>
+<h3>3.3 Heresies of the vessel (variables, collections, schemas)</h3>
+<table>
+<tr><th>Genus</th><th>Condition</th></tr>
+<tr><td><code>vas_ignotum</code></td><td>reference to an undeclared name</td></tr>
+<tr><td><code>sanctum_violatum</code></td><td>assignment to a <code>SANCTUM</code> binding or a loop variable</td></tr>
+<tr><td><code>sigillum_fractum</code></td><td>mutation of a value frozen by <code>sigilla</code></td></tr>
+<tr><td><code>index_extra_fines</code></td><td>ORDO/SCRIPTUM index out of <code>[0, len)</code>, incl. any negative index</td></tr>
+<tr><td><code>clavis_ignota</code></td><td>TABULA read of an absent key</td></tr>
+<tr><td><code>campus_ignotus</code></td><td>access/instantiation of an unknown schema field</td></tr>
+<tr><td><code>campus_deest</code></td><td>instantiation missing a mandatory field</td></tr>
+<tr><td><code>mutatio_in_processione</code></td><td>collection mutated while being iterated</td></tr>
+<tr><td><code>nihil_tactum</code></td><td>any operation on NIHIL other than <code>== NIHIL</code></td></tr>
+</table>
+<h3>3.4 Heresies of the rite</h3>
+<table>
+<tr><th>Genus</th><th>Condition</th></tr>
+<tr><td><code>argumentum_pravum</code></td><td>wrong argument count; <code>series_gradu</code> with zero step; invalid built-in arguments</td></tr>
+<tr><td><code>reditus_deest</code></td><td>non-NIHIL rite falls off the end without <code>REDDO</code></td></tr>
+<tr><td><code>profunditas_excessa</code></td><td>recursion beyond the frame limit</td></tr>
+</table>
+<h3>3.5 Heresies of the world (I/O — raised by stdlib)</h3>
+<table>
+<tr><th>Genus</th><th>Condition</th></tr>
+<tr><td><code>archivum_ignotum</code></td><td>file not found / not readable</td></tr>
+<tr><td><code>archivum_clausum</code></td><td>permission denied, disk full, other OS I/O failure</td></tr>
+<tr><td><code>auscultatio_vana</code></td><td><code>AUSCULTO()</code> at EOF</td></tr>
+<tr><td><code>retis_fractum</code></td><td>network failure in <code>machina_cogitans</code> (DNS, timeout, connection refused)</td></tr>
+<tr><td><code>responsum_pravum</code></td><td>HTTP response with status ≥ 400 (the heresy object carries <code>.gradus</code> = status code)</td></tr>
+<tr><td><code>forma_prava</code></td><td>malformed input to a stdlib parser (<code>codex_json.lege</code>, date parsing, etc.)</td></tr>
+</table>
+<h3>3.6 Heresies of the fabrica and of the proving ground</h3>
+<table>
+<tr><th>Genus</th><th>Condition</th></tr>
+<tr><td><code>fabrica_impura</code></td><td>non-deterministic rite (<code>fortuna.*</code>, <code>tempus.nunc*</code>, <code>AUSCULTO</code>) called in FABRICA mode (10-fabrica §8)</td></tr>
+<tr><td><code>probatio_fracta</code></td><td>failed <code>probatio</code> assertion (09-stdlib §12); caught by the test runner</td></tr>
+</table>
+<h3>3.7 Declared heresy</h3>
+<table>
+<tr><th>Genus</th><th>Condition</th></tr>
+<tr><td><code>heresis_declarata</code></td><td><code>PROCLAMO HERESIM expr</code> — default genus</td></tr>
+<tr><td><em>(custom)</em></td><td><code>PROCLAMO HERESIM expr GENERIS "my_genus"</code> — user-defined genus, must match <code>[a-z_][a-z0-9_]*</code>; may not shadow a genus in this codex (<code>argumentum_pravum</code> if it does)</td></tr>
+</table>
+<h2>4. Major Heresies (runtime, NOT catchable)</h2>
+<table>
+<tr><th>Genus</th><th>Condition</th></tr>
+<tr><td><code>circulus_impius</code></td><td>module/litania import cycle</td></tr>
+<tr><td><code>nomen_geminum</code></td><td>two resources/data/outputs with the same evaluated name in one FABRICA</td></tr>
+<tr><td><code>fabrica_in_cantico</code></td><td><code>EXSTRUATUR</code> (or any infra statement) reached at runtime in CANTICUM mode — <em>(defense in depth: normally P-XVI catches this statically)</em></td></tr>
+<tr><td><code>memoria_exhausta</code></td><td>interpreter cannot allocate</td></tr>
+<tr><td><code>relatio_differata_tacta</code></td><td>a deferred Terraform reference used in imperative computation (10-fabrica §7)</td></tr>
+<tr><td><code>machina_corrupta</code></td><td>internal interpreter invariant broken — always a bug in <code>gothica</code> itself; message includes a plea to report it to the Librarium</td></tr>
+</table>
+<p>A Major Heresy unwinds the entire stack, ignoring <code>TEMPTA</code> guards; <code>DENIQUE</code> blocks <strong>do</strong> still run (resources must be released even as the ship burns).</p>
+<h2>5. The heresy object</h2>
+<p>Inside <code>SI HERESIS (delictum)</code>, <code>delictum</code> has type <code>HERESIS</code> with fields (all read-only; writing → <code>sanctum_violatum</code>):</p>
+<table>
+<tr><th>Field</th><th>Type</th><th>Meaning</th></tr>
+<tr><td><code>.genus</code></td><td>SCRIPTUM</td><td>genus from this codex</td></tr>
+<tr><td><code>.nuntius</code></td><td>SCRIPTUM</td><td>human message</td></tr>
+<tr><td><code>.versus</code></td><td>NUMERUS</td><td>line where raised</td></tr>
+<tr><td><code>.archivum</code></td><td>SCRIPTUM</td><td>file where raised</td></tr>
+<tr><td><code>.gradus</code></td><td>NUMERUS</td><td>extra numeric detail (HTTP status, index value, …) or <code>N</code></td></tr>
+<tr><td><code>.vestigium</code></td><td>ORDO[SCRIPTUM]</td><td>stack trace, innermost first</td></tr>
+<tr><td><code>.origo</code></td><td>HERESIS (nullable)</td><td>the suppressed heresy, when one heresy displaced another (§6 rules 3–4); <code>NIHIL</code> otherwise</td></tr>
+</table>
+<h2>6. TEMPTA semantics (normative)</h2>
+<pre><code>
+TEMPTA &lt;body&gt;
+SI HERESIS (nomen) &lt;catch&gt;        ++ optional
+DENIQUE &lt;finally&gt;                 ++ optional; at least one of the two must appear
+FINIS TEMPTA
+</code></pre>
+<ol>
+<li>Body runs. If no heresy: catch is skipped, finally runs.</li>
+<li>Minor heresy in body: body aborts at the raise point, catch runs with the heresy bound, then finally.</li>
+<li>Heresy in <strong>catch</strong>: finally runs, then the new heresy propagates (the original is attached as <code>.origo</code>, a nullable HERESIS field).</li>
+<li>Heresy in <strong>finally</strong>: it wins; anything propagating is attached as its <code>.origo</code>.</li>
+<li><code>REDDO</code>/<code>RUMPO</code>/<code>PERGO</code> inside body or catch: finally runs first, then the jump completes.</li>
+<li>Selective catching is by inspection — <code>SI delictum.genus == "clavis_ignota" TUNC ... ALITER PROCLAMO HERESIM delictum</code> re-raises. (<code>PROCLAMO HERESIM &lt;HERESIS value&gt;</code> re-raises preserving all fields; this is the only way a HERESIS value may be "constructed".)</li>
+<li>Major heresies ignore catch arms entirely (§4) but honor finally arms.</li>
+</ol>
+<h2>7. Raising</h2>
+<pre><code>
+PROCLAMO HERESIM "The divisor is naught!"
+PROCLAMO HERESIM "Auspex reading {v} exceeds doctrine" GENERIS "auspex_falsum"
+PROCLAMO HERESIM delictum        ++ re-raise a caught HERESIS
+</code></pre>
+<h2>8. Excommunications (package manager — tool level)</h2>
+<p>See 08-litaniae §8 for context. Never raised inside a running program.</p>
+<table>
+<tr><th>Code</th><th>Name</th><th>Condition</th></tr>
+<tr><td>X-I</td><td><code>litania_ignota</code></td><td>package not found at source</td></tr>
+<tr><td>X-II</td><td><code>versio_discors</code></td><td>no version satisfies all constraints</td></tr>
+<tr><td>X-III</td><td><code>signum_falsum</code></td><td>checksum mismatch against the lockfile — <strong>hard fail, never overridable by flag</strong></td></tr>
+<tr><td>X-IV</td><td><code>manifestum_pravum</code></td><td>malformed <code>litania.toml</code></td></tr>
+<tr><td>X-V</td><td><code>claustrum_discors</code></td><td>lockfile inconsistent with manifest (run <code>gothica adfero</code> to regenerate)</td></tr>
+<tr><td>X-VI</td><td><code>versio_excommunicata</code></td><td>resolved version is yanked from the registry; error names the advisory</td></tr>
+</table>
+<h2>9. Wrath of the Machine (infrastructure)</h2>
+<p>Raised when <code>terraform</code> exits non-zero during <code>auguro</code>/<code>consecro</code>/<code>exterminatus</code>. The banner is themed; <strong>Terraform's own stderr is reproduced verbatim below it, untruncated</strong> — obscuring the true error is itself heresy (of the toolsmith). Exit code <code>III</code>.</p>
+<h2>10. Canonical diagnostic format</h2>
+<p>See 12-cli-and-diagnostics §2. Every heresy/profanation surfaces with: banner, genus, file + Roman <code>VERSUS</code>, message, source excerpt with caret, hint (if the genus has one), and stack trace for runtime heresies.</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Instrumenta · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class=' activa' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>14 — Reference Implementation <em>(informative)</em></h1>
+<h2>1. Stack</h2>
+<p>Python 3.11+, Lark for parsing, <code>tomllib</code>/<code>tomli-w</code> for manifests, <code>click</code> for CLI, <code>terraform</code> as subprocess. A Go/Rust rewrite is sanctioned once the conformance suite exists — the suite, not the Python code, is the true reference.</p>
+<h2>2. Package layout</h2>
+<pre><code>
+gothica/
+  lexicon.py        ++ lexer add-ons: roman numerals, interpolation splitting,
+                    ++ line continuation; feeds Lark a clean token stream
+  gothica.lark      ++ grammar (11-grammar.md, mechanically kept in sync)
+  arbor.py          ++ AST node dataclasses, source spans on every node
+  resolutio.py      ++ post-parse: mode checks (P-XVI), schema/type name
+                    ++ resolution (P-XV), assignment-target checks (P-X),
+                    ++ RUMPO/PERGO placement (P-XII), rite hoisting
+  interpres/
+    machina.py      ++ tree-walker: environments, call frames, heresy unwinding
+    valores.py      ++ runtime values; deferred-reference kind (10-fabrica §7)
+    heresiae.py     ++ heresy objects, genus registry == 06-heresies tables
+  cultus/           ++ stdlib, one module per file; registry maps import names
+  fabrica/
+    aestimator.py   ++ consecration-time evaluation, purity enforcement
+    tabula_aliarum.toml  ++ alias table (10-fabrica §5)
+    emissor.py      ++ resource graph → tf.json (+ tfvars.json)
+    terraformum.py  ++ subprocess wrapper, confirmation words, output theming
+  litaniae/
+    manifestum.py   ++ litania.toml parsing/validation (X-IV)
+    solutio.py      ++ MVS resolver (08-litaniae §4)
+    claustrum.py    ++ lockfile read/write/verify (X-III, X-V)
+    fons_git.py     ++ git fetching, tag listing, archive hashing
+    librarium.py    ++ index lookup, mirrors, advisories
+  probatio/
+    cursor.py       ++ test discovery and runner (09-stdlib §12)
+  mandata/          ++ CLI commands, one file per verb
+  diagnostica.py    ++ formatting (12-cli §2), roman numerals, hints table,
+                    ++ --profanum plain/json renderers
+</code></pre>
+<h2>3. Key implementation notes</h2>
+<ul>
+<li><strong>Environments:</strong> chained dicts; captured variables promoted to heap cells at closure creation (05-rites §4). Loop variables freshly bound per iteration.</li>
+<li><strong>Heresy unwinding:</strong> Python exceptions carrying the HERESIS object; Major heresies use a distinct exception class that <code>TEMPTA</code> handlers re-raise after running <code>DENIQUE</code> blocks.</li>
+<li><strong>Deferred references:</strong> a <code>Relatio</code> runtime value wrapping a Terraform address path. <code>__getattr__</code>-style access extends the path; every other operation raises <code>relatio_differata_tacta</code>. The emissor serializes it to <code>${...}</code>.</li>
+<li><strong>Determinism in FABRICA:</strong> the stdlib registry has a per-mode capability mask; <code>fortuna</code>/<code>tempus.nunc*</code>/<code>AUSCULTO</code> are masked in FABRICA (10-fabrica §8).</li>
+<li><strong>Interpolation:</strong> the lexer splits STRING into parts; each expression part is parsed by the same grammar entry <code>expr</code> — no separate mini-language to maintain.</li>
+<li><strong>Conformance suite:</strong> <code>probationes/conformitas/</code> — every numbered claim in 01–10 gets a passing and a failing case; every heresy genus gets a test asserting its exact genus. CI runs the suite plus <code>gothica proba</code> on all doc examples extracted from 13-examples.md (doc-tested, so docs cannot rot).</li>
+</ul>
+<h2>4. Milestones</h2>
+<table>
+<tr><th>#</th><th>Name</th><th>Scope</th><th>Exit criterion</th></tr>
+<tr><td>M1</td><td>Prima Verba</td><td>lexer, parser, resolutio, interpreter core (01–05 minus TEMPTA/SCHEMA)</td><td>examples 13.1–13.2 run</td></tr>
+<tr><td>M2</td><td>Disciplina</td><td>TEMPTA + full Codex Hereticus, SCHEMA, closures, modules (07), core stdlib</td><td>examples 13.3–13.4 run; heresy genus conformance green</td></tr>
+<tr><td>M3</td><td>Consecratio</td><td>FABRICA end-to-end: emitter, terraform wrapper, POSTULO/ARCANUM, deferred refs, purity mask</td><td>example 13.5 plans &amp; applies on localstack</td></tr>
+<tr><td>M4</td><td>Communio</td><td>litaniae: manifest, MVS, lockfile, git fetch, <code>adfero/expello/renovo/offero</code>, probatio runner, conformance suite</td><td>example 13.6 publishes to a test librarium; suite green</td></tr>
+<tr><td>M5</td><td>Censura</td><td>static type checker (annotations already suffice), typed <code>RITUS(T)-&gt;U</code>, <code>RELATIO</code> type</td><td>checker finds P-XV/typus at compile time on suite</td></tr>
+<tr><td>M6</td><td>Librarium Sanctum</td><td>hosted index UI/API, doc site, LSP (<code>--profanum=json</code> transport), syntax highlighting</td><td>ecosystem bootstrapped</td></tr>
+</table>
+<h2>5. Deliberate exclusions (v0.2 doctrine)</h2>
+<p>No concurrency (<code>CHORUS</code> reserved), no FFI (<code>LEGATUS</code> reserved), no pattern matching (<code>MUTATIO</code> reserved), no operator overloading (ever), no inheritance (ever), no macro system (ever — code that writes liturgy is how Chaos gets in), no Terraform <code>CAPITULUM</code> passthrough modules (helper litaniae cover the need in pure Vox Gothica).</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

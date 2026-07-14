@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Glossarium · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class=' activa' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>15 — Glossary of Keywords and Terms</h1>
+<h2>Keywords</h2>
+<table>
+<tr><th>Keyword</th><th>Latin</th><th>Role</th></tr>
+<tr><td><code>AVE OMNISSIAH</code></td><td>hail the Omnissiah</td><td>salutation</td></tr>
+<tr><td><code>CANTICUM</code></td><td>canticle</td><td>program header</td></tr>
+<tr><td><code>FABRICA</code></td><td>workshop</td><td>infrastructure header</td></tr>
+<tr><td><code>LITANIA</code></td><td>litany</td><td>library module header; also: a package</td></tr>
+<tr><td><code>FINIS</code></td><td>end</td><td>block terminator</td></tr>
+<tr><td><code>DECLARO</code></td><td>I declare</td><td>mutable declaration</td></tr>
+<tr><td><code>SANCTUM</code></td><td>sacred</td><td>immutable declaration; purity mark on rites</td></tr>
+<tr><td><code>FIAT</code></td><td>let it become</td><td>assignment</td></tr>
+<tr><td><code>SCHEMA</code></td><td>form, figure</td><td>record type</td></tr>
+<tr><td><code>RITUS</code></td><td>rite</td><td>function; the callable type</td></tr>
+<tr><td><code>REDDO</code></td><td>I give back</td><td>return</td></tr>
+<tr><td><code>SI / TUNC / ALITER</code></td><td>if / then / otherwise</td><td>conditional</td></tr>
+<tr><td><code>DUM / AGE</code></td><td>while / act!</td><td>while loop</td></tr>
+<tr><td><code>PRO OMNI … IN</code></td><td>for each … in</td><td>for-each</td></tr>
+<tr><td><code>RUMPO / PERGO</code></td><td>I break / I proceed</td><td>break / continue</td></tr>
+<tr><td><code>ET / VEL / NON</code></td><td>and / or / not</td><td>boolean ops</td></tr>
+<tr><td><code>VERUM / FALSUM</code></td><td>true / false</td><td>VERITAS literals</td></tr>
+<tr><td><code>NIHIL</code></td><td>nothing</td><td>null value &amp; void type</td></tr>
+<tr><td><code>NUMERUS</code></td><td>number</td><td>integer</td></tr>
+<tr><td><code>FRACTIO</code></td><td>fraction</td><td>float</td></tr>
+<tr><td><code>SCRIPTUM</code></td><td>writing</td><td>string</td></tr>
+<tr><td><code>VERITAS</code></td><td>truth</td><td>boolean</td></tr>
+<tr><td><code>ORDO</code></td><td>rank, order</td><td>list</td></tr>
+<tr><td><code>TABULA</code></td><td>tablet</td><td>map</td></tr>
+<tr><td><code>HERESIS</code></td><td>heresy (nom.)</td><td>error type; catch clause</td></tr>
+<tr><td><code>HERESIM</code></td><td>heresy (acc.)</td><td>object of <code>PROCLAMO</code> — the one declension joke this language permits itself</td></tr>
+<tr><td><code>VOCIFERO</code></td><td>I cry out</td><td>print</td></tr>
+<tr><td><code>SUSURRO</code></td><td>I whisper</td><td>stderr</td></tr>
+<tr><td><code>AUSCULTO</code></td><td>I listen</td><td>read stdin</td></tr>
+<tr><td><code>TEMPTA</code></td><td>I attempt</td><td>try</td></tr>
+<tr><td><code>PROCLAMO</code></td><td>I proclaim</td><td>raise</td></tr>
+<tr><td><code>GENERIS</code></td><td>of the kind</td><td>custom heresy genus</td></tr>
+<tr><td><code>DENIQUE</code></td><td>finally</td><td>finally</td></tr>
+<tr><td><code>INVOCO</code></td><td>I invoke</td><td>import</td></tr>
+<tr><td><code>EX</code></td><td>from</td><td>named import</td></tr>
+<tr><td><code>UT</code></td><td>as</td><td>import alias</td></tr>
+<tr><td><code>PALAM</code></td><td>openly</td><td>explicit export marker</td></tr>
+<tr><td><code>EXSTRUATUR</code></td><td>let it be constructed</td><td>resource</td></tr>
+<tr><td><code>FOEDUS</code></td><td>covenant</td><td>provider</td></tr>
+<tr><td><code>SEDES</code></td><td>seat</td><td>state backend</td></tr>
+<tr><td><code>POSTULO</code></td><td>I demand</td><td>input variable</td></tr>
+<tr><td><code>PROFITEOR</code></td><td>I proclaim publicly</td><td>output</td></tr>
+<tr><td><code>SCRUTOR</code></td><td>I examine</td><td>data source</td></tr>
+<tr><td><code>ARCANUM</code></td><td>secret</td><td>sensitive marker</td></tr>
+<tr><td><code>N</code></td><td>nulla</td><td>Roman zero</td></tr>
+<tr><td>reserved: <code>CHORUS</code></td><td>choir</td><td>future concurrency</td></tr>
+<tr><td>reserved: <code>CAPITULUM</code></td><td>chapter</td><td>future TF modules</td></tr>
+<tr><td>reserved: <code>LEGATUS</code></td><td>envoy</td><td>future FFI</td></tr>
+<tr><td>reserved: <code>MUTATIO</code></td><td>change</td><td>future pattern matching</td></tr>
+<tr><td>reserved: <code>RELATIO</code></td><td>reference</td><td>future deferred-ref type</td></tr>
+</table>
+<h2>Toolchain &amp; ecosystem terms</h2>
+<table>
+<tr><th>Term</th><th>Latin</th><th>Meaning</th></tr>
+<tr><td>gothica</td><td>—</td><td>the toolchain binary</td></tr>
+<tr><td>invoco / auguro / consecro / exterminatus</td><td>invoke / augur / consecrate / —</td><td>run / plan / apply / destroy</td></tr>
+<tr><td>purga / lustro / proba</td><td>cleanse / lustrate / test</td><td>format / lint / test</td></tr>
+<tr><td>initium / adfero / expello / renovo / offero</td><td>beginning / I bring / I expel / I renew / I offer</td><td>scaffold / install / remove / upgrade / publish</td></tr>
+<tr><td>litania.toml / litania.claustrum</td><td>— / enclosure</td><td>manifest / lockfile</td></tr>
+<tr><td>via</td><td>road</td><td>import path / package identity</td></tr>
+<tr><td>requirit</td><td>it requires</td><td>dependency table</td></tr>
+<tr><td>substitutio</td><td>substitution</td><td>local path override</td></tr>
+<tr><td>Librarium (Sanctum)</td><td>library</td><td>package index/registry</td></tr>
+<tr><td>excommunicatio</td><td>excommunication</td><td>package-level failure; yanked version</td></tr>
+<tr><td>signum</td><td>seal</td><td>checksum</td></tr>
+<tr><td>species</td><td>appearance, kind</td><td>resource category (<code>machina</code>, <code>retiaculum</code>, <code>horreum</code>, <code>custodia</code>, <code>nuntius</code>, <code>codex</code>, <code>res</code>)</td></tr>
+<tr><td>scrutinium</td><td>examination</td><td>data-source reference root</td></tr>
+<tr><td>postulata</td><td>demands</td><td>variable values file</td></tr>
+<tr><td>principium</td><td>beginning</td><td>entry-point rite / file</td></tr>
+<tr><td>probationes</td><td>proofs</td><td>test directory</td></tr>
+<tr><td>vestigium</td><td>footprint</td><td>stack trace</td></tr>
+<tr><td>profanum</td><td>profane</td><td>untheming flag for CI</td></tr>
+<tr><td>Codex Hereticus</td><td>—</td><td>the error taxonomy (06-heresies)</td></tr>
+</table>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

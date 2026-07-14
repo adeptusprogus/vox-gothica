@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Ritus · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class=' activa' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>05 — Rites (Functions)</h1>
+<h2>1. Declaration</h2>
+<pre><code>
+RITUS benedictio (nomen : SCRIPTUM, gradus : NUMERUS) -&gt; SCRIPTUM
+    SI gradus &gt; V TUNC
+        REDDO "Magos {nomen}"
+    FINIS SI
+    REDDO "Adept {nomen}"
+FINIS RITUS
+</code></pre>
+<ul>
+<li>Parameter types and return type are mandatory. <code>-&gt; NIHIL</code> rites may omit <code>REDDO</code> or use bare <code>REDDO</code>.</li>
+<li>A non-NIHIL rite whose execution reaches <code>FINIS RITUS</code> without <code>REDDO</code> raises <code>reditus_deest</code> ("the return is missing") at that moment. <em>(Runtime in v0.2; the M5 static checker will make it compile-time.)</em></li>
+<li>Returned value is type-checked against the declared return type (<code>typus_profanus</code>).</li>
+<li>Rite declarations are allowed at top level and <strong>inside other rites</strong> (local rites). Not inside blocks (<code>SI</code>/loops) — <code>PROFANATIO</code> (P-XIII).</li>
+<li>No overloading, no varargs, no default parameter values, no keyword arguments (03-expressions §5).</li>
+</ul>
+<h2>2. Rites as values</h2>
+<p>Rites are first-class:</p>
+<pre><code>
+DECLARO f : RITUS = benedictio
+VOCIFERO f("Kane", VII)
+
+RITUS applica (opus : RITUS, x : NUMERUS) -&gt; NUMERUS
+    REDDO opus(x)
+FINIS RITUS
+</code></pre>
+<p>The <code>RITUS</code> type is <strong>opaque</strong> in v0.2: any rite value fits any <code>RITUS</code> slot; arity/type errors surface at call time (<code>argumentum_pravum</code> / <code>typus_profanus</code>). Parameterized rite types <code>RITUS(NUMERUS) -&gt; NUMERUS</code> are reserved syntax for M5.</p>
+<h2>3. Anonymous rites</h2>
+<p>A rite expression without a name:</p>
+<pre><code>
+DECLARO duplica : RITUS = RITUS (x : NUMERUS) -&gt; NUMERUS
+    REDDO x * II
+FINIS RITUS
+
+DECLARO quadrata : ORDO[NUMERUS] =
+    transmuta(series(I, VI), RITUS (x : NUMERUS) -&gt; NUMERUS
+        REDDO x * x
+    FINIS RITUS)
+</code></pre>
+<p>Anonymous rites are ordinary expressions (grammar: <code>rite_expr</code>) and may appear anywhere an expression may. There is no one-line lambda sugar in v0.2 <em>(considered and deferred: a second function syntax doubles every tutorial)</em>.</p>
+<h2>4. Closures (normative)</h2>
+<ul>
+<li>A rite captures its lexical environment <strong>by reference</strong>: it sees later mutations of captured <code>DECLARO</code> variables.</li>
+<li>Loop variables are rebound each iteration (04-statements §3), so the classic bug is defined away:</li>
+</ul>
+<pre><code>
+DECLARO opera : ORDO[RITUS] = []
+PRO OMNI i IN series(N, III) AGE
+    adde(opera, RITUS () -&gt; NUMERUS
+        REDDO i          ++ captures THIS iteration's i
+    FINIS RITUS)
+FINIS PRO
+++ opera[N]() == N, opera[I]() == I, opera[II]() == II
+</code></pre>
+<ul>
+<li>Captured variables live as long as any capturing rite (the implementation must heap-allocate captured cells).</li>
+</ul>
+<h2>5. Recursion</h2>
+<ul>
+<li>Direct and mutual recursion are permitted. Forward references work at top level: all top-level rite names in a module are hoisted before top-level code runs.</li>
+<li>Default recursion depth: <code>MMMM</code> (4000) frames; exceeding it raises <code>profunditas_excessa</code> (catchable). Configurable: <code>gothica invoco --profunditas 10000</code>.</li>
+<li>No tail-call elimination in v0.2 (documented so programs don't depend on it accidentally).</li>
+</ul>
+<h2>6. Purity annotation <em>(informative)</em></h2>
+<p><code>SANCTUM RITUS nomen (...)</code> declares intent of purity; <code>lustro</code> warns if the body performs I/O or mutates captured state. The interpreter does not enforce it in v0.2. Pure rites are candidates for consecration-time constant folding in FABRICA mode.</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

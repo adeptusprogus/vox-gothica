@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Typi et Valores · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class=' activa' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>02 — Types and Values</h1>
+<p>Vox Gothica is <strong>statically declared, dynamically checked</strong> in v0.2: every binding carries a type annotation; the interpreter enforces it at every assignment, argument pass, return, and index. A full static checker is milestone M5 (<code>14-implementation.md</code>); the annotations already make it possible without new syntax.</p>
+<h2>1. The types</h2>
+<table>
+<tr><th>Type</th><th>Category</th><th>Description</th></tr>
+<tr><td><code>NUMERUS</code></td><td>value</td><td>64-bit signed integer</td></tr>
+<tr><td><code>FRACTIO</code></td><td>value</td><td>IEEE-754 binary64</td></tr>
+<tr><td><code>SCRIPTUM</code></td><td>value</td><td>immutable Unicode string</td></tr>
+<tr><td><code>VERITAS</code></td><td>value</td><td><code>VERUM</code> / <code>FALSUM</code></td></tr>
+<tr><td><code>NIHIL</code></td><td>value</td><td>the single value <code>NIHIL</code>; also the void return type</td></tr>
+<tr><td><code>ORDO[T]</code></td><td>reference</td><td>ordered, growable list of <code>T</code></td></tr>
+<tr><td><code>TABULA[K, V]</code></td><td>reference</td><td>insertion-ordered hash map; <code>K</code> ∈ {<code>NUMERUS</code>, <code>SCRIPTUM</code>}</td></tr>
+<tr><td><code>SCHEMA</code> types</td><td>reference</td><td>user-defined records (§6)</td></tr>
+<tr><td><code>RITUS</code></td><td>reference</td><td>callable value (function/closure); opaque in v0.2</td></tr>
+<tr><td><code>HERESIS</code></td><td>reference</td><td>caught error object (§06-heresies §5); cannot be constructed directly</td></tr>
+</table>
+<h2>2. Value vs reference semantics (normative)</h2>
+<ul>
+<li><strong>Value types</strong> (<code>NUMERUS FRACTIO SCRIPTUM VERITAS NIHIL</code>) are immutable. Assignment copies.</li>
+<li><strong>Reference types</strong> (<code>ORDO TABULA</code> schema instances <code>RITUS HERESIS</code>) are handles. Assignment aliases:</li>
+</ul>
+<pre><code>
+DECLARO a : ORDO[NUMERUS] = [I, II]
+DECLARO b : ORDO[NUMERUS] = a
+adde(b, III)
+VOCIFERO longitudo(a)     ++ III — a and b are one vessel
+</code></pre>
+<p>To copy: <code>exemplar(x)</code> performs a <strong>deep</strong> copy of ORDO/TABULA/SCHEMA (rite values are not copyable — heresy <code>conversio_impossibilis</code>).</p>
+<h2>3. NUMERUS semantics</h2>
+<ul>
+<li>Range: −2⁶³ … 2⁶³−1. Overflow <strong>raises</strong> heresy <code>excessus_numeri</code> — it does not wrap. <em>(Rationale: silent wrapping is precisely the kind of quiet corruption the Mechanicus fears most.)</em></li>
+<li><code>/</code> on two NUMERUS is integer division, truncating toward zero. <code>%</code> takes the sign of the dividend. <code>x / 0</code> and <code>x % 0</code> raise <code>divisio_nihili</code>.</li>
+<li>Mixed <code>NUMERUS op FRACTIO</code> promotes to <code>FRACTIO</code> — the only implicit conversion in the language.</li>
+</ul>
+<h2>4. FRACTIO semantics</h2>
+<p>IEEE-754: <code>NaN</code>, <code>+inf</code>, <code>-inf</code> exist (constants <code>mathematica.NAN</code>, <code>mathematica.INFINITUM</code>). <code>0.0 / 0.0</code> is <code>NaN</code>, not a heresy — floats follow the IEEE creed, which predates the Imperium and is respected. <code>NaN != NaN</code> is <code>VERUM</code>. <code>fractio_integra(x)</code> raises <code>conversio_impossibilis</code> on NaN/inf.</p>
+<h2>5. SCRIPTUM semantics</h2>
+<ul>
+<li>Immutable sequence of Unicode code points. <code>longitudo</code> counts code points; <code>scriptura.mensura_octetorum</code> counts UTF-8 bytes.</li>
+<li>Indexing <code>s[i]</code> returns a one-code-point <code>SCRIPTUM</code>; out of range raises <code>index_extra_fines</code>. Negative indices are heresy (<code>index_extra_fines</code>) — there is no Pythonic <code>-1</code>; use <code>s[longitudo(s) - I]</code>. Explicit is pious.</li>
+<li>Slicing: <code>pars(s, a, b)</code> returns <code>[a, b)</code>; clamps to bounds (does not raise).</li>
+<li><code>+</code> concatenates two SCRIPTUM. <code>SCRIPTUM + NUMERUS</code> is <code>typus_profanus</code> — interpolate or convert.</li>
+</ul>
+<h2>6. SCHEMA — records</h2>
+<pre><code>
+SCHEMA servitor
+    nomen : SCRIPTUM
+    gradus : NUMERUS = I            ++ field default
+    officia : ORDO[SCRIPTUM] = []
+FINIS SCHEMA
+</code></pre>
+<ul>
+<li>Declares a new named type, usable wherever a type is expected: <code>DECLARO s : servitor = ...</code>, <code>ORDO[servitor]</code>, parameter and return types.</li>
+<li><strong>Instantiation</strong> uses the schema name as constructor:</li>
+</ul>
+<pre><code>
+DECLARO s : servitor = servitor { nomen: "Kane", gradus: VII }
+</code></pre>
+<p>Fields without defaults are mandatory at instantiation; omitting one raises <code>campus_deest</code>. Unknown fields raise <code>campus_ignotus</code>.</p>
+<ul>
+<li><strong>Field access and mutation:</strong> <code>s.gradus</code>, <code>s.gradus FIAT VIII</code>. Fields are typed; assignment checks types.</li>
+<li>Instances are reference values; <code>exemplar(s)</code> deep-copies; <code>==</code> compares <strong>structurally</strong> (same schema, all fields equal).</li>
+<li>SCHEMA declarations are allowed only at top level (of any mode). No methods in v0.2 — write rites that take the schema as first parameter. Methods (<code>RITUS ... APUD servitor</code>) are a v0.3 candidate.</li>
+<li>No inheritance. Ever. <em>(This is doctrine, not a roadmap gap: composition is purer.)</em></li>
+<li>Recursive schemas are permitted if the recursion passes through <code>ORDO</code>/<code>TABULA</code> (which may be empty) or a <code>NIHIL</code>-permitting field, declared as <code>pater : servitor = NIHIL</code> — a field whose default is <code>NIHIL</code> is <em>nullable</em>; all other fields never hold <code>NIHIL</code>.</li>
+</ul>
+<h2>7. NIHIL discipline (normative)</h2>
+<ul>
+<li><code>NIHIL</code> may be <strong>assigned</strong> only to: variables declared with type <code>NIHIL</code> (rarely useful), nullable schema fields (§6), and returned from <code>-&gt; NIHIL</code> rites.</li>
+<li>Passing <code>NIHIL</code> where any other type is expected raises <code>typus_profanus</code>.</li>
+<li>Any operation on <code>NIHIL</code> (arithmetic, indexing, field access, calling) raises <code>nihil_tactum</code>.</li>
+<li>Test for it: <code>x == NIHIL</code> is the only legal operation, allowed on nullable fields.</li>
+</ul>
+<p><em>(Rationale: NIHIL is quarantined, not banned — Terraform attributes and JSON need it, but it must never wander the program freely.)</em></p>
+<h2>8. Conversions (all explicit)</h2>
+<table>
+<tr><th>Rite</th><th>From → To</th><th>On failure</th></tr>
+<tr><td><code>numerus(x)</code></td><td>FRACTIO (truncates), SCRIPTUM (parses Arabic <strong>or Roman</strong>), VERITAS (I/N)</td><td><code>conversio_impossibilis</code></td></tr>
+<tr><td><code>fractio(x)</code></td><td>NUMERUS, SCRIPTUM</td><td><code>conversio_impossibilis</code></td></tr>
+<tr><td><code>scriptum(x)</code></td><td>any value → canonical text</td><td>never fails</td></tr>
+<tr><td><code>veritas(x)</code></td><td>SCRIPTUM <code>"VERUM"</code>/<code>"FALSUM"</code> only</td><td><code>conversio_impossibilis</code></td></tr>
+<tr><td><code>romanum(n)</code></td><td>NUMERUS 0–3999 → Roman SCRIPTUM</td><td><code>excessus_numeri</code></td></tr>
+</table>
+<p><code>scriptum</code> canonical forms <em>(normative, used by interpolation and VOCIFERO)</em>: integers in Arabic; floats in shortest round-trip form; <code>VERUM</code>/<code>FALSUM</code>; <code>NIHIL</code>; lists as <code>[a, b]</code>; maps as <code>{k: v, ...}</code> in insertion order; schema instances as <code>nomen{campus: valor, ...}</code>; rites as <code>RITUS &lt;nomen&gt;</code>.</p>
+<h2>9. Equality (normative)</h2>
+<ul>
+<li><code>==</code>/<code>!=</code> is <strong>structural, deep</strong> equality for all types. NUMERUS 42 ≠ FRACTIO 42.0 (<code>==</code> across distinct types is simply <code>FALSUM</code>, not a heresy — comparison is a question, and questions are not heresy).</li>
+<li>Identity of references: built-in <code>idem(a, b) -&gt; VERITAS</code>.</li>
+<li>Rite values: <code>==</code> is identity.</li>
+<li>Ordering <code>&lt; &lt;= &gt; &gt;=</code> is defined for NUMERUS↔NUMERUS, FRACTIO↔FRACTIO, mixed numeric (promotes), and SCRIPTUM↔SCRIPTUM (lexicographic by code point). Anything else: <code>typus_profanus</code>.</li>
+</ul>
+<h2>10. No truthiness (normative)</h2>
+<p>Conditions (<code>SI</code>, <code>DUM</code>) require <code>VERITAS</code>. <code>SI longitudo(x) TUNC</code> is <code>typus_profanus</code>. Write <code>SI longitudo(x) &gt; N TUNC</code>. Ambiguity is the door through which heresy enters.</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

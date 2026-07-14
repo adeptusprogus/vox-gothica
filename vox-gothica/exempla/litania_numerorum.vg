@@ -1,0 +1,14 @@
+AVE OMNISSIAH.
+CANTICUM "litania_numerorum".
+
+PRO OMNI i IN series(I, CI) AGE
+    SI i % XV == N TUNC
+        VOCIFERO "AVE OMNISSIAH"
+    ALITER SI i % III == N TUNC
+        VOCIFERO "AVE"
+    ALITER SI i % V == N TUNC
+        VOCIFERO "OMNISSIAH"
+    ALITER
+        VOCIFERO scriptum(i)
+    FINIS SI
+FINIS PRO

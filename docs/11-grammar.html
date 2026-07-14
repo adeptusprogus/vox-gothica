@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Grammatica Formalis · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class=' activa' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>11 — Formal Grammar (EBNF)</h1>
+<p>Normative. Lexer-resolved: comments, Roman numerals (→ <code>INT</code>), string interpolation (STRING → interleaved text/expression parts), line-continuation (01-lexical §7). <code>NL</code> = newline token. Target: Lark (<code>lalr</code> preferred; <code>earley</code> acceptable for the reference implementation).</p>
+<pre><code>
+(* ===== file structure ===== *)
+file            = [salutation] header {NL} {top_stmt} ;
+salutation      = "AVE" "OMNISSIAH" "." NL ;
+header          = ("CANTICUM" | "FABRICA" | "LITANIA") STRING "." NL ;
+
+top_stmt        = import_stmt | schema_def | rite_def | stmt | infra_stmt ;
+(* mode restrictions (P-XVI) are enforced post-parse:
+   LITANIA: import_stmt, schema_def, rite_def, declare only
+   CANTICUM: no infra_stmt ; FABRICA: everything *)
+
+(* ===== imports ===== *)
+import_stmt     = "INVOCO" STRING ["UT" IDENT] NL
+                | "INVOCO" IDENT {"," IDENT} "EX" STRING NL ;
+
+(* ===== declarations ===== *)
+schema_def      = "SCHEMA" IDENT NL {field_decl} "FINIS" "SCHEMA" NL ;
+field_decl      = IDENT ":" type ["=" expr] NL ;
+
+rite_def        = ["SANCTUM"] "RITUS" IDENT "(" [params] ")" "-&gt;" type NL
+                  block "FINIS" "RITUS" NL ;
+params          = param {"," param} ;
+param           = IDENT ":" type ;
+
+declare         = ("DECLARO" | "SANCTUM") IDENT ":" type "=" expr NL ;
+
+(* ===== statements ===== *)
+stmt            = declare | assign | if_stmt | while_stmt | for_stmt
+                | try_stmt | print_stmt | return_stmt | raise_stmt
+                | expr_stmt | "RUMPO" NL | "PERGO" NL ;
+
+assign          = lvalue "FIAT" expr NL ;
+lvalue          = IDENT {"[" expr "]" | "." IDENT} ;
+
+if_stmt         = "SI" expr "TUNC" NL block
+                  {"ALITER" "SI" expr "TUNC" NL block}
+                  ["ALITER" NL block]
+                  "FINIS" "SI" NL ;
+while_stmt      = "DUM" expr "AGE" NL block "FINIS" "DUM" NL ;
+for_stmt        = "PRO" "OMNI" IDENT "IN" expr "AGE" NL block "FINIS" "PRO" NL ;
+block           = {stmt | rite_def_local} ;
+rite_def_local  = rite_def ;   (* legal in rite bodies only, P-XIII elsewhere *)
+
+try_stmt        = "TEMPTA" NL block
+                  ["SI" "HERESIS" "(" IDENT ")" NL block]
+                  ["DENIQUE" NL block]
+                  "FINIS" "TEMPTA" NL ;
+(* at least one of catch/finally required: P-XIV if both absent *)
+
+print_stmt      = ("VOCIFERO" | "SUSURRO") expr NL ;
+return_stmt     = "REDDO" [expr] NL ;
+raise_stmt      = "PROCLAMO" "HERESIM" expr ["GENERIS" STRING] NL ;
+expr_stmt       = postfix_expr NL ;   (* call statements *)
+
+(* ===== types ===== *)
+type            = "NUMERUS" | "FRACTIO" | "SCRIPTUM" | "VERITAS" | "NIHIL"
+                | "RITUS" | "HERESIS"
+                | "ORDO" "[" type "]"
+                | "TABULA" "[" type "," type "]"
+                | IDENT ;                    (* schema name; P-XV if unknown *)
+
+(* ===== expressions ===== *)
+expr            = or_expr ;
+or_expr         = and_expr {"VEL" and_expr} ;
+and_expr        = eq_expr {"ET" eq_expr} ;
+eq_expr         = cmp_expr [("==" | "!=") cmp_expr] ;
+cmp_expr        = add_expr [("&lt;" | "&lt;=" | "&gt;" | "&gt;=") add_expr] ;
+(* single comparison only: chaining is P-IX *)
+add_expr        = mul_expr {("+" | "-") mul_expr} ;
+mul_expr        = unary {("*" | "/" | "%") unary} ;
+unary           = ["-" | "NON"] postfix_expr ;
+postfix_expr    = primary {"(" [args] ")" | "[" expr "]" | "." IDENT} ;
+args            = expr {"," expr} [","] ;
+
+primary         = INT | FLOAT | string | "VERUM" | "FALSUM" | "NIHIL"
+                | IDENT | "(" expr ")"
+                | list_lit | map_lit | schema_lit | rite_expr ;
+
+string          = STRING_START {STRING_TEXT | "{" expr "}"} STRING_END ;
+list_lit        = "[" [expr {"," expr} [","]] "]" ;
+map_lit         = "{" [map_entry {"," map_entry} [","]] "}" ;
+map_entry       = expr ":" expr ;
+schema_lit      = IDENT "{" [field_init {"," field_init} [","]] "}" ;
+field_init      = IDENT ":" expr ;
+rite_expr       = "RITUS" "(" [params] ")" "-&gt;" type NL block "FINIS" "RITUS" ;
+
+(* ===== infrastructure (FABRICA only) ===== *)
+infra_stmt      = covenant | seat | resource | scrutiny | demand | proclaim ;
+
+covenant        = "FOEDUS" STRING NL attr_block "FINIS" "FOEDUS" NL ;
+seat            = "SEDES" STRING NL attr_block "FINIS" "SEDES" NL ;
+resource        = "EXSTRUATUR" IDENT string_or_interp NL attr_block
+                  "FINIS" "EXSTRUATUR" NL ;
+scrutiny        = "SCRUTOR" IDENT STRING NL attr_block "FINIS" "SCRUTOR" NL ;
+demand          = "POSTULO" IDENT ":" type ["=" expr] ["ARCANUM"] NL ;
+proclaim        = "PROFITEOR" IDENT "=" expr ["ARCANUM"] NL ;
+
+attr_block      = {attr} ;
+attr            = IDENT ":" (expr NL | NL attr_block "FINIS" NL) ;
+string_or_interp = string ;
+</code></pre>
+<h2>Parse ambiguity notes (normative resolutions)</h2>
+<ol>
+<li><code>schema_lit</code> vs <code>map_lit</code> vs block-open: <code>IDENT "{"</code> at expression position is a schema literal; bare <code>"{"</code> is a map. In statement position, an <code>IDENT "{"</code> sequence cannot occur (calls need <code>(</code>), so no conflict with <code>attr</code> blocks.</li>
+<li><code>SI HERESIS</code> inside <code>try_stmt</code> is distinguished from an <code>if_stmt</code> by the <code>HERESIS (</code> lookahead; LALR handles it because <code>HERESIS</code> is a keyword.</li>
+<li><code>SANCTUM</code> leads either <code>declare</code> or <code>rite_def</code> — decided by the following token (<code>IDENT :</code> vs <code>RITUS</code>).</li>
+<li><code>schema_lit</code> requires the IDENT be a known schema at post-parse resolution; unknown → P-XV (not a parse error, better message).</li>
+<li>Keywords <code>ARCANUM</code>/<code>GENERIS</code> appear only in their productions; they are reserved globally (add to 01-lexical §4 master list — done in rev 2).</li>
+</ol>
+<h2>Master keyword list (rev 2, supersedes 01-lexical §4 count)</h2>
+<pre><code>
+AVE OMNISSIAH CANTICUM FABRICA LITANIA FINIS
+DECLARO SANCTUM FIAT SCHEMA RITUS REDDO
+SI TUNC ALITER DUM PRO OMNI IN AGE RUMPO PERGO
+ET VEL NON VERUM FALSUM NIHIL
+NUMERUS FRACTIO SCRIPTUM VERITAS ORDO TABULA HERESIS
+VOCIFERO SUSURRO AUSCULTO
+TEMPTA HERESIM PROCLAMO DENIQUE GENERIS
+INVOCO EX UT PALAM
+EXSTRUATUR FOEDUS POSTULO PROFITEOR SCRUTOR SEDES ARCANUM
+reserved: CHORUS CAPITULUM LEGATUS MUTATIO RELATIO
+</code></pre>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

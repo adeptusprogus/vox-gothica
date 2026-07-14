@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vox-gothica"
+version = "0.2.0"
+description = "Vox Gothica — a High Gothic programming language for canticles and infrastructure"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-3.0-or-later" }
+authors = [{ name = "EduardL", email = "adeptusprogus@users.noreply.github.com" }]
+keywords = ["esolang", "terraform", "infrastructure-as-code", "warhammer"]
+
+[project.scripts]
+gothica = "gothica.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["gothica*"]

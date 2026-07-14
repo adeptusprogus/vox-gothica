@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Prooemium — Doctrine · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class=' activa' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>Vox Gothica</h1>
+<p><strong>A High Gothic programming language for canticles and infrastructure.</strong></p>
+<p>Version 0.2.0-draft ("Second Canticle") · File extension <code>.vg</code> · Docs are normative unless marked <em>(informative)</em>.</p>
+<blockquote><em>"The soul of the Machine God surrounds thee. The power of the Machine God invests thee. Live!"</em></blockquote>
+<p>Vox Gothica is a language whose source reads as the pseudo-Latin liturgy of the Adeptus Mechanicus. One syntax, two purposes:</p>
+<ol>
+<li><strong>Canticles</strong> — general-purpose programs: an interpreted, imperative, lexically-scoped language with rites (functions), schemas (records), heresy handling (errors), modules, and packages ("litaniae").</li>
+<li><strong>Fabricae</strong> — infrastructure manifests that transpile to Terraform JSON. Terraform keeps state, providers, and diffing; Vox Gothica is the liturgical frontend.</li>
+</ol>
+<pre><code>
+AVE OMNISSIAH.
+CANTICUM "salutatio".
+
+VOCIFERO "Ave, Imperium!"
+</code></pre>
+<h2>Documentation structure</h2>
+<table>
+<tr><th>#</th><th>File</th><th>Contents</th></tr>
+<tr><td>—</td><td><code>README.md</code></td><td>This index, philosophy, conformance rules</td></tr>
+<tr><td>01</td><td><code>01-lexical.md</code></td><td>Characters, comments, identifiers, keywords, literals (incl. Roman numerals), file headers, statement termination</td></tr>
+<tr><td>02</td><td><code>02-types.md</code></td><td>Type system, values, mutability, equality, SCHEMA records, conversions</td></tr>
+<tr><td>03</td><td><code>03-expressions.md</code></td><td>Operators, precedence, evaluation order, indexing, interpolation</td></tr>
+<tr><td>04</td><td><code>04-statements.md</code></td><td>Declarations, assignment, control flow, scope rules</td></tr>
+<tr><td>05</td><td><code>05-rites.md</code></td><td>Functions, closures, anonymous rites, recursion</td></tr>
+<tr><td>06</td><td><code>06-heresies.md</code></td><td><strong>The Codex Hereticus</strong> — complete, normative error taxonomy</td></tr>
+<tr><td>07</td><td><code>07-modules.md</code></td><td>In-project modules, imports, visibility</td></tr>
+<tr><td>08</td><td><code>08-litaniae.md</code></td><td><strong>Packages</strong> — manifest, versioning, resolution, registry, publishing</td></tr>
+<tr><td>09</td><td><code>09-stdlib.md</code></td><td>The Machine-Cult: built-ins and standard modules, incl. testing</td></tr>
+<tr><td>10</td><td><code>10-fabrica.md</code></td><td>Infrastructure: providers, resources, state backends, Terraform mapping</td></tr>
+<tr><td>11</td><td><code>11-grammar.md</code></td><td>Complete formal grammar (EBNF)</td></tr>
+<tr><td>12</td><td><code>12-cli-and-diagnostics.md</code></td><td>The <code>gothica</code> toolchain and diagnostic format</td></tr>
+<tr><td>13</td><td><code>13-examples.md</code></td><td>Complete worked examples</td></tr>
+<tr><td>14</td><td><code>14-implementation.md</code></td><td>Reference implementation architecture and milestones</td></tr>
+<tr><td>15</td><td><code>15-glossary.md</code></td><td>Keyword-by-keyword Latin glossary</td></tr>
+</table>
+<h2>Design principles (normative)</h2>
+<ol>
+<li><strong>Pseudo-Latin, fixed forms.</strong> Every keyword is one Latin word frozen in one grammatical form. The parser never conjugates. (One sanctioned exception: <code>HERESIS</code>/<code>HERESIM</code>, nominative/accusative — see §15.)</li>
+<li><strong>Code is liturgy.</strong> Programs are canticles, functions are rites, packages are litaniae, errors are heresies, deployment is consecration. The metaphor is total: it covers the CLI, diagnostics, the package registry, and the testing framework.</li>
+<li><strong>Serious core, ironic surface.</strong> Underneath: a small, honest, fully implementable language. The joke never costs correctness, debuggability, or Terraform interoperability.</li>
+<li><strong>One AST, two backends.</strong> Imperative code executes; infrastructure declarations accumulate into a resource graph emitted as <code>.tf.json</code>.</li>
+<li><strong>No lock-in.</strong> The Terraform escape hatch is a guarantee: generated JSON is readable, state is ordinary Terraform state, and <code>--profanum</code> mode strips all theming for CI.</li>
+<li><strong>Strictness is piety.</strong> No implicit coercions, no truthiness, mandatory type annotations, immutable-by-keyword constants. Sloppiness is how heresy enters.</li>
+</ol>
+<h2>Execution modes</h2>
+<table>
+<tr><th>Mode</th><th>Header</th><th>Entry</th><th><code>EXSTRUATUR</code> allowed?</th></tr>
+<tr><td>Canticle</td><td><code>CANTICUM "name".</code></td><td>top-level statements, or rite <code>principium</code> if defined</td><td>no — raising resources in a program is heresy <code>fabrica_in_cantico</code></td></tr>
+<tr><td>Fabrica</td><td><code>FABRICA "name".</code></td><td>top level, executed once at consecration time</td><td>yes</td></tr>
+<tr><td>Litania module</td><td><code>LITANIA "name".</code></td><td>no entry; only declarations</td><td>no</td></tr>
+</table>
+<h2>Conformance</h2>
+<p>An implementation conforms if it: accepts every program this spec declares valid; raises exactly the heresy genus specified in <code>06-heresies.md</code> for every condition listed there; produces Terraform JSON per <code>10-fabrica.md</code>; and passes the conformance suite (<code>probationes/</code> in the reference repo, milestone M4).</p>
+<p>Undefined behavior does not exist in Vox Gothica: anything not defined here is <code>PROFANATIO</code> (a compile-time rejection). When this spec is ambiguous, the stricter reading is correct — that is doctrine.</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

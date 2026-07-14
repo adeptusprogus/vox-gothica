@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Expressiones · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class=' activa' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>03 — Expressions</h1>
+<h2>1. Precedence (high → low)</h2>
+<table>
+<tr><th>Level</th><th>Operators</th><th>Associativity</th></tr>
+<tr><td>1</td><td>postfix: call <code>f(x)</code>, index <code>a[i]</code>, field <code>a.b</code></td><td>left</td></tr>
+<tr><td>2</td><td>unary <code>-</code>, <code>NON</code></td><td>right</td></tr>
+<tr><td>3</td><td><code>*</code> <code>/</code> <code>%</code></td><td>left</td></tr>
+<tr><td>4</td><td><code>+</code> <code>-</code></td><td>left</td></tr>
+<tr><td>5</td><td><code>&lt;</code> <code>&lt;=</code> <code>&gt;</code> <code>&gt;=</code></td><td>non-associative</td></tr>
+<tr><td>6</td><td><code>==</code> <code>!=</code></td><td>non-associative</td></tr>
+<tr><td>7</td><td><code>ET</code></td><td>left</td></tr>
+<tr><td>8</td><td><code>VEL</code></td><td>left</td></tr>
+</table>
+<ul>
+<li>Comparison chains are <code>PROFANATIO</code> (P-IX): <code>a &lt; b &lt; c</code> must be <code>a &lt; b ET b &lt; c</code>. <em>(One litany, one claim.)</em></li>
+<li>No ternary operator; use <code>SI</code>/<code>ALITER</code> or the built-in <code>elige(cond, a, b)</code> — note <code>elige</code> evaluates <strong>both</strong> branches (it is an ordinary rite), which the docs warn about.</li>
+<li>No assignment expressions. <code>FIAT</code> is a statement.</li>
+<li>No user-defined operator overloading. The Machine God fixed the operators at the dawn of the age.</li>
+</ul>
+<h2>2. Evaluation order (normative)</h2>
+<p>Strict left-to-right, everywhere: operands, call arguments, list/map literal elements, interpolation segments. <code>ET</code>/<code>VEL</code> short-circuit (right operand not evaluated when the left decides). Both operands of all other binary operators are always evaluated.</p>
+<h2>3. Operator semantics by type</h2>
+<table>
+<tr><th>Operator</th><th>NUMERUS</th><th>FRACTIO</th><th>SCRIPTUM</th><th>ORDO</th><th>Other</th></tr>
+<tr><td><code>+</code></td><td>add (overflow → <code>excessus_numeri</code>)</td><td>IEEE add</td><td>concatenate</td><td>concatenate (new list)</td><td><code>typus_profanus</code></td></tr>
+<tr><td><code>-</code> <code>*</code></td><td>arithmetic</td><td>IEEE</td><td>—</td><td>—</td><td><code>typus_profanus</code></td></tr>
+<tr><td><code>/</code></td><td>trunc. division; <code>divisio_nihili</code> on 0</td><td>IEEE (÷0 → ±inf per creed)</td><td>—</td><td>—</td><td><code>typus_profanus</code></td></tr>
+<tr><td><code>%</code></td><td>remainder, sign of dividend; <code>divisio_nihili</code> on 0</td><td><code>fmod</code></td><td>—</td><td>—</td><td><code>typus_profanus</code></td></tr>
+<tr><td>unary <code>-</code></td><td>negate (<code>-(-2⁶³)</code> → <code>excessus_numeri</code>)</td><td>negate</td><td>—</td><td>—</td><td><code>typus_profanus</code></td></tr>
+<tr><td><code>NON</code></td><td>—</td><td>—</td><td>—</td><td>—</td><td>VERITAS only</td></tr>
+</table>
+<p>Mixed NUMERUS/FRACTIO promotes to FRACTIO (the only implicit conversion; see 02-types §3).</p>
+<h2>4. Indexing and fields</h2>
+<ul>
+<li><code>ordo[i]</code>: <code>i</code> must be NUMERUS, <code>0 &lt;= i &lt; longitudo</code> — else <code>index_extra_fines</code>. Index expressions of any other type: <code>typus_profanus</code>.</li>
+<li><code>tabula[k]</code>: missing key raises <code>clavis_ignota</code>. Use <code>habet(t, k)</code> first, or <code>accipe(t, k, defectus)</code> for a default.</li>
+<li><code>scriptum[i]</code>: one-code-point SCRIPTUM (02-types §5).</li>
+<li><code>instantia.campus</code>: unknown field → <code>campus_ignotus</code>.</li>
+<li>Assignment targets: <code>x</code>, <code>ordo[i]</code>, <code>tabula[k]</code> (inserts if absent), <code>instantia.campus</code>, and chains thereof (<code>a[i].b[k] FIAT v</code>). Assigning through anything else is <code>PROFANATIO</code> (P-X).</li>
+</ul>
+<h2>5. Calls</h2>
+<ul>
+<li>Arity is exact: wrong count → <code>argumentum_pravum</code>. No varargs, no defaults, no keyword arguments in v0.2 <em>(rejected for now: each adds parser and doc complexity that the language does not yet earn back)</em>.</li>
+<li>Arguments are passed by value for value types, by reference for reference types (02-types §2).</li>
+</ul>
+<h2>6. String interpolation</h2>
+<p><code>"{expr}"</code> evaluates the expression and converts via canonical <code>scriptum</code> (02-types §8). Interpolations may nest arbitrarily (<code>"{elige(x &gt; N, "plus", "minus")}"</code>). A deferred infrastructure reference (10-fabrica §7) inside interpolation is legal <strong>only</strong> in FABRICA attribute/<code>PROFITEOR</code> contexts and compiles to a Terraform template string.</p>
+<h2>7. Constant expressions <em>(informative)</em></h2>
+<p>The <code>lustro</code> linter folds constant expressions to warn about e.g. guaranteed <code>divisio_nihili</code>. The interpreter itself performs no folding in v0.2 — behavior is identical either way because the language is deterministic and effect-ordered.</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

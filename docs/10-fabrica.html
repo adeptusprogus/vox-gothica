@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Fabrica · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class=' activa' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>10 — Fabrica (Infrastructure)</h1>
+<p><strong>Model:</strong> a FABRICA file is a program executed once at <em>consecration time</em>; its side effect is a <strong>resource graph</strong>; the graph is emitted as Terraform JSON (<code>.tf.json</code>); <code>terraform</code> owns state, providers, planning, and drift. Vox Gothica adds no second source of truth — that guarantee is what makes it safe to use ironically in production.</p>
+<h2>1. Consecration pipeline</h2>
+<pre><code>
+fabrica.vg ──interpret──▶ resource graph ──emit──▶ .gothica/&lt;name&gt;/main.tf.json
+                                                        │
+                              terraform init/plan/apply ◀┘   (subprocess)
+</code></pre>
+<ul>
+<li>Output directory <code>.gothica/&lt;fabrica-name&gt;/</code> also holds Terraform's <code>.terraform/</code> and plan files. Add <code>.gothica/</code> to VCS ignore except <code>*.tf.json</code> if you want reviewable artifacts (<code>lustro</code> suggests committing them — plans should be diffable in PRs).</li>
+<li>Everything imperative (loops, rites, litania calls) happens <strong>before</strong> Terraform sees anything. Terraform receives only static JSON.</li>
+</ul>
+<h2>2. Covenants (providers)</h2>
+<pre><code>
+FOEDUS "aws"
+    regio: "eu-west-1"
+    versio_foederis: "~&gt; 5.0"        ++ provider version constraint
+FINIS FOEDUS
+</code></pre>
+<p>Maps to <code>provider</code> + <code>terraform.required_providers</code>. Multiple covenants with the same provider need <code>cognomen:</code> (alias). <code>versio_foederis</code> is extracted into <code>required_providers</code>; omitted = unpinned (with a <code>lustro</code> warning — unpinned covenants are reckless piety).</p>
+<h2>3. The Seat (state backend)</h2>
+<pre><code>
+SEDES "s3"
+    bucket: "mechanicus-status"
+    key: "fabricae/interretialis.tfstate"
+    regio: "eu-west-1"
+FINIS SEDES
+</code></pre>
+<p>Maps to <code>terraform.backend</code>. At most one per FABRICA (<code>nomen_geminum</code> otherwise). Absent = local state, and <code>auguro</code> prints a gentle admonition: <em>"The state rests upon this fragile machine alone."</em></p>
+<h2>4. Raising resources</h2>
+<pre><code>
+EXSTRUATUR machina "web_primus"
+    genus: "aws_instance"
+    imago: scrutinium.ubuntu.id
+    genus_machinae: "t3.micro"
+    tags:
+        Name: "web-primus"
+    FINIS
+FINIS EXSTRUATUR
+</code></pre>
+<ul>
+<li>The word after <code>EXSTRUATUR</code> is the <strong>species</strong> — a required human category: <code>machina</code> (compute), <code>retiaculum</code> (network), <code>horreum</code> (storage), <code>custodia</code> (security/IAM), <code>nuntius</code> (queues/messaging), <code>codex</code> (DNS/config), <code>res</code> (anything else). Species is metadata: it drives lint rules (a <code>custodia</code> with open <code>0.0.0.0/0</code> ingress gets a louder warning) and reference readability. The Terraform type comes from mandatory <code>genus:</code>.</li>
+<li>Resource <strong>name</strong>: string, may interpolate consecration-time values; must evaluate to <code>[a-z_][a-z0-9_]*</code> (else <code>argumentum_pravum</code>) and be unique across the FABRICA (<code>nomen_geminum</code>, Major).</li>
+<li>Attribute values: full expressions, evaluated at consecration; nested blocks end with bare <code>FINIS</code>; lists of blocks are lists of TABULA literals.</li>
+<li>A NIHIL attribute value means "omit this attribute" — the sanctioned use of NIHIL (02-types §7).</li>
+</ul>
+<h2>5. Attribute names and the alias table</h2>
+<p>Attributes pass to Terraform <strong>verbatim</strong>, except entries in the alias table (one TOML data file in the toolchain, extensible via project config <code>[fabrica.aliae]</code>):</p>
+<table>
+<tr><th>Alias</th><th>Terraform</th><th></th><th>Alias</th><th>Terraform</th></tr>
+<tr><td><code>regio</code></td><td><code>region</code></td><td></td><td><code>numerus_machinarum</code></td><td><code>count</code></td></tr>
+<tr><td><code>genus_machinae</code></td><td><code>instance_type</code></td><td></td><td><code>imago</code></td><td><code>ami</code> / <code>image</code>*</td></tr>
+<tr><td><code>nomen_datum</code></td><td><code>name</code></td><td></td><td><code>postulat</code></td><td><code>depends_on</code></td></tr>
+<tr><td><code>cognomen</code></td><td><code>alias</code> / <code>provider</code>*</td><td></td><td><code>vita</code></td><td><code>lifecycle</code></td></tr>
+</table>
+<p>&#42; resolved per resource genus. Raw Terraform names are always legal; aliases are liturgy, not law. <code>gothica purga --latinizat</code> rewrites known raw names to aliases.</p>
+<h2>6. Demands, proclamations, divinations</h2>
+<pre><code>
+POSTULO ambitus_nomen : SCRIPTUM                     ++ variable, required
+POSTULO numerus_servorum : NUMERUS = III             ++ with default
+POSTULO clavis_arcana : SCRIPTUM ARCANUM             ++ sensitive: masked in output
+
+PROFITEOR primus_ip = machina.web_primus.public_ip   ++ output
+PROFITEOR arcanum_db = res.db.password ARCANUM       ++ sensitive output
+
+SCRUTOR imago_recens "ubuntu"                        ++ data source
+    genus: "aws_ami"
+    most_recent: VERUM
+FINIS SCRUTOR
+</code></pre>
+<ul>
+<li><code>POSTULO</code> values are resolved <strong>before</strong> interpretation (precedence: <code>-postulatum k=v</code> flags → <code>postulata.toml</code> → env <code>GOTHICA_POSTULATUM_&lt;NOMEN&gt;</code> → default → else abort with <code>IRA MACHINAE</code>-adjacent prompt listing missing demands). They are ordinary typed values usable in any imperative logic — unlike Terraform's lazy variables. They are <em>also</em> emitted as <code>variable</code> blocks (with values pinned via generated <code>.tfvars.json</code>) so the JSON stands alone.</li>
+<li><code>ARCANUM</code> marks sensitive: masked in <code>gothica</code> output, <code>sensitive = true</code> in Terraform.</li>
+</ul>
+<h2>7. Deferred references (normative)</h2>
+<p><code>&lt;species&gt;.&lt;nomen&gt;.&lt;attr...&gt;</code> and <code>scrutinium.&lt;nomen&gt;.&lt;attr...&gt;</code> evaluate to <strong>deferred references</strong> — values that exist only after <code>terraform apply</code>.</p>
+<ul>
+<li>Legal positions: resource/covenant attribute values, <code>PROFITEOR</code> expressions, and inside string interpolation <strong>in those positions</strong> (compiles to <code>"${...}"</code> template strings).</li>
+<li>Any other use — a <code>SI</code> condition, arithmetic, <code>longitudo()</code>, storing then branching — raises <code>relatio_differata_tacta</code> (Major): <em>"Thou hast touched that which is not yet made flesh."</em> The interpreter enforces this by making deferred references a distinct runtime kind that poisons every operation except attribute access (which extends the reference) and placement into infra positions.</li>
+<li>Cross-referencing implies ordering; explicit ordering uses <code>postulat: [machina.db, res.certificate]</code>.</li>
+</ul>
+<h2>8. Generating resources imperatively</h2>
+<pre><code>
+PRO OMNI i IN series(N, numerus_servorum) AGE
+    EXSTRUATUR machina "serv_{i}"
+        genus: "aws_instance"
+        imago: scrutinium.ubuntu.id
+        genus_machinae: elige(i == N, "t3.medium", "t3.micro")
+    FINIS EXSTRUATUR
+FINIS PRO
+</code></pre>
+<p>Runs at consecration; registers <code>serv_0…</code>. <strong>Determinism rule (normative):</strong> a FABRICA must be a pure function of (source, POSTULO values, litaniae versions). <code>fortuna.*</code>, <code>tempus.nunc*</code>, <code>AUSCULTO</code> raise <code>fabrica_impura</code> (Minor) in FABRICA mode; <code>archivum.lege</code> and <code>machina_cogitans.pete</code> are permitted (reading configuration is legitimate) but <code>lustro</code> flags network reads. *(Without this rule, <code>auguro</code> and <code>consecro</code> could see different worlds — the plan would be a lie.)*</p>
+<h2>9. Reusable infrastructure: FABRICA helper litaniae</h2>
+<p>The Terraform-module equivalent is plain code (08-litaniae §9):</p>
+<pre><code>
+++ litania github.com/adeptus/vpc_benedicta, module fons/vpc.vg
+AVE OMNISSIAH.
+LITANIA "vpc".
+
+RITUS vpc_benedicta (nomen : SCRIPTUM, cidr : SCRIPTUM) -&gt; NIHIL
+    EXSTRUATUR retiaculum "{nomen}_vpc"
+        genus: "aws_vpc"
+        cidr_block: cidr
+    FINIS EXSTRUATUR
+    ++ ... subnets, route tables, the whole blessed pattern
+FINIS RITUS
+</code></pre>
+<p>Called from any FABRICA: <code>vpc.vpc_benedicta("fabrica_prima", "10.0.0.0/16")</code>. Called from a CANTICUM: <code>fabrica_in_cantico</code>. Rites may <strong>return deferred references</strong> to let callers wire outputs together — a rite's return type for these is declared <code>SCRIPTUM</code> and the deferral kind rides along at runtime *(v0.2 pragmatism; a <code>RELATIO</code> type is an M5 candidate)*.</p>
+<h2>10. Terraform JSON mapping summary (normative)</h2>
+<table>
+<tr><th>Vox Gothica</th><th>Terraform JSON</th></tr>
+<tr><td><code>FOEDUS "aws" ...</code></td><td><code>provider.aws</code>, <code>terraform.required_providers.aws</code></td></tr>
+<tr><td><code>SEDES "s3" ...</code></td><td><code>terraform.backend.s3</code></td></tr>
+<tr><td><code>EXSTRUATUR &lt;species&gt; "n"</code> with <code>genus: "T"</code></td><td><code>resource.T.n</code> (species → a <code>#</code> comment key <code>//species</code>)</td></tr>
+<tr><td><code>SCRUTOR "n"</code> with <code>genus: "T"</code></td><td><code>data.T.n</code></td></tr>
+<tr><td><code>POSTULO x : T [= d] [ARCANUM]</code></td><td><code>variable.x</code> (+ pinned value in generated tfvars)</td></tr>
+<tr><td><code>PROFITEOR x = e [ARCANUM]</code></td><td><code>output.x</code></td></tr>
+<tr><td>deferred reference</td><td><code>"${aws_instance.web_primus.public_ip}"</code></td></tr>
+<tr><td><code>postulat: [...]</code></td><td><code>depends_on</code></td></tr>
+<tr><td>NIHIL attribute</td><td>attribute omitted</td></tr>
+<tr><td>NUMERUS/FRACTIO/SCRIPTUM/VERITAS/ORDO/TABULA</td><td>JSON number/string/bool/array/object</td></tr>
+</table>
+<h2>11. Lifecycle commands</h2>
+<p><code>auguro</code> (plan), <code>consecro</code> (apply, confirmation word <code>FIAT</code>), <code>exterminatus</code> (destroy, confirmation word <code>EXTERMINATUS</code>, no bypass flag), <code>auguro --exi-si-mutatio</code> (exit <code>I</code> if plan non-empty — for CI drift detection). All accept <code>--profanum</code> for untheming. Terraform failures: exit <code>III</code>, banner + verbatim Terraform stderr (06-heresies §9).</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

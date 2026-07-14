@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Sententiae · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class=' activa' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>04 — Statements and Control Flow</h1>
+<h2>1. Declarations</h2>
+<pre><code>
+DECLARO nomen : NUMERUS = XII      ++ mutable vessel
+SANCTUM pi : FRACTIO = 3.14159     ++ consecrated: immutable forever
+</code></pre>
+<ul>
+<li>Initializer mandatory. Declared type checked against the value (<code>typus_profanus</code> at runtime if violated).</li>
+<li>Reassigning a <code>SANCTUM</code> raises <code>sanctum_violatum</code>. Note: <code>SANCTUM</code> consecrates the <strong>binding</strong>, not the object — a <code>SANCTUM ordo</code> can still be mutated through <code>adde</code>. For deep immutability use <code>sigilla(x)</code> (freezes an ORDO/TABULA/SCHEMA recursively; subsequent mutation raises <code>sigillum_fractum</code>).</li>
+<li>Redeclaration in the same scope: <code>PROFANATIO</code> (P-XI). Shadowing an outer scope: legal, but <code>lustro</code> warns.</li>
+</ul>
+<h2>2. Assignment</h2>
+<pre><code>
+lvalue FIAT expr
+</code></pre>
+<p><code>FIAT</code> ("let it become") is the sole assignment form. No compound assignment, no increment — write the litany in full: <code>i FIAT i + I</code>.</p>
+<h2>3. Scope (normative)</h2>
+<ul>
+<li>Lexical scoping. Scopes: module (file) → rite body → each block (<code>SI</code> arm, loop body, <code>TEMPTA</code> arms).</li>
+<li>A name is visible from its declaration to the end of its scope. Use before declaration: <code>vas_ignotum</code>.</li>
+<li>Loop variables (<code>PRO OMNI x</code>) are scoped to the loop body and are <strong>immutable</strong> within it (assignment → <code>sanctum_violatum</code>). Each iteration binds a fresh <code>x</code> (this matters for closures — see 05-rites §4).</li>
+<li>Top-level code in a module runs exactly once, at import/invocation (07-modules).</li>
+</ul>
+<h2>4. Conditional</h2>
+<pre><code>
+SI vigor &gt; C TUNC
+    VOCIFERO "Strong."
+ALITER SI vigor &gt; L TUNC
+    VOCIFERO "Willing."
+ALITER
+    VOCIFERO "Appease it!"
+FINIS SI
+</code></pre>
+<p>Condition must be <code>VERITAS</code> (no truthiness — 02-types §10). Any number of <code>ALITER SI</code> arms; at most one final <code>ALITER</code>.</p>
+<h2>5. Loops</h2>
+<pre><code>
+DUM cond AGE ... FINIS DUM                 ++ while
+
+PRO OMNI x IN iterable AGE ... FINIS PRO   ++ for-each
+</code></pre>
+<p>Iterables: <code>ORDO</code> (elements, in order), <code>TABULA</code> (keys, insertion order), <code>SCRIPTUM</code> (code points as 1-char SCRIPTUM), <code>series(a, b)</code> / <code>series_gradu(a, b, gradus)</code> (integer ranges, half-open <code>[a, b)</code>; <code>gradus</code> of <code>N</code> raises <code>argumentum_pravum</code>; negative <code>gradus</code> counts down).</p>
+<ul>
+<li>Mutating an ORDO/TABULA <strong>while iterating it</strong> raises <code>mutatio_in_processione</code> ("mutation during the procession") at the moment of the next iteration step. <em>(Deterministic and immediate — no C++-style undefined behavior.)</em></li>
+<li><code>RUMPO</code> breaks the innermost loop; <code>PERGO</code> skips to the next iteration. Either outside a loop: <code>PROFANATIO</code> (P-XII). There are no labeled breaks; refactor into a rite and <code>REDDO</code>.</li>
+<li>There is no C-style <code>for</code>; <code>series</code> covers it.</li>
+<li>Infinite loop idiom: <code>DUM VERUM AGE ... FINIS DUM</code> — sanctioned; the linter stays silent if the body contains <code>RUMPO</code> or <code>REDDO</code>.</li>
+</ul>
+<h2>6. Output and input</h2>
+<pre><code>
+VOCIFERO expr      ++ stdout + newline; value converted via canonical scriptum
+SUSURRO expr       ++ stderr + newline
+DECLARO s : SCRIPTUM = AUSCULTO()    ++ read one line from stdin, newline stripped
+</code></pre>
+<p><code>AUSCULTO()</code> at EOF raises <code>auscultatio_vana</code> ("the listening was in vain") — catchable, so interactive loops can end gracefully.</p>
+<h2>7. TEMPTA (see 06-heresies for full semantics)</h2>
+<pre><code>
+TEMPTA
+    ...
+SI HERESIS (delictum)
+    ...
+DENIQUE
+    ...
+FINIS TEMPTA
+</code></pre>
+<h2>8. Entry point</h2>
+<ul>
+<li>A <code>CANTICUM</code> executes top-level statements in order. If a rite named <code>principium</code> ("beginning") is declared, it is called (with no arguments) <strong>after</strong> top-level statements complete; its declared return type must be <code>NIHIL</code> or <code>NUMERUS</code> (a NUMERUS becomes the process exit code).</li>
+<li><code>imperium.exi(codex)</code> exits immediately with the given code.</li>
+</ul>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

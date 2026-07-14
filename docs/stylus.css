@@ -1,0 +1,749 @@
+/* ═══════════════════════════════════════════════════════════════
+   LIBRARIUM SANCTUM — Codex Vox Gothica
+   COGITATOR DISPLAY PROTOCOL // PHOSPHOR-CATHODE LITURGY
+   Green is the light of the Omnissiah. Amber is His warning.
+   Red is His wrath. There are no other colors in the noosphere.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Self-hosted sacred glyph-forms. Downloaded, blessed, vendored in ./fontes.
+   No dependence on the Google noosphere: the shrine renders even in a
+   blackout of the astropathic relays. */
+@font-face { font-family: 'Pirata One'; src: url('fontes/pirata-one-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'UnifrakturCook'; src: url('fontes/unifrakturcook-latin-700-normal.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Grenze Gotisch'; src: url('fontes/grenze-gotisch-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Grenze Gotisch'; src: url('fontes/grenze-gotisch-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Grenze Gotisch'; src: url('fontes/grenze-gotisch-latin-800-normal.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+@font-face { font-family: 'Cinzel Decorative'; src: url('fontes/cinzel-decorative-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Cinzel Decorative'; src: url('fontes/cinzel-decorative-latin-700-normal.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Nosifer'; src: url('fontes/nosifer-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Eater'; src: url('fontes/eater-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Share Tech Mono'; src: url('fontes/share-tech-mono-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'VT323'; src: url('fontes/vt323-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('fontes/ibm-plex-mono-latin-400-normal.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'IBM Plex Mono'; src: url('fontes/ibm-plex-mono-latin-600-normal.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+
+:root {
+    --void:          #010502;
+    --tube-dark:     #030a05;
+    --tube:          #06120a;
+    --tube-raised:   #0a1a0f;
+    --phos:          #4dff7c;   /* primary phosphor */
+    --phos-bright:   #a8ffbe;
+    --phos-dim:      #2a8f4a;
+    --phos-faint:    #14512a;
+    --phos-ghost:    #0c2e18;
+    --amber:         #ffb000;   /* warning / headers */
+    --amber-dim:     #a87300;
+    --alert:         #ff3b1f;   /* heresy */
+    --alert-dim:     #7e1d10;
+    --glow:          0 0 6px rgba(77, 255, 124, 0.55);
+    --glow-strong:   0 0 4px rgba(77,255,124,0.9), 0 0 18px rgba(77,255,124,0.35);
+    --glow-amber:    0 0 4px rgba(255,176,0,0.8), 0 0 16px rgba(255,176,0,0.3);
+}
+
+* { box-sizing: border-box; }
+
+::selection { background: var(--phos); color: var(--void); text-shadow: none; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    background: var(--void);
+    background-image:
+        radial-gradient(ellipse at 50% 40%, rgba(20, 81, 42, 0.22), transparent 70%),
+        radial-gradient(ellipse at 50% 120%, rgba(255, 176, 0, 0.04), transparent 60%);
+    color: var(--phos);
+    font-family: 'IBM Plex Mono', 'Share Tech Mono', monospace;
+    font-size: 15.5px;
+    line-height: 1.62;
+    text-shadow: var(--glow);
+}
+
+/* ── CRT overlay: scanlines + vignette + flicker ─────────── */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.22) 0px,
+        rgba(0, 0, 0, 0.22) 1px,
+        transparent 2px,
+        transparent 4px);
+    mix-blend-mode: multiply;
+}
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 998;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center,
+        transparent 55%, rgba(0, 0, 0, 0.5) 100%);
+    animation: tube-hum 7s ease-in-out infinite;
+}
+@keyframes tube-hum {
+    0%, 100% { opacity: 1; }
+    48%      { opacity: 0.96; }
+    50%      { opacity: 1; }
+    52%      { opacity: 0.93; }
+    54%      { opacity: 1; }
+}
+
+/* ── top bar: cogitator status rail ─────────────────────── */
+.vox-banner {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.5rem 1.4rem;
+    background: linear-gradient(180deg, var(--tube-raised), var(--tube-dark));
+    border-bottom: 1px solid var(--phos-dim);
+    box-shadow: 0 0 22px rgba(77,255,124,0.12), 0 2px 14px rgba(0,0,0,0.8);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.86rem;
+}
+.vox-banner .cog {
+    font-size: 1.35rem;
+    color: var(--amber);
+    text-shadow: var(--glow-amber);
+    animation: cog-turn 20s linear infinite;
+    display: inline-block;
+}
+@keyframes cog-turn { to { transform: rotate(360deg); } }
+.vox-banner a {
+    color: var(--phos-bright);
+    text-decoration: none;
+    text-shadow: var(--glow-strong);
+    font-family: 'UnifrakturCook', 'Grenze Gotisch', serif;
+    font-weight: 700;
+    font-size: 1.22rem;
+    letter-spacing: 0.06em;
+    text-transform: none;
+}
+.vox-banner .sigil { color: var(--amber); }
+.vox-banner .machina-spiritus {
+    margin-left: auto;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--phos-dim);
+    white-space: nowrap;
+}
+.vox-banner .machina-spiritus::before {
+    content: '█ ';
+    color: var(--phos);
+    animation: cursor-blink 1.1s steps(1) infinite;
+}
+@keyframes cursor-blink { 0%,100% { opacity: 1; } 50% { opacity: 0.15; } }
+
+/* ── layout ──────────────────────────────────────────────── */
+.templum {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    align-items: flex-start;
+}
+
+nav.transectus {
+    position: sticky;
+    top: 3rem;
+    flex: 0 0 300px;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    padding: 1.4rem 1rem 3rem;
+    border-right: 1px solid var(--phos-ghost);
+}
+nav.transectus h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    color: var(--amber-dim);
+    border: none;
+    margin: 0 0 0.7rem 0.5rem;
+    text-shadow: none;
+}
+nav.transectus h2::before { content: '>> '; color: var(--phos-dim); }
+nav.transectus a {
+    display: flex;
+    gap: 0.55rem;
+    align-items: baseline;
+    padding: 0.28rem 0.55rem;
+    margin: 1px 0;
+    color: var(--phos-dim);
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.86rem;
+    border-left: 2px solid transparent;
+    text-shadow: none;
+    transition: all 0.12s steps(2);
+}
+nav.transectus a .num {
+    font-size: 0.7rem;
+    color: var(--amber-dim);
+    min-width: 2.6em;
+}
+nav.transectus a:hover {
+    color: var(--phos-bright);
+    border-left-color: var(--phos);
+    background: var(--phos-ghost);
+    text-shadow: var(--glow);
+}
+nav.transectus a:hover::after { content: ' ▌'; animation: cursor-blink 1.1s steps(1) infinite; }
+nav.transectus a.heretica {
+    margin-top: 1.1rem;
+    color: var(--alert-dim);
+    border-top: 1px dashed var(--alert-dim);
+    padding-top: 0.7rem;
+    letter-spacing: 0.18em;
+}
+nav.transectus a.heretica .num { color: var(--alert); }
+nav.transectus a.heretica:hover {
+    color: var(--alert);
+    border-left-color: var(--alert);
+    background: rgba(255, 59, 31, 0.08);
+    text-shadow: 0 0 6px rgba(255,59,31,0.7);
+}
+nav.transectus a.activa {
+    color: var(--amber);
+    border-left-color: var(--amber);
+    background: linear-gradient(90deg, rgba(255,176,0,0.10), transparent);
+    text-shadow: var(--glow-amber);
+}
+
+main.sanctum {
+    flex: 1;
+    min-width: 0;
+    padding: 2.2rem 3rem 5rem;
+}
+
+/* ── typography: terminal gothic ────────────────────────── */
+h1, h2, h3, h4 {
+    font-family: 'Grenze Gotisch', 'VT323', serif;
+    font-weight: 600;
+    color: var(--amber);
+    line-height: 1.15;
+    letter-spacing: 0.045em;
+    text-shadow: var(--glow-amber);
+    text-transform: none;
+}
+h1 {
+    font-family: 'Pirata One', 'Grenze Gotisch', serif;
+    font-size: 2.9rem;
+    font-weight: 400;
+    margin: 0.3rem 0 1.4rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--amber-dim);
+    box-shadow: 0 1px 0 rgba(255,176,0,0.15);
+}
+h1::before { content: '++ '; color: var(--phos); text-shadow: var(--glow-strong); }
+h1::after  { content: ' ++'; color: var(--phos); text-shadow: var(--glow-strong); }
+h2 {
+    font-size: 1.85rem;
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px dashed var(--phos-faint);
+}
+h2::before { content: '⚙ '; color: var(--phos-dim); }
+h3 { font-size: 1.4rem; margin: 1.8rem 0 0.55rem; color: var(--phos-bright); text-shadow: var(--glow-strong); }
+h3::before { content: '» '; color: var(--amber-dim); }
+h4 { font-size: 1.05rem; color: var(--phos-dim); text-shadow: none; }
+
+p { margin: 0.7rem 0; }
+strong { color: var(--phos-bright); font-weight: 600; text-shadow: var(--glow-strong); }
+em { color: var(--amber); font-style: normal; }
+em::before { content: '‹'; color: var(--amber-dim); }
+em::after  { content: '›'; color: var(--amber-dim); }
+a { color: var(--phos-bright); text-decoration: none; border-bottom: 1px dotted var(--phos-dim); }
+a:hover { color: var(--amber); border-bottom: 1px solid var(--amber); text-shadow: var(--glow-amber); }
+hr {
+    border: none;
+    text-align: center;
+    margin: 2.4rem 0;
+}
+hr::after {
+    content: '─── ✠ ─── ⚙ ─── ✠ ───';
+    color: var(--phos-faint);
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    text-shadow: none;
+}
+
+/* ── litanies (blockquotes): amber vox-transmissions ────── */
+blockquote {
+    margin: 1.5rem 0;
+    padding: 0.8rem 1.3rem;
+    border: 1px solid var(--amber-dim);
+    border-left: 4px solid var(--amber);
+    background: rgba(255, 176, 0, 0.045);
+    color: var(--amber);
+    text-shadow: 0 0 5px rgba(255,176,0,0.4);
+    position: relative;
+}
+blockquote::before {
+    content: '++ INCOMING VOX // LITANIA ++';
+    display: block;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--amber-dim);
+    margin-bottom: 0.35rem;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+/* ── data-slates (code): the brightest phosphor ─────────── */
+code {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.88em;
+    color: var(--phos-bright);
+    background: var(--tube);
+    border: 1px solid var(--phos-ghost);
+    padding: 0.05em 0.35em;
+    text-shadow: var(--glow-strong);
+}
+pre {
+    position: relative;
+    background: var(--tube-dark);
+    border: 1px solid var(--phos-faint);
+    outline: 1px solid var(--phos-ghost);
+    outline-offset: 3px;
+    padding: 1.3rem 1.2rem 1rem;
+    overflow-x: auto;
+    margin: 1.2rem 0;
+    box-shadow: inset 0 0 46px rgba(0,0,0,0.75), 0 0 14px rgba(77,255,124,0.07);
+}
+pre::before {
+    content: '▚▚ DATA-SLATE // NOOSPHERIC FEED 01001100 ▚▚';
+    position: absolute;
+    top: 0.3rem;
+    right: 0.7rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.56rem;
+    letter-spacing: 0.18em;
+    color: var(--phos-faint);
+    text-shadow: none;
+}
+pre code {
+    display: block;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0.5rem 0 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--phos);
+    text-shadow: var(--glow);
+}
+
+/* ── tabulae: auspex readouts ───────────────────────────── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.2rem 0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.86rem;
+    border: 1px solid var(--phos-faint);
+    text-shadow: none;
+}
+th {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--amber);
+    text-shadow: var(--glow-amber);
+    background: var(--tube-raised);
+    border-bottom: 1px solid var(--amber-dim);
+    padding: 0.5rem 0.75rem;
+}
+td {
+    padding: 0.42rem 0.75rem;
+    border-bottom: 1px solid var(--phos-ghost);
+    vertical-align: top;
+    color: var(--phos);
+}
+tr:nth-child(even) td { background: rgba(77,255,124,0.025); }
+tr:hover td { background: var(--phos-ghost); color: var(--phos-bright); }
+
+ul, ol { padding-left: 1.5rem; }
+li { margin: 0.3rem 0; }
+ul li::marker { content: '▸ '; color: var(--amber-dim); }
+ol li::marker { color: var(--amber); font-family: 'Share Tech Mono', monospace; }
+
+/* ── index portal: boot screen of the shrine ────────────── */
+.invocatio {
+    text-align: center;
+    padding: 3.2rem 1rem 2.2rem;
+}
+.invocatio .aquila {
+    font-size: 2.4rem;
+    color: var(--amber);
+    text-shadow: var(--glow-amber);
+    animation: cursor-blink 3.5s steps(1) infinite;
+}
+.invocatio h1 {
+    border: none;
+    box-shadow: none;
+    font-family: 'Pirata One', 'UnifrakturCook', serif;
+    font-weight: 400;
+    font-size: 5.4rem;
+    letter-spacing: 0.05em;
+    margin: 0.4rem 0 0.1rem;
+    color: var(--phos-bright);
+    text-shadow: 0 0 6px rgba(168,255,190,0.9), 0 0 30px rgba(77,255,124,0.45);
+}
+.invocatio h1::before, .invocatio h1::after { content: none; }
+.invocatio .subtitulus {
+    font-family: 'Cinzel Decorative', serif;
+    font-weight: 700;
+    color: var(--phos-dim);
+    letter-spacing: 0.34em;
+    font-size: 0.86rem;
+    text-transform: uppercase;
+    text-shadow: none;
+}
+.invocatio .litania {
+    max-width: 36rem;
+    margin: 1.7rem auto 0;
+    padding: 1rem 1.4rem;
+    border: 1px solid var(--phos-ghost);
+    color: var(--phos-dim);
+    line-height: 2;
+    font-size: 0.92rem;
+    text-align: left;
+    text-shadow: none;
+}
+.invocatio .litania::before {
+    content: '> INITIALIZING CANTICLE OF AWAKENING ...';
+    display: block;
+    color: var(--phos-faint);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.6rem;
+}
+.invocatio .litania .responsum { color: var(--amber); text-shadow: var(--glow-amber); }
+
+.capitula-ordo {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 0.8rem;
+    margin-top: 2rem;
+}
+.capitulum-carta {
+    position: relative;
+    display: block;
+    padding: 1rem 1.1rem 0.9rem;
+    background: linear-gradient(165deg, var(--tube), var(--tube-dark));
+    border: 1px solid var(--phos-faint);
+    text-decoration: none;
+    color: var(--phos);
+    overflow: hidden;
+    transition: all 0.13s steps(3);
+}
+/* corner brackets, auspex style */
+.capitulum-carta::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    pointer-events: none;
+    background:
+        linear-gradient(var(--phos-dim), var(--phos-dim)) top left    / 10px 1px,
+        linear-gradient(var(--phos-dim), var(--phos-dim)) top left    / 1px 10px,
+        linear-gradient(var(--phos-dim), var(--phos-dim)) bottom right / 10px 1px,
+        linear-gradient(var(--phos-dim), var(--phos-dim)) bottom right / 1px 10px;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+}
+.capitulum-carta::after {
+    content: '⚙';
+    position: absolute;
+    right: -0.4rem;
+    bottom: -1.2rem;
+    font-size: 4.2rem;
+    color: rgba(77,255,124,0.05);
+    transition: all 0.25s ease;
+    text-shadow: none;
+}
+.capitulum-carta:hover {
+    border-color: var(--phos);
+    background: var(--tube-raised);
+    box-shadow: 0 0 18px rgba(77,255,124,0.18), inset 0 0 24px rgba(77,255,124,0.05);
+}
+.capitulum-carta:hover::after { color: rgba(77,255,124,0.16); transform: rotate(40deg); }
+.capitulum-carta .num {
+    font-family: 'Cinzel Decorative', serif;
+    font-weight: 700;
+    color: var(--amber-dim);
+    font-size: 0.64rem;
+    letter-spacing: 0.24em;
+    text-shadow: none;
+}
+.capitulum-carta .titulus {
+    font-family: 'Grenze Gotisch', serif;
+    font-weight: 600;
+    color: var(--phos-bright);
+    font-size: 1.45rem;
+    text-transform: none;
+    letter-spacing: 0.04em;
+    margin: 0.2rem 0 0.3rem;
+    text-shadow: var(--glow-strong);
+}
+.capitulum-carta:hover .titulus { color: var(--amber); text-shadow: var(--glow-amber); }
+.capitulum-carta .descriptio {
+    font-size: 0.82rem;
+    color: var(--phos-dim);
+    text-shadow: none;
+    line-height: 1.5;
+}
+
+/* ── collegium magorum: the contributor roll ────────────── */
+.nota-collegii { color: var(--phos-dim); font-size: 0.88rem; text-shadow: none; }
+.magi-ordo {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.7rem;
+    margin: 1rem 0 2rem;
+}
+.magus-carta {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.7rem 0.9rem;
+    background: linear-gradient(165deg, var(--tube), var(--tube-dark));
+    border: 1px solid var(--phos-faint);
+    text-decoration: none;
+    color: var(--phos);
+    transition: all 0.13s steps(3);
+}
+.magus-carta:hover {
+    border-color: var(--amber-dim);
+    background: var(--tube-raised);
+    box-shadow: 0 0 16px rgba(255,176,0,0.12);
+}
+.effigies {
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--phos-dim);
+    background: var(--tube-dark);
+    overflow: hidden;
+}
+.effigies img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* servitor-feed filter: the noosphere shows all flesh in phosphor */
+    filter: grayscale(1) sepia(1) hue-rotate(65deg) saturate(2.2) brightness(0.9) contrast(1.15);
+}
+.effigies.glyphus {
+    font-size: 1.7rem;
+    color: var(--phos-dim);
+    text-shadow: var(--glow);
+}
+.corpus-magi { display: flex; flex-direction: column; min-width: 0; }
+.nomen-magi {
+    font-family: 'Grenze Gotisch', serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    text-transform: none;
+    color: var(--phos-bright);
+    text-shadow: var(--glow-strong);
+    letter-spacing: 0.04em;
+}
+.magus-carta:hover .nomen-magi { color: var(--amber); text-shadow: var(--glow-amber); }
+.titulus-magi {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--amber-dim);
+    text-shadow: none;
+}
+
+/* ── footer: the crypt feed ─────────────────────────────── */
+footer.crypta {
+    margin-top: 4rem;
+    padding: 1.4rem;
+    border-top: 1px solid var(--phos-ghost);
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    color: var(--phos-faint);
+    text-shadow: none;
+}
+footer.crypta .binarius {
+    color: var(--phos-dim);
+    word-spacing: 0.5em;
+    display: block;
+    margin-bottom: 0.5rem;
+    animation: cursor-blink 4s steps(1) infinite;
+}
+
+/* ── scrollbar of the machine ───────────────────────────── */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--tube-dark); }
+::-webkit-scrollbar-thumb {
+    background: var(--phos-faint);
+    border: 2px solid var(--tube-dark);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--phos-dim); }
+
+/* ═══════════════════════════════════════════════════════════════
+   H̸E̸R̸E̸T̸E̸C̸H̸ — beyond this line the Geller field does not hold.
+   The palette is no longer sanctioned. Nothing here is sanctioned.
+   ═══════════════════════════════════════════════════════════════ */
+
+body.warp {
+    --wp-void:    #0a0114;
+    --wp-flesh:   #ff2fd6;
+    --wp-sick:    #9d4dff;
+    --wp-bile:    #59ffc8;
+    --wp-blood:   #ff2244;
+    background: var(--wp-void);
+    background-image:
+        radial-gradient(ellipse at 18% 25%, rgba(157, 77, 255, 0.20), transparent 50%),
+        radial-gradient(ellipse at 82% 70%, rgba(255, 47, 214, 0.14), transparent 55%),
+        radial-gradient(ellipse at 50% 110%, rgba(255, 34, 68, 0.12), transparent 60%);
+    color: var(--wp-sick);
+    text-shadow: 0 0 7px rgba(157, 77, 255, 0.6);
+    overflow-x: hidden;
+    animation: warp-breathe 13s ease-in-out infinite;
+}
+@keyframes warp-breathe {
+    0%, 100% { filter: hue-rotate(0deg); }
+    33%      { filter: hue-rotate(14deg); }
+    66%      { filter: hue-rotate(-11deg); }
+}
+body.warp::before {
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 47, 214, 0.05) 0px,
+        rgba(0, 0, 0, 0.28) 1px,
+        transparent 2px,
+        transparent 3px);
+}
+
+.abyssus { padding: 2.2rem 0 4rem; text-align: center; }
+
+a.fuga {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.24em;
+    color: var(--wp-bile);
+    border: 1px solid var(--wp-bile);
+    padding: 0.5rem 1.2rem;
+    margin-bottom: 1.6rem;
+    text-decoration: none;
+    text-shadow: 0 0 8px rgba(89, 255, 200, 0.6);
+    animation: cursor-blink 2.2s steps(1) infinite;
+}
+a.fuga:hover {
+    background: rgba(89, 255, 200, 0.1);
+    box-shadow: 0 0 22px rgba(89, 255, 200, 0.35);
+    border-bottom: 1px solid var(--wp-bile);
+}
+
+h1.glitch {
+    position: relative;
+    display: inline-block;
+    font-family: 'Nosifer', 'Grenze Gotisch', cursive;
+    font-weight: 400;
+    font-size: 3.4rem;
+    letter-spacing: 0.12em;
+    color: var(--wp-flesh);
+    border: none;
+    box-shadow: none;
+    margin: 0.2rem 0 0.6rem;
+    text-shadow: 0 0 10px rgba(255,47,214,0.8), 0 0 44px rgba(255,47,214,0.4);
+    animation: glitch-skew 3.1s steps(2) infinite;
+}
+h1.glitch::before, h1.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+h1.glitch::before {
+    color: var(--wp-bile);
+    clip-path: inset(12% 0 58% 0);
+    transform: translate(-4px, -2px);
+    animation: glitch-slice-a 2.3s steps(3) infinite;
+}
+h1.glitch::after {
+    color: var(--wp-blood);
+    clip-path: inset(62% 0 8% 0);
+    transform: translate(4px, 2px);
+    animation: glitch-slice-b 1.7s steps(4) infinite;
+}
+@keyframes glitch-skew {
+    0%, 88%, 100% { transform: skewX(0); }
+    90% { transform: skewX(3deg); }
+    94% { transform: skewX(-2deg); }
+}
+@keyframes glitch-slice-a {
+    0%, 100% { clip-path: inset(12% 0 58% 0); transform: translate(-4px, -2px); }
+    30% { clip-path: inset(44% 0 30% 0); transform: translate(-7px, 1px); }
+    65% { clip-path: inset(4% 0 80% 0); transform: translate(-2px, -4px); }
+}
+@keyframes glitch-slice-b {
+    0%, 100% { clip-path: inset(62% 0 8% 0); transform: translate(4px, 2px); }
+    40% { clip-path: inset(28% 0 52% 0); transform: translate(8px, -1px); }
+    75% { clip-path: inset(78% 0 2% 0); transform: translate(3px, 4px); }
+}
+
+.monitum-warp {
+    font-family: 'Eater', 'Share Tech Mono', cursive;
+    font-size: 0.82rem;
+    letter-spacing: 0.22em;
+    color: var(--wp-blood);
+    text-shadow: 0 0 8px rgba(255, 34, 68, 0.7);
+    margin: 0.4rem auto 2rem;
+    max-width: 60rem;
+    animation: cursor-blink 0.9s steps(1) infinite;
+}
+.monitum-warp.infra { margin-top: 2.4rem; animation-duration: 3.7s; }
+
+/* the endless ribbons of corrupted scripture */
+.vitta {
+    white-space: nowrap;
+    overflow: hidden;
+    border-top: 1px solid rgba(157, 77, 255, 0.18);
+    padding: 0.32rem 0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.86rem;
+    text-align: left;
+}
+.vitta span {
+    display: inline-block;
+    padding-right: 3em;
+    animation-name: fluxus;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform;
+}
+.vitta.retro span { animation-direction: reverse; }
+.vitta:nth-child(4n)   { color: var(--wp-flesh); text-shadow: 0 0 7px rgba(255,47,214,0.55); }
+.vitta:nth-child(4n+1) { color: var(--wp-sick);  text-shadow: 0 0 7px rgba(157,77,255,0.55); }
+.vitta:nth-child(4n+2) { color: var(--wp-bile);  text-shadow: 0 0 7px rgba(89,255,200,0.45); font-size: 0.74rem; opacity: 0.85; }
+.vitta:nth-child(4n+3) { color: var(--wp-blood); text-shadow: 0 0 7px rgba(255,34,68,0.55); font-size: 1rem; }
+.vitta:hover span { animation-play-state: paused; }
+.vitta:hover { background: rgba(255, 47, 214, 0.05); }
+@keyframes fluxus { to { transform: translateX(-50%); } }
+
+@media (max-width: 900px) {
+    .templum { flex-direction: column; }
+    nav.transectus { position: static; flex: none; width: 100%; max-height: none;
+        border-right: none; border-bottom: 1px solid var(--phos-ghost); }
+    main.sanctum { padding: 1.3rem 1.1rem 4rem; }
+    .invocatio h1 { font-size: 2.6rem; }
+}

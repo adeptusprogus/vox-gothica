@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Moduli · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class=' activa' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class='' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>07 — Modules (in-project)</h1>
+<p>A <strong>module</strong> is one <code>.vg</code> file. This chapter covers modules within a single project; packages of modules shared between projects are <strong>litaniae</strong> (08-litaniae).</p>
+<h2>1. Module kinds</h2>
+<ul>
+<li><code>LITANIA "name".</code> header — a library module: only declarations (<code>DECLARO</code>/<code>SANCTUM</code>/<code>RITUS</code>/<code>SCHEMA</code> and imports) at top level. Imperative top-level statements are <code>PROFANATIO</code> P-XVI. <em>(Rationale: importing must be effect-free so import order can never matter.)</em></li>
+<li><code>CANTICUM</code> / <code>FABRICA</code> files may also be imported? <strong>No.</strong> Importing a CANTICUM or FABRICA is P-XVI. Entry files and library files are different castes.</li>
+</ul>
+<h2>2. Import forms</h2>
+<pre><code>
+INVOCO "mathematica"                       ++ stdlib module
+INVOCO "fons/logistics"                    ++ project module (path from project root, no .vg)
+INVOCO "adeptus/http_sancta"               ++ installed litania (08-litaniae)
+INVOCO "adeptus/http_sancta" UT rete       ++ alias
+INVOCO radix, potentia EX "mathematica"    ++ named imports, bound directly
+</code></pre>
+<ul>
+<li>Default binding name is the final path segment (<code>logistics</code>, <code>http_sancta</code>). Members are accessed as <code>logistics.expedi(...)</code>.</li>
+<li><code>EX</code> binds listed names directly; importing a name that is not exported raises P-XVII <code>nomen_non_exportatum</code> at load time.</li>
+<li>Import statements must precede all other declarations in the file (after the header). Elsewhere: P-XVI.</li>
+</ul>
+<h2>3. Resolution order (normative)</h2>
+<p>For <code>INVOCO "path"</code>:</p>
+<ol>
+<li><strong>Stdlib</strong> names (no <code>/</code> in path, matches a stdlib module) — always win; shadowing stdlib is impossible.</li>
+<li><strong>Project modules</strong>: <code>&lt;project root&gt;/&lt;path&gt;.vg</code>, where project root is the directory containing <code>litania.toml</code> (or the entry file's directory if no manifest).</li>
+<li><strong>Installed litaniae</strong>: <code>&lt;root&gt;/litaniae/&lt;auctor&gt;/&lt;nomen&gt;/...</code> (see 08-litaniae §6).</li>
+<li>Otherwise: load-time P-XVIII <code>invocatio_vana</code> ("the invocation went unanswered"), with a hint listing near-miss names.</li>
+</ol>
+<h2>4. Semantics</h2>
+<ul>
+<li>A module is loaded <strong>once</strong> per process; subsequent imports bind the same instance (module-level mutable state is therefore shared — use sparingly; <code>lustro</code> warns on mutable <code>DECLARO</code> at module top level).</li>
+<li>Loading executes the module's declarations top to bottom. Rite names are hoisted within the module (05-rites §5); cross-module references are not hoisted — import order in a file is the initialization order.</li>
+<li>Import cycles raise <code>circulus_impius</code> (Major) naming the full cycle path.</li>
+</ul>
+<h2>5. Visibility</h2>
+<ul>
+<li>Everything at module top level is exported <strong>unless</strong> its name starts with <code>_</code> (unhallowed = private).</li>
+<li><code>PALAM</code> ("publicly") before a declaration is redundant but legal, for emphasis: <code>PALAM RITUS ...</code>. <code>lustro --strictus</code> can require it.</li>
+<li>Schema fields are always visible; there is no field privacy in v0.2.</li>
+</ul>
+<h2>6. Project layout <em>(informative)</em></h2>
+<pre><code>
+meum_opus/
+  litania.toml          ++ manifest (even for apps; 08-litaniae §3)
+  litania.claustrum     ++ lockfile
+  principium.vg         ++ CANTICUM entry
+  fabrica.vg            ++ FABRICA manifest(s)
+  fons/                 ++ project LITANIA modules
+    logistics.vg
+    cogitator/
+      auspex.vg         ++ imported as "fons/cogitator/auspex"
+  litaniae/             ++ installed packages (vendored, committed or not — your rite)
+  probationes/          ++ tests: *_proba.vg (09-stdlib §12)
+</code></pre>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>

@@ -1,0 +1,18 @@
+AVE OMNISSIAH.
+CANTICUM "auspex_lectio".
+
+RITUS divide_sancte (summa : NUMERUS, divisor : NUMERUS) -> NUMERUS
+    SI divisor == N TUNC
+        PROCLAMO HERESIM "Division by naught profanes the cogitator." GENERIS "divisio_prohibita"
+    FINIS SI
+    REDDO summa / divisor
+FINIS RITUS
+
+TEMPTA
+    VOCIFERO "Result: {divide_sancte(C, V)}"
+    VOCIFERO "Result: {divide_sancte(C, N)}"
+SI HERESIS (delictum)
+    SUSURRO "Contained: [{delictum.genus}] {delictum.nuntius}"
+DENIQUE
+    VOCIFERO "The rite concludes."
+FINIS TEMPTA

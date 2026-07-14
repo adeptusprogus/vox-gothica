@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+*.pyz
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Vox Gothica toolchain artifacts
+exempla/.gothica/
+**/.gothica/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Terraform (fabrica output)
+*.tfstate
+*.tfstate.*
+.terraform/

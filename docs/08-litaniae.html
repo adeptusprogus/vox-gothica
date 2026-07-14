@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang='en'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Litaniae · Codex Vox Gothica</title>
+<link rel='stylesheet' href='stylus.css'>
+</head><body>
+<div class='vox-banner'><span class='cog'>⚙</span>
+<a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
+<div class='templum'>
+<nav class='transectus'><h2>INDEX CODICIS</h2>
+<a class='' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
+<a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
+<a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
+<a class='' href='03-expressions.html'><span class='num'>III</span> Expressiones</a>
+<a class='' href='04-statements.html'><span class='num'>IV</span> Sententiae</a>
+<a class='' href='05-rites.html'><span class='num'>V</span> Ritus</a>
+<a class='' href='06-heresies.html'><span class='num'>VI</span> Codex Hereticus</a>
+<a class='' href='07-modules.html'><span class='num'>VII</span> Moduli</a>
+<a class=' activa' href='08-litaniae.html'><span class='num'>VIII</span> Litaniae</a>
+<a class='' href='09-stdlib.html'><span class='num'>IX</span> Cultus Machinae</a>
+<a class='' href='10-fabrica.html'><span class='num'>X</span> Fabrica</a>
+<a class='' href='11-grammar.html'><span class='num'>XI</span> Grammatica Formalis</a>
+<a class='' href='12-cli.html'><span class='num'>XII</span> Mandata</a>
+<a class='' href='13-examples.html'><span class='num'>XIII</span> Exempla Sancta</a>
+<a class='' href='14-implementation.html'><span class='num'>XIV</span> Instrumenta</a>
+<a class='' href='15-glossary.html'><span class='num'>XV</span> Glossarium</a>
+<a class='heretica' href='heretech.html'><span class='num'>☠</span> NOLI INTRARE</a>
+</nav>
+<main class='sanctum'>
+<h1>08 — Litaniae (Packages)</h1>
+<p>A <strong>litania</strong> is a versioned, distributable package of modules — Vox Gothica's answer to Python packages and Go modules. The design is deliberately Go-shaped: <strong>git-first, decentralized, checksum-locked, minimal version selection.</strong> No central server is required to ship v0.2; a curated registry (the <strong>Librarium Sanctum</strong>) layers on top later without changing the model.</p>
+<h2>1. Identity</h2>
+<p>A litania is identified by its <strong>via</strong> (import path):</p>
+<pre><code>
+&lt;auctor&gt;/&lt;nomen&gt;                  ++ short form, e.g.  adeptus/http_sancta
+&lt;host&gt;/&lt;auctor&gt;/&lt;nomen&gt;           ++ full form, e.g.  github.com/adeptus/http_sancta
+</code></pre>
+<ul>
+<li><code>auctor</code> and <code>nomen</code> match <code>[a-z_][a-z0-9_-]*</code> (hyphens allowed in package names, not in module files).</li>
+<li>The short form resolves through the Librarium index (§7); the full form resolves directly via git. <strong>The full form always works even if the Librarium burns</strong> — decentralization is doctrine.</li>
+<li>Reserved <code>auctor</code> names: <code>fons</code>, <code>litaniae</code>, <code>gothica</code>, and all stdlib module names (X-IV on publish attempt).</li>
+</ul>
+<h2>2. Versioning (normative)</h2>
+<ul>
+<li>Semantic versioning, Arabic: <code>MAJOR.MINOR.PATCH</code> (git tags <code>v1.2.3</code>). *(Roman versions were considered and rejected: <code>v.XLII.IX.III</code> is illegible in a diff. The Machine God favors legible diffs.)*</li>
+<li>Pre-1.0: anything may break. Post-1.0: breaking changes require a MAJOR bump — violating this earns your version an excommunication entry in the Librarium (X-VI).</li>
+<li><strong>Major versions are distinct litaniae</strong>, Go-style: <code>adeptus/http_sancta/v2</code> is imported and resolved independently of v1. A program may depend on both. This kills the diamond-dependency problem at the cost of an ugly suffix — a trade the Adeptus accepts.</li>
+</ul>
+<h2>3. The manifest — <code>litania.toml</code></h2>
+<p>Every litania (and every project) carries one at its root:</p>
+<pre><code>
+[litania]
+via         = "github.com/adeptus/http_sancta"
+versio      = "1.4.2"                  # required for published litaniae
+descriptio  = "Sanctified HTTP rites for the discerning magos"
+auctores    = ["Magos Errant Kane &lt;kane@mechanicus.example&gt;"]
+licentia    = "MIT"
+gothica     = "&gt;=0.2"                  # minimum toolchain version
+
+[requirit]                             # dependencies
+"github.com/adeptus/codex_json"  = "^1.2"
+"github.com/xenos/retis/v2"      = "^2.0.1"
+
+[requirit_probationis]                 # test-only dependencies
+"github.com/adeptus/probatio_aux" = "^0.3"
+
+[canticum]                             # only for runnable projects
+principium = "principium.vg"           # entry file for `gothica invoco` with no args
+</code></pre>
+<p>Constraint syntax: <code>^1.2</code> (≥1.2.0, &lt;2.0.0), <code>~1.2.3</code> (≥1.2.3, &lt;1.3.0), <code>=1.2.3</code> (exact), <code>&gt;=1.2</code> (at least). Malformed manifest: X-IV <code>manifestum_pravum</code>.</p>
+<h2>4. Version resolution — Minimal Version Selection (normative)</h2>
+<p>Given the dependency graph, the selected version of each litania is the <strong>maximum of the minimum versions requested</strong> by all requirers — Go's MVS, verbatim:</p>
+<ol>
+<li>Collect every constraint on litania L across the graph.</li>
+<li>Each constraint has an implied minimum; take the highest minimum, <code>v</code>.</li>
+<li>If <code>v</code> violates any upper bound (<code>^</code>/<code>~</code>/<code>=</code>): X-II <code>versio_discors</code>, message lists the conflicting requirers.</li>
+<li>Otherwise select exactly <code>v</code> — <strong>never</strong> silently the newest available.</li>
+</ol>
+<p>*(Rationale: builds are reproducible from the manifest alone, no SAT solver, upgrades are always explicit acts of faith — <code>gothica renovo</code>.)*</p>
+<h2>5. The lockfile — <code>litania.claustrum</code></h2>
+<p>Machine-written, human-readable, <strong>committed to version control</strong>:</p>
+<pre><code>
+[[claustrum]]
+via     = "github.com/adeptus/codex_json"
+versio  = "1.3.0"
+fons    = "git+https://github.com/adeptus/codex_json@v1.3.0"
+signum  = "sha256:9f2c1a...e77b"       # hash of the package archive tree
+</code></pre>
+<ul>
+<li><code>signum</code> is verified on every fetch and every build; mismatch is X-III <code>signum_falsum</code> and there is <strong>no flag to override it</strong>. A tampered litania is not installed with a warning; it is not installed.</li>
+<li>Lockfile inconsistent with manifest: X-V, fix with <code>gothica adfero</code>.</li>
+</ul>
+<h2>6. Installation layout</h2>
+<p><code>gothica adfero</code> materializes dependencies into the project-local <code>litaniae/</code> directory (vendoring is the default and only mode in v0.2 — a global content-addressed cache <code>~/.gothica/librarium/</code> seeds it, so disk cost is one hardlink):</p>
+<pre><code>
+litaniae/
+  github.com/adeptus/codex_json/     ++ the package's fons/ tree + its litania.toml
+  github.com/xenos/retis/v2/
+</code></pre>
+<p>Import resolution (07-modules §3) searches this tree. Nested <code>litaniae/</code> inside dependencies are ignored — the root project's lockfile governs the whole build (single flat resolution, no node_modules hell).</p>
+<h2>7. The Librarium (registry)</h2>
+<ul>
+<li>v0.2: the Librarium is <strong>just a git repository</strong> of index files mapping short vias to full vias + advisory metadata (excommunicated versions, license, description). Default: <code>github.com/vox-gothica/librarium-sanctum</code>; override or add mirrors in <code>~/.gothica/configuratio.toml</code> (first match wins — private corporate librariums are first-class).</li>
+<li>Publishing (§8) into the Librarium = a pull request adding/updating your index entry, exactly like early Homebrew. A web UI and API are M6 concerns; the data model already supports them.</li>
+<li><strong>Excommunication ≠ deletion.</strong> A yanked (<code>excommunicata</code>) version stays fetchable if already in a lockfile (builds must not break) but is refused for new resolution, with the advisory shown.</li>
+</ul>
+<h2>8. Package commands</h2>
+<table>
+<tr><th>Command</th><th>Act</th></tr>
+<tr><td><code>gothica initium</code></td><td>scaffold a project (<code>litania.toml</code>, <code>principium.vg</code>, <code>fons/</code>, <code>probationes/</code>)</td></tr>
+<tr><td><code>gothica initium --litania</code></td><td>scaffold a publishable litania</td></tr>
+<tr><td><code>gothica adfero</code></td><td>resolve manifest → update lockfile → populate <code>litaniae/</code></td></tr>
+<tr><td><code>gothica adfero &lt;via&gt;[@versio]</code></td><td>add a dependency (writes <code>[requirit]</code>, then as above)</td></tr>
+<tr><td><code>gothica expello &lt;via&gt;</code></td><td>remove a dependency; fails if still required transitively</td></tr>
+<tr><td><code>gothica renovo [&lt;via&gt;]</code></td><td>raise constraint minimums to newest compatible; explicit upgrades only</td></tr>
+<tr><td><code>gothica offero</code></td><td>publish: verify manifest, run <code>gothica proba</code>, check tag == versio, verify no path deps, push tag; prints the Librarium PR link</td></tr>
+<tr><td><code>gothica librarium quaere &lt;term&gt;</code></td><td>search the index</td></tr>
+<tr><td><code>gothica librarium inspice &lt;via&gt;</code></td><td>show versions, advisories, deps of a litania</td></tr>
+</table>
+<p><code>offero</code> refuses (X-IV) if: tests fail, the git tree is dirty, <code>versio</code> ≠ the git tag, <code>[requirit]</code> contains a path or pre-release dependency, or <code>via</code> doesn't match the repo origin.</p>
+<h2>9. What a litania may contain (normative)</h2>
+<ul>
+<li>Only <code>LITANIA</code>-mode <code>.vg</code> files, <code>litania.toml</code>, docs, and <code>probationes/</code>. A <code>CANTICUM</code>/<code>FABRICA</code> inside a published litania is refused at publish and ignored at import <em>(packages are libraries; ship apps as repos, not litaniae)</em>.</li>
+<li>FABRICA <strong>helper</strong> litaniae are legal and encouraged: LITANIA modules exporting rites that call <code>EXSTRUATUR</code>. Such rites execute only when invoked from a FABRICA context; invoked from CANTICUM they raise <code>fabrica_in_cantico</code>. This is how the ecosystem grows reusable infrastructure patterns ("a blessed VPC", "a consecrated Postgres") — the Vox Gothica equivalent of Terraform modules, but they are just code.</li>
+<li>Native/FFI extensions: not in v0.2 (<code>LEGATUS</code> is a reserved keyword for this future).</li>
+</ul>
+<h2>10. Local development</h2>
+<p>Path override for developing two litaniae in tandem — in the <strong>project's</strong> manifest only:</p>
+<pre><code>
+[substitutio]
+"github.com/adeptus/codex_json" = { via_localis = "../codex_json" }
+</code></pre>
+<p>Substitutions are ignored by <code>offero</code> targets and rejected in published manifests (X-IV). Equivalent of Go's <code>replace</code>.</p>
+<h2>11. Naming taste <em>(informative)</em></h2>
+<p>Litania names should be Latin-flavored and honest: <code>codex_json</code>, <code>http_sancta</code>, <code>tempus_extra</code>, <code>postgres_benedicta</code>. The Librarium index review rejects names that collide with stdlib or claim false sanctity (<code>officialis_*</code> is reserved for the core team).</p>
+<footer class='crypta'><span class='binarius'>01001111 01001101 01001110 01001001 01010011 01010011 01001001 01000001 01001000</span>
+FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US · GENERATED BY VITRARIUM.VG, A CANTICLE OF VOX GOTHICA ⚙ AVE OMNISSIAH
+</footer></main></div></body></html>
