@@ -24,24 +24,78 @@ cd vox-gothica
 git remote add upstream https://github.com/adeptusprogus/vox-gothica.git
 ```
 
-### 2. Create a branch
+### 2. Create a branch — *Ordo Branchium*
+
+Every branch bears an **ordo** (order) prefix from the Cult Mechanicus. This is not optional decoration: it tells reviewers what liturgy you are performing.
+
+**Format (normative):**
+
+```
+<ordo>/<slug>
+```
+
+| Part | Rule |
+|------|------|
+| `<ordo>` | One of the sacred orders below — lowercase, exactly as written |
+| `<slug>` | `kebab-case`, lowercase English or Latin, **3–48 characters**, describes the change |
+| Separator | Single `/` between ordo and slug — no nested paths |
+
+**Examples:**
+
+```bash
+git checkout -b cantica/lustro-linter upstream/main
+git checkout -b purgatio/divisor-nihil-guard upstream/main
+git checkout -b codex/chapter-viii-litaniae upstream/main
+git checkout -b fabrica/aws-vpc-alias upstream/main
+```
+
+#### Sacred ordines
+
+| Ordo | High Gothic | Use for |
+|------|-------------|---------|
+| `cantica/` | *canticle* | Language features, interpreter, parser, stdlib modules, runtime |
+| `fabrica/` | *workshop* | Fabricae, Terraform emission, providers, `EXSTRUATUR`, IaC |
+| `litania/` | *litany* | Package manager, `litania.toml`, lockfile, registry, deps |
+| `purgatio/` | *purification* | Bug fixes — expunging heresy from the Machine |
+| `codex/` | *sacred text* | Documentation: `docs/`, `wiki/`, README, Codex chapters |
+| `cogitator/` | *cogitator* | CI, build, install scripts, formatter/linter tooling, refactors |
+| `auspex/` | *auspex* | Spikes and prototypes — **not for merge without follow-up PR** |
+| `exterminatus/` | *extermination* | Removals, deprecations, dead-code annihilation |
+| `crusade/` | *crusade* | Large efforts spanning multiple PRs (link the issue in PR body) |
+
+#### Choosing the right ordo
+
+```
+New RITUS syntax?          → cantica/
+Terraform alias table?     → fabrica/
+adfero/offero commands?    → litania/
+divisio_nihili on zero?    → purgatio/
+Fix typo in 06-heresies?   → codex/
+GitHub Actions matrix?     → cogitator/
+Try a Go parser for fun?   → auspex/   (mark PR as draft)
+Remove deprecated kw?      → exterminatus/
+M4 conformance suite?      → crusade/   (reference issue #N)
+```
+
+#### Forbidden names
+
+| Sin | Examples |
+|-----|----------|
+| No ordo prefix | `my-fix`, `update`, `johns-branch` |
+| Wrong case | `Cantica/Foo`, `PURGATIO/bar` |
+| Nested paths | `cantica/fabrica/vpc` |
+| Sacred branch names | `main`, `master`, `develop`, `release` |
+| Joke slugs that obscure intent | `cantica/chaos-wins`, `purgatio/empire-sucks` |
+| Personal names as slug | `cantica/eduard-wip` — use topic instead: `cantica/lustro-wip` |
+
+> **Auspex branches** must be opened as **Draft PRs** and either promoted to a proper ordo or closed within 14 days. The Machine tolerates reconnaissance, not permanent camps.
 
 Branch from latest `main`:
 
 ```bash
 git fetch upstream
-git checkout -b feat/short-description upstream/main
+git checkout -b <ordo>/<slug> upstream/main
 ```
-
-**Branch naming:**
-
-| Prefix | Use for |
-|--------|---------|
-| `feat/` | New language feature or stdlib module |
-| `fix/` | Bug fix |
-| `docs/` | Codex, wiki, README only |
-| `ci/` | Workflows, tooling |
-| `refactor/` | Internal restructuring (no behavior change) |
 
 ### 3. Develop and test
 
@@ -57,27 +111,40 @@ If you change language behavior, add or update:
 - a test in `vox-gothica/demo/probationes/` (`*_proba.vg`)
 - the relevant Codex chapter in `docs/` (if spec-visible)
 
-### 4. Commit
+### 4. Commit — *Inscriptiones*
 
-Write clear commit messages:
+Commit messages use the **same ordines** as branch names (Conventional Commits, Mechanicus dialect):
 
 ```
-fix: guard divisor in litania_numerorum example
+purgatio: guard divisor in litania_numerorum example
 
 Prevents divisio_nihili when divisor is N. Adds *_proba.vg case.
 ```
 
-Prefixes: `feat`, `fix`, `docs`, `ci`, `refactor`, `test`.
+| Prefix | Ordo | When |
+|--------|------|------|
+| `cantica:` | `cantica/` | New behavior in language or stdlib |
+| `fabrica:` | `fabrica/` | Infrastructure / Terraform |
+| `litania:` | `litania/` | Packages and lockfile |
+| `purgatio:` | `purgatio/` | Bug fix |
+| `codex:` | `codex/` | Documentation only |
+| `cogitator:` | `cogitator/` | CI, build, tooling, refactor |
+| `exterminatus:` | `exterminatus/` | Removal / deprecation |
+| `crusade:` | `crusade/` | Part of a tracked multi-PR effort |
+
+Legacy prefixes (`feat:`, `fix:`, `docs:`) are still understood by maintainers but **discouraged** — inscribe the proper ordo.
 
 ### 5. Open a pull request
 
 ```bash
-git push origin feat/short-description
+git push origin <ordo>/<slug>
 ```
 
 Open a PR against `adeptusprogus/vox-gothica:main`. Fill in the PR template.
 
-**PR title:** same style as commits (e.g. `feat: add lustro linter stub`).
+**PR title:** same ordine as the branch (e.g. `cantica: add lustro linter stub`).
+
+**Branch name in PR** must match `<ordo>/<slug>`. Maintainers will request rename if the ordo is wrong.
 
 ### 6. Review and merge
 

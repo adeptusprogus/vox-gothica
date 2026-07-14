@@ -2,13 +2,21 @@
 
 <!-- What does this PR do, and why? One paragraph. -->
 
-## Type of change
+## Ordo (branch type)
 
-- [ ] Bug fix (`fix/`)
-- [ ] New feature (`feat/`)
-- [ ] Documentation (`docs/`)
-- [ ] CI / tooling (`ci/`)
-- [ ] Refactor (no behavior change)
+<!-- Branch must be <ordo>/<slug> — see CONTRIBUTING.md § Ordo Branchium -->
+
+- [ ] `cantica/` — language, interpreter, stdlib
+- [ ] `fabrica/` — infrastructure, Terraform
+- [ ] `litania/` — packages, lockfile
+- [ ] `purgatio/` — bug fix
+- [ ] `codex/` — documentation
+- [ ] `cogitator/` — CI, tooling, refactor
+- [ ] `auspex/` — spike (draft PR)
+- [ ] `exterminatus/` — removal / deprecation
+- [ ] `crusade/` — part of larger effort (issue: #<!-- N -->)
+
+**Branch:** `<!-- ordo/slug -->`
 
 ## Codex alignment
 
@@ -25,6 +33,7 @@
 
 ## Checklist
 
+- [ ] Branch name follows **Ordo Branchium** (`<ordo>/<slug>`)
 - [ ] Single concern per PR (no unrelated changes)
 - [ ] No secrets, tokens, or credentials committed
-- [ ] Commit messages follow conventional style (`feat:`, `fix:`, `docs:`)
+- [ ] Commit messages use Mechanicus ordines (`cantica:`, `purgatio:`, …)

@@ -94,6 +94,6 @@ vox-gothica/       Reference toolchain (Python): gothica package, exempla, demo
 
 ## Contributing
 
-Pull requests welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for branch rules, testing requirements, and the sacred workflow around `main`.
+Pull requests welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the **Ordo Branchium** naming policy, testing requirements, and workflow around `main`. Quick ref: [.github/BRANCH_POLICY.md](.github/BRANCH_POLICY.md).
 
 *The flesh is weak; the toolchain is versioned.*
