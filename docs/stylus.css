@@ -410,6 +410,20 @@ ol li::marker { color: var(--amber); font-family: 'Share Tech Mono', monospace; 
     text-shadow: var(--glow-amber);
     animation: cursor-blink 3.5s steps(1) infinite;
 }
+.heraldry-sigil {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.4rem;
+    animation: none;
+}
+.heraldry-sigil img {
+    width: 7.5rem;
+    height: 7.5rem;
+    border-radius: 0.35rem;
+    border: 1px solid var(--phos-faint);
+    box-shadow: 0 0 28px rgba(77,255,124,0.18), inset 0 0 12px rgba(0,0,0,0.6);
+    background: var(--tube-dark);
+}
 .invocatio h1 {
     border: none;
     box-shadow: none;

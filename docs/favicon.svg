@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vox Gothica">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#1a2e1a"/>
+      <stop offset="100%" stop-color="#0a0f0a"/>
+    </radialGradient>
+    <filter id="p" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="8" fill="url(#g)"/>
+  <g fill="none" stroke="#c9a227" stroke-width="2.2" filter="url(#p)">
+    <circle cx="32" cy="30" r="14"/>
+    <circle cx="32" cy="30" r="5.5" stroke="#4dff7c" stroke-width="1.6"/>
+    <path d="M32 16v-4M32 44v4M18 30h-4M46 30h4M22.2 19.8l-2.8-2.8M41.8 40.2l2.8 2.8M41.8 19.8l2.8-2.8M22.2 40.2l-2.8 2.8" stroke-linecap="round"/>
+    <path d="M32 22l-3 6h6l-3 6" stroke="#4dff7c" stroke-width="1.8" stroke-linejoin="round"/>
+  </g>
+  <text x="32" y="56" text-anchor="middle" font-family="Georgia,serif" font-size="9" font-weight="700" fill="#4dff7c" letter-spacing="2">VG</text>
+</svg>

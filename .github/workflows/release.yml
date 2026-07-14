@@ -19,9 +19,7 @@ jobs:
           - os: macos-14
             asset: gothica-darwin-arm64
             exe: gothica
-          - os: macos-13
-            asset: gothica-darwin-amd64
-            exe: gothica
+          # Intel Mac: macos-13 runners are scarce/deprecated; arm64 binary runs via Rosetta.
           - os: ubuntu-latest
             asset: gothica-linux-amd64
             exe: gothica
@@ -85,15 +83,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+          fail_on_unmatched_files: false
           files: |
-            artifacts/gothica-darwin-arm64
-            artifacts/gothica-darwin-arm64.sha256
-            artifacts/gothica-darwin-amd64
-            artifacts/gothica-darwin-amd64.sha256
-            artifacts/gothica-linux-amd64
-            artifacts/gothica-linux-amd64.sha256
-            artifacts/gothica-windows-amd64.exe
-            artifacts/gothica-windows-amd64.exe.sha256
+            artifacts/*
             SHA256SUMS.txt
           body: |
             ## Install (no Python required)
@@ -112,8 +104,7 @@ jobs:
 
             | Asset | Platform |
             |-------|----------|
-            | `gothica-darwin-arm64` | macOS Apple Silicon |
-            | `gothica-darwin-amd64` | macOS Intel |
+            | `gothica-darwin-arm64` | macOS (Apple Silicon; Intel via Rosetta) |
             | `gothica-linux-amd64` | Linux x86_64 |
             | `gothica-windows-amd64.exe` | Windows x86_64 |
 

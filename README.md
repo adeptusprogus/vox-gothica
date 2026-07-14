@@ -1,5 +1,9 @@
 # Vox Gothica
 
+<p align="center">
+  <img src="docs/heraldry.png" alt="Vox Gothica heraldry" width="160">
+</p>
+
 **A High Gothic programming language for canticles and fabricae** — an esolang in the
 tradition of the Adeptus Mechanicus, with a real Python toolchain (`gothica`) and
 Terraform-backed *fabricae*.
