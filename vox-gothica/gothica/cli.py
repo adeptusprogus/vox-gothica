@@ -64,7 +64,31 @@ def _postulata(args) -> dict:
     return out
 
 
+def _censura_preflight(path: str, args) -> int:
+    if os.environ.get("GOTHICA_CENSURA") == "N":
+        return 0
+    hits = lit_censura.check_file(
+        path,
+        root_dir=_find_root(os.path.dirname(os.path.abspath(path)) or "."),
+    )
+    if not hits:
+        return 0
+    if args.profanum:
+        for h in hits:
+            print(json.dumps(censura_record(h)), flush=True)
+    else:
+        for h in hits:
+            loc = f"{h.archivum}:{h.line}" if h.archivum else str(h.line)
+            print(f"  ⚙ {h.code} [{h.genus}]  {loc} — {h.message}",
+                  file=sys.stderr)
+        print(f"++ censura preflight: {len(hits)} finding(s) — "
+              f"rite halted ++", file=sys.stderr)
+    return 1
+
+
 def cmd_invoco(args) -> int:
+    if _censura_preflight(args.file, args):
+        return 1
     prog = _load(args.file)
     if prog.mode != "CANTICUM":
         print(f"⚙ invoco requires a CANTICUM ('{prog.name}' is a {prog.mode}; "
@@ -80,6 +104,8 @@ def cmd_invoco(args) -> int:
 
 
 def _consecrate(args, plan_only=False, destroy=False, emit_only=False) -> int:
+    if _censura_preflight(args.file, args):
+        return 1
     prog = _load(args.file)
     if prog.mode != "FABRICA":
         print(f"⚙ this command requires a FABRICA ('{prog.name}' is a "

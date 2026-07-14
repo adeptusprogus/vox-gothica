@@ -6,6 +6,7 @@ from typing import Any
 from . import arbor as A
 
 WILDCARD = "*"
+TABULA_KEYS = frozenset({"NUMERUS", "SCRIPTUM"})
 
 
 def is_wildcard(t: Any) -> bool:
@@ -47,6 +48,33 @@ def type_eq(a: Any, b: Any) -> bool:
                 return False
         return type_eq(a.ret, b.ret)
     return False
+
+
+def valid_tabula_key(t: Any) -> bool:
+    return isinstance(t, A.TName) and t.name in TABULA_KEYS
+
+
+def resolve_type_ref(t: Any, *, primitives: frozenset[str], schemas: set[str]) -> bool:
+    """Return True if type reference is known."""
+    if t is None:
+        return True
+    if isinstance(t, A.TName):
+        return t.name in primitives or t.name in schemas
+    if isinstance(t, A.TOrdo):
+        return resolve_type_ref(t.inner, primitives=primitives, schemas=schemas)
+    if isinstance(t, A.TTabula):
+        if not valid_tabula_key(t.k):
+            return False
+        return (
+            resolve_type_ref(t.k, primitives=primitives, schemas=schemas)
+            and resolve_type_ref(t.v, primitives=primitives, schemas=schemas)
+        )
+    if isinstance(t, A.TRitus):
+        return all(
+            resolve_type_ref(pt, primitives=primitives, schemas=schemas)
+            for _, pt in t.params
+        ) and resolve_type_ref(t.ret, primitives=primitives, schemas=schemas)
+    return True
 
 
 def binds(got: Any, want: Any) -> bool:

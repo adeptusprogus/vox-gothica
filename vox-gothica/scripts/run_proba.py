@@ -16,6 +16,7 @@ def main() -> int:
     run(["-m", "gothica", "invoco", "exempla/salutatio.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/litania_numerorum.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/census_servitorum.vg", "--silens"])
+    run(["-m", "gothica", "invoco", "exempla/auspex_lectio.vg", "--silens"])
     run(["-m", "gothica", "librarium", "quaere", "gothica", "--silens"])
     run(["-m", "gothica", "librarium", "inspice",
          "github.com/adeptusprogus/vox-gothica", "--silens"])
@@ -28,7 +29,9 @@ def main() -> int:
     run(["-m", "gothica", "codex", "lustro", "--silens"])
     run(["-m", "gothica", "codex", "--silens"])
     for bad in ("typus_pravus", "reditus_pravus", "typus_ignotus", "ritus_pravus",
-                "ordo_pravus", "modulus_pravus", "ordo_inner_pravus", "ordo_cov_assign"):
+                "ordo_pravus", "modulus_pravus", "ordo_inner_pravus", "ordo_cov_assign",
+                "schema_pravus", "condicio_pravus", "binop_pravus", "import_pravus",
+                "tabula_key_pravus"):
         r = subprocess.run(
             [sys.executable, "-m", "gothica", "censura",
              f"probationes/censura/{bad}.vg", "--silens"],

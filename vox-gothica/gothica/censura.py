@@ -7,13 +7,14 @@ from typing import Any
 
 from . import arbor as A
 from .modularis import ModRef, ModuleResolver, _rt as _rite_type
-from .parser import parse_source
+from .parser import SPECIES, parse_source
 from . import typi as T
 
 PRIMITIVES = frozenset(
     {"NUMERUS", "FRACTIO", "SCRIPTUM", "VERITAS", "NIHIL", "RITUS", "HERESIS",
      "RELATIO"}
 )
+_RELATIO = A.TName(name="RELATIO")
 
 
 @dataclass
@@ -52,6 +53,7 @@ class _Checker:
         self.prog = prog
         self.resolver = resolver
         self.schemas: set[str] = set()
+        self.schema_defs: dict[str, list] = {}
         self.rites: dict[str, A.TRitus] = {}
         self.hits: list[Finding] = []
 
@@ -59,6 +61,7 @@ class _Checker:
         for st in self.prog.body:
             if isinstance(st, A.SchemaDef):
                 self.schemas.add(st.name)
+                self.schema_defs[st.name] = st.fields
             if isinstance(st, A.RiteDef):
                 self.rites[st.name] = _rite_type(st.params, st.ret)
         self.schemas |= self.resolver.schemas_for(self.prog)
@@ -93,6 +96,14 @@ class _Checker:
         if isinstance(t, A.TOrdo):
             return self._resolve_type(t.inner, line)
         if isinstance(t, A.TTabula):
+            if not T.valid_tabula_key(t.k):
+                self._warn(
+                    "C-IV",
+                    "typus_profanus",
+                    "TABULA key type must be NUMERUS or SCRIPTUM",
+                    line,
+                )
+                return False
             return self._resolve_type(t.k, line) and self._resolve_type(t.v, line)
         if isinstance(t, A.TRitus):
             ok = True
@@ -180,16 +191,24 @@ class _Checker:
                 local[n] = pt
             self._walk_block(st.body, env=local, ret_type=st.ret)
         elif isinstance(st, A.Assign):
-            self._infer(st.expr, env)
-            self._infer(st.target, env)
+            got = self._infer(st.expr, env)
+            if isinstance(st.target, A.Ident):
+                want = env.get(st.target.name)
+                if want is not None and got is not None:
+                    self._check_bind(
+                        got, want, st.line,
+                        f"assignment to '{st.target.name}'",
+                    )
+            else:
+                self._infer(st.target, env)
         elif isinstance(st, A.If):
             for cond, body in st.arms:
-                self._infer(cond, env)
+                self._require_veritas(cond, env)
                 self._walk_block(body, env=dict(env), ret_type=ret_type)
             if st.els:
                 self._walk_block(st.els, env=dict(env), ret_type=ret_type)
         elif isinstance(st, A.While):
-            self._infer(st.cond, env)
+            self._require_veritas(st.cond, env)
             self._walk_block(st.body, env=dict(env), ret_type=ret_type)
         elif isinstance(st, A.For):
             self._infer(st.it, env)
@@ -217,7 +236,7 @@ class _Checker:
         elif isinstance(st, A.ExprStmt):
             self._infer(st.expr, env)
         elif isinstance(st, (A.Foedus, A.Sedes, A.Exstruatur, A.Scrutor,
-                             A.Profiteor, A.SchemaDef)):
+                             A.SchemaDef)):
             for attr in getattr(st, "attrs", []) or []:
                 if isinstance(attr.value, list):
                     for sub in attr.value:
@@ -227,7 +246,13 @@ class _Checker:
             if isinstance(st, A.Exstruatur):
                 self._infer(st.name_expr, env)
         elif isinstance(st, A.Postulo):
-            self._resolve_type(st.type, st.line)
+            if st.default is not None:
+                got = self._infer(st.default, env)
+                if got is not None:
+                    self._check_bind(got, st.type, st.line, f"postulo '{st.name}'")
+            env[st.name] = st.type
+        elif isinstance(st, A.Profiteor):
+            self._infer(st.expr, env)
 
     def _resolve_import(self, st: A.Import, env: dict[str, Any]) -> None:
         try:
@@ -267,6 +292,19 @@ class _Checker:
                 return self.resolver.export_type(bound.path, fn.name)
         return self._infer(fn, env)
 
+    def _require_veritas(self, e, env: dict[str, Any]) -> None:
+        got = self._infer(e, env)
+        if got is None:
+            return
+        want = A.TName(line=e.line, name="VERITAS")
+        if not _binds(got, want):
+            self._warn(
+                "C-IV",
+                "typus_profanus",
+                "condition must be VERITAS — there is no truthiness",
+                e.line,
+            )
+
     def _check_bind(self, got: Any, want: Any, line: int, what: str) -> None:
         if not _binds(got, want):
             self._warn(
@@ -288,6 +326,9 @@ class _Checker:
         if isinstance(e, A.Nihil):
             return A.TName(line=e.line, name="NIHIL")
         if isinstance(e, A.Ident):
+            if self.prog.mode == "FABRICA":
+                if e.name in SPECIES or e.name == "scrutinium":
+                    return _RELATIO
             return self.rites.get(e.name) or env.get(e.name)
         if isinstance(e, A.ListLit):
             if not e.items:
@@ -333,6 +374,13 @@ class _Checker:
                             "FRACTIO",
                         ):
                             return A.TName(line=e.line, name="FRACTIO")
+                if lt is not None and rt is not None:
+                    self._warn(
+                        "C-IV",
+                        "typus_profanus",
+                        f"operator '{e.op}' cannot bind {_tname(lt)} and {_tname(rt)}",
+                        e.line,
+                    )
             if e.op in ("==", "!=", "<", "<=", ">", ">="):
                 return A.TName(line=e.line, name="VERITAS")
             if e.op in ("ET", "VEL"):
@@ -369,7 +417,16 @@ class _Checker:
             return None
         if isinstance(e, A.Index):
             self._infer(e.obj, env)
-            self._infer(e.idx, env)
+            idx_t = self._infer(e.idx, env)
+            if idx_t is not None and not _binds(
+                idx_t, A.TName(line=e.idx.line, name="NUMERUS")
+            ):
+                self._warn(
+                    "C-IV",
+                    "typus_profanus",
+                    "index must be NUMERUS",
+                    e.idx.line or e.line,
+                )
             if isinstance(e.obj, A.Ident):
                 ot = env.get(e.obj.name)
                 if isinstance(ot, A.TOrdo):
@@ -378,6 +435,9 @@ class _Checker:
                     return ot.v
             return None
         if isinstance(e, A.Attr):
+            if isinstance(e.obj, A.Ident) and self.prog.mode == "FABRICA":
+                if e.obj.name in SPECIES or e.obj.name == "scrutinium":
+                    return _RELATIO
             if isinstance(e.obj, A.Ident):
                 bound = env.get(e.obj.name)
                 if isinstance(bound, ModRef):
@@ -403,10 +463,44 @@ class _Checker:
             self._walk_block(e.body, env=local, ret_type=e.ret)
             return _rite_type(e.params, e.ret)
         if isinstance(e, A.SchemaLit):
-            if e.name in self.schemas:
-                return A.TName(line=e.line, name=e.name)
-            return None
+            return self._check_schema_lit(e, env)
         return None
+
+    def _check_schema_lit(self, e: A.SchemaLit, env: dict[str, Any]) -> Any | None:
+        if e.name not in self.schemas:
+            self._warn(
+                "P-XV",
+                "typus_ignotus",
+                f"unknown schema '{e.name}'",
+                e.line,
+            )
+            return None
+        fields = self.schema_defs.get(e.name, [])
+        known = {fn for fn, _, _ in fields}
+        required = {fn for fn, _, default in fields if default is None}
+        given_names = set()
+        for fn, fe in e.fields:
+            given_names.add(fn)
+            if fn not in known:
+                self._warn(
+                    "C-V",
+                    "campus_ignotus",
+                    f"schema '{e.name}' has no field '{fn}'",
+                    fe.line or e.line,
+                )
+                continue
+            ft = next(t for n, t, _ in fields if n == fn)
+            got = self._infer(fe, env)
+            if got is not None:
+                self._check_bind(got, ft, fe.line or e.line, f"field '{fn}'")
+        for fn in required - given_names:
+            self._warn(
+                "C-V",
+                "campus_deest",
+                f"field '{fn}' of '{e.name}' is mandatory",
+                e.line,
+            )
+        return A.TName(line=e.line, name=e.name)
 
 
 def _default_root(start: Path) -> str:
@@ -418,6 +512,15 @@ def _default_root(start: Path) -> str:
         if parent == probe:
             return str(start.resolve())
         probe = parent
+
+
+def check_file(path: str | Path, *, root_dir: str | None = None) -> list[Finding]:
+    fp = Path(path).resolve()
+    text = fp.read_text(encoding="utf-8")
+    resolver = ModuleResolver(
+        root_dir or _default_root(fp.parent),
+    )
+    return check_source(text, str(fp), resolver=resolver)
 
 
 def check_source(

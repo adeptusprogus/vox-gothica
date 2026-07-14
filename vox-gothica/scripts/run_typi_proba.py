@@ -22,6 +22,12 @@ def test_strict_ordo() -> None:
     assert T.binds(srv, A.TOrdo(inner=A.TName(name="*")))
 
 
+def test_tabula_keys() -> None:
+    assert T.valid_tabula_key(A.TName(name="NUMERUS"))
+    assert T.valid_tabula_key(A.TName(name="SCRIPTUM"))
+    assert not T.valid_tabula_key(A.TName(name="VERITAS"))
+
+
 def test_speculum_stdio() -> None:
     salutatio = ROOT / "exempla" / "salutatio.vg"
     req = json.dumps({
@@ -44,6 +50,7 @@ def test_speculum_stdio() -> None:
 
 def main() -> int:
     test_strict_ordo()
+    test_tabula_keys()
     test_speculum_stdio()
     print("++ typi/speculum sancta ++")
     return 0

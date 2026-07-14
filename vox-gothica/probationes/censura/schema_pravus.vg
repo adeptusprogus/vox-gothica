@@ -1,0 +1,8 @@
+AVE OMNISSIAH.
+CANTICUM "schema_pravus".
+
+SCHEMA servitor
+    nomen : SCRIPTUM
+FINIS SCHEMA
+
+DECLARO s : servitor = servitor { nomen: "Kane", gradus: VII }

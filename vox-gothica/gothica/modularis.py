@@ -13,8 +13,10 @@ _FR = A.TName(name="FRACTIO")
 _VR = A.TName(name="VERITAS")
 _NH = A.TName(name="NIHIL")
 _RT = A.TName(name="RITUS")
+_STR = A.TName(name="SCRIPTUM")
 _WILD = A.TName(name="*")
 _ORDO_ANY = A.TOrdo(inner=_WILD)
+_ORDO_STR = A.TOrdo(inner=_STR)
 
 
 def _rt(params, ret) -> A.TRitus:
@@ -54,7 +56,73 @@ _STDLIB: dict[str, dict[str, Any]] = {
         "transmuta": _rt([(None, _ORDO_ANY), (None, _RT)], _ORDO_ANY),
         "redige": _rt([(None, _ORDO_ANY), (None, _RT), (None, _NUM)], _NUM),
         "ordina": _rt([(None, _ORDO_ANY)], _ORDO_ANY),
+        "ordina_per": _rt([(None, _ORDO_ANY), (None, _RT)], _ORDO_ANY),
+        "inverte": _rt([(None, _ORDO_ANY)], _ORDO_ANY),
         "summa": _rt([(None, _ORDO_ANY)], _NUM),
+        "quisque": _rt([(None, _ORDO_ANY), (None, _RT)], _VR),
+        "ullus": _rt([(None, _ORDO_ANY), (None, _RT)], _VR),
+        "compone": _rt([(None, _ORDO_ANY), (None, _ORDO_ANY)], _ORDO_ANY),
+    },
+    "scriptura": {
+        "maiuscula": _rt([(None, _STR)], _STR),
+        "minuscula": _rt([(None, _STR)], _STR),
+        "divide": _rt([(None, _STR), (None, _STR)], _ORDO_STR),
+        "coniunge": _rt([(None, _ORDO_ANY), (None, _STR)], _STR),
+        "substitue": _rt([(None, _STR), (None, _STR), (None, _STR)], _STR),
+        "incipit": _rt([(None, _STR), (None, _STR)], _VR),
+        "desinit": _rt([(None, _STR), (None, _STR)], _VR),
+        "continet": _rt([(None, _STR), (None, _STR)], _VR),
+        "purga": _rt([(None, _STR)], _STR),
+        "imple_sinistra": _rt([(None, _STR), (None, _NUM), (None, _STR)], _STR),
+        "inveni": _rt([(None, _STR), (None, _STR)], _NUM),
+        "mensura_octetorum": _rt([(None, _STR)], _NUM),
+        "ad_octetos": _rt([(None, _STR)], A.TOrdo(inner=_NUM)),
+        "ex_octetis": _rt([(None, A.TOrdo(inner=_NUM))], _STR),
+    },
+    "tempus": {
+        "nunc": _rt([], _NUM),
+        "nunc_monotonicum": _rt([], _NUM),
+        "data_scriptum": _rt([(None, _NUM), (None, _STR)], _STR),
+    },
+    "archivum": {
+        "lege": _rt([(None, _STR)], _STR),
+        "scribe": _rt([(None, _STR), (None, _STR)], _NH),
+        "attinge": _rt([(None, _STR), (None, _STR)], _NH),
+        "existit": _rt([(None, _STR)], _VR),
+        "dele": _rt([(None, _STR)], _NH),
+        "enumera": _rt([(None, _STR)], _ORDO_STR),
+        "crea_directorium": _rt([(None, _STR)], _NH),
+    },
+    "imperium": {
+        "argumenta": _rt([], _ORDO_STR),
+        "ambitus": _rt([(None, _STR)], _STR),
+        "ambitus_aut": _rt([(None, _STR), (None, _STR)], _STR),
+        "exi": _rt([(None, _NUM)], _NH),
+        "impera": _rt([(None, _ORDO_ANY)], _ORDO_ANY),
+    },
+    "machina_cogitans": {
+        "pete": _rt([(None, _STR)], _STR),
+        "mitte": _rt([(None, _STR), (None, _STR)], _STR),
+    },
+    "codex_json": {
+        "lege": _rt([(None, _STR)], _ORDO_ANY),
+        "scribe": _rt([(None, _ORDO_ANY)], _STR),
+        "scribe_ornatum": _rt([(None, _ORDO_ANY)], _STR),
+    },
+    "fortuna": {
+        "inter": _rt([(None, _NUM), (None, _NUM)], _NUM),
+        "fractio_fortunae": _rt([], _FR),
+        "elige_sortem": _rt([(None, _ORDO_ANY)], _ORDO_ANY),
+        "misce": _rt([(None, _ORDO_ANY)], _NH),
+        "semen": _rt([(None, _NUM)], _NH),
+    },
+    "notarius": {
+        "nota": _rt([(None, _STR), (None, _ORDO_ANY)], _NH),
+        "debug": _rt([(None, _ORDO_ANY)], _NH),
+        "info": _rt([(None, _ORDO_ANY)], _NH),
+        "monitum": _rt([(None, _ORDO_ANY)], _NH),
+        "error": _rt([(None, _ORDO_ANY)], _NH),
+        "gradus_pone": _rt([(None, _STR)], _NH),
     },
 }
 
