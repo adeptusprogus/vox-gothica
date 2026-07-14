@@ -14,6 +14,9 @@ build/
 exempla/.gothica/
 **/.gothica/
 
+# Local staging
+wiki-staging/
+
 # OS / editor
 .DS_Store
 .idea/

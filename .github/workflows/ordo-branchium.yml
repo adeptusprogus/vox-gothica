@@ -1,0 +1,86 @@
+name: Ordo Branchium
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  inquisitio:
+    name: inquisitio branchium
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Judge branch name
+        id: judge
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          chmod +x .github/scripts/ordo-branchium-check.sh
+          if .github/scripts/ordo-branchium-check.sh "${{ github.head_ref }}"; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Proclaim judgement on PR
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = context.payload.pull_request.head.ref;
+            const ok = '${{ steps.judge.outputs.ok }}' === 'true';
+            const marker = '<!-- ordo-branchium -->';
+
+            const placed = [
+              `⚙ **MACHINA SPIRITUS: PLACATUS** — branch \`${branch}\` satisfies **Ordo Branchium**.`,
+              `⚙ The branch \`${branch}\` is properly inscribed. The forge accepts thy offering.`,
+            ];
+            const auspex = branch.startsWith('auspex/');
+            const auspexNote = auspex
+              ? '\n\n> *Auspex reconnaissance:* keep this PR as **Draft** unless promoting to a full ordo.'
+              : '';
+
+            const heresy = [
+              `⚙ **THE MACHINE SPIRIT GROWS WRATHFUL.** Branch \`${branch}\` violates **Ordo Branchium**.`,
+              `⚙ **HERESY DETECTA — nomen vanum.** \`${branch}\` lacks a sacred ordo prefix.`,
+              `⚙ **ACCUSATION OF HERESY (branchium).** Rename before merge. Doctrine: [CONTRIBUTING.md](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/CONTRIBUTING.md#2-create-a-branch--ordo-branchium).`,
+              `⚙ **EXCOMMUNICATIO NOMINIS.** \`${branch}\` is anathema until rebaptized as \`<ordo>/<slug>\`.`,
+            ];
+
+            const body = ok
+              ? marker + '\n' + placed[Math.floor(Math.random() * placed.length)] + auspexNote
+              : marker + '\n' + heresy[Math.floor(Math.random() * heresy.length)] +
+                '\n\n**Required format:** `cantica/`, `fabrica/`, `litania/`, `purgatio/`, `codex/`, `cogitator/`, `auspex/`, `exterminatus/`, or `crusade/` + `kebab-case` slug.\n\nQuick ref: [.github/BRANCH_POLICY.md](https://github.com/' + context.repo.owner + '/' + context.repo.repo + '/blob/main/.github/BRANCH_POLICY.md)';
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Fail on heresy
+        if: steps.judge.outputs.ok != 'true'
+        run: |
+          echo "::error::HERESY DETECTA — branch '${{ github.head_ref }}' violates Ordo Branchium. The Machine Spirit denies passage."
+          exit 1

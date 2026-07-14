@@ -155,6 +155,8 @@ Open a PR against `adeptusprogus/vox-gothica:main`. Fill in the PR template.
 
 Maintainers may bypass review in emergencies (branch protection allows admin bypass), but the PR + CI requirement still applies.
 
+**Automated inquisitor:** workflow `inquisitio branchium` comments on every PR. Invalid branch names fail with *HERESY DETECTA* and messages such as *THE MACHINE SPIRIT GROWS WRATHFUL* — rename the branch to a valid `<ordo>/<slug>`.
+
 ## What we merge
 
 | ✅ Welcome | ❌ Please don't |

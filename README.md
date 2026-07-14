@@ -1,6 +1,8 @@
 # Vox Gothica
 
-**A High Gothic programming language for canticles and fabricae.**
+**A High Gothic programming language for canticles and fabricae** — an esolang in the
+tradition of the Adeptus Mechanicus, with a real Python toolchain (`gothica`) and
+Terraform-backed *fabricae*.
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)

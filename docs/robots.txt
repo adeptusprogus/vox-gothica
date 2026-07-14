@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://adeptusprogus.github.io/vox-gothica/sitemap.xml
