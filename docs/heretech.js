@@ -167,9 +167,116 @@
         pulse();
     }
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", init);
-    } else {
+    function initWarpTrace() {
+        const canvas = document.getElementById("warp-trace");
+        if (!canvas || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            return;
+        }
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        let w = 0;
+        let h = 0;
+        const trails = [];
+        const hues = [275, 295, 320, 168, 350];
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = window.innerHeight;
+        }
+
+        function spawn(fromEdge) {
+            let x;
+            let y;
+            let angle;
+            if (fromEdge && Math.random() < 0.55) {
+                const edge = Math.floor(Math.random() * 4);
+                if (edge === 0) {
+                    x = rand(-40, w * 0.15);
+                    y = rand(0, h);
+                    angle = rand(-35, 35);
+                } else if (edge === 1) {
+                    x = rand(w * 0.85, w + 40);
+                    y = rand(0, h);
+                    angle = rand(145, 215);
+                } else if (edge === 2) {
+                    x = rand(0, w);
+                    y = rand(-40, h * 0.12);
+                    angle = rand(55, 125);
+                } else {
+                    x = rand(0, w);
+                    y = rand(h * 0.88, h + 40);
+                    angle = rand(-125, -55);
+                }
+            } else {
+                x = rand(0, w);
+                y = rand(0, h);
+                angle = rand(0, 360);
+            }
+            trails.push({
+                x,
+                y,
+                angle,
+                len: rand(90, 320),
+                speed: rand(0.35, 1.4),
+                hue: pick(hues),
+                life: rand(0.55, 1),
+                decay: rand(0.004, 0.014),
+                width: rand(1.2, 4.5),
+                curl: rand(-0.02, 0.02),
+            });
+        }
+
+        function frame() {
+            ctx.fillStyle = "rgba(10, 1, 20, 0.11)";
+            ctx.fillRect(0, 0, w, h);
+
+            for (const t of trails) {
+                const rad = (t.angle * Math.PI) / 180;
+                const ex = t.x + Math.cos(rad) * t.len;
+                const ey = t.y + Math.sin(rad) * t.len;
+                const g = ctx.createLinearGradient(t.x, t.y, ex, ey);
+                const a = 0.32 * t.life;
+                g.addColorStop(0, `hsla(${t.hue}, 92%, 62%, 0)`);
+                g.addColorStop(0.35, `hsla(${t.hue}, 92%, 68%, ${a})`);
+                g.addColorStop(0.7, `hsla(${t.hue + 20}, 88%, 58%, ${a * 0.6})`);
+                g.addColorStop(1, `hsla(${t.hue}, 92%, 62%, 0)`);
+                ctx.strokeStyle = g;
+                ctx.lineWidth = t.width;
+                ctx.lineCap = "round";
+                ctx.beginPath();
+                ctx.moveTo(t.x, t.y);
+                ctx.lineTo(ex, ey);
+                ctx.stroke();
+
+                t.x += Math.cos(rad) * t.speed;
+                t.y += Math.sin(rad) * t.speed;
+                t.angle += t.curl * 57;
+                t.life -= t.decay;
+            }
+
+            for (let i = trails.length - 1; i >= 0; i--) {
+                if (trails[i].life <= 0) trails.splice(i, 1);
+            }
+            if (trails.length < 28 && Math.random() < 0.18) spawn(true);
+            if (Math.random() < 0.06) spawn(false);
+            requestAnimationFrame(frame);
+        }
+
+        resize();
+        window.addEventListener("resize", resize);
+        for (let i = 0; i < 12; i++) spawn(true);
+        requestAnimationFrame(frame);
+    }
+
+    function boot() {
         init();
+        initWarpTrace();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+    } else {
+        boot();
     }
 })();
