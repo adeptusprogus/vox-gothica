@@ -1,0 +1,38 @@
+# Vox Gothica Wiki
+
+Welcome to the **Librarium Sanctum** — the project wiki for [Vox Gothica](https://github.com/adeptusprogus/vox-gothica).
+
+> *From the weakness of the flesh — the Machine delivers us.*
+
+## Primary documentation
+
+The **canonical, normative specification** is the [Codex Vox Gothica](https://adeptusprogus.github.io/vox-gothica/) — a full HTML shrine with 15 chapters, formal grammar, and the complete Codex Hereticus.
+
+This wiki provides a **quick-reference layer** for contributors and newcomers.
+
+## Wiki pages
+
+| Page | Contents |
+|------|----------|
+| [Getting Started](Getting-Started) | Install `gothica`, run your first canticle |
+| [Language Overview](Language-Overview) | Canticles, fabricae, litaniae — the three rites |
+| [CLI Reference](CLI-Reference) | All `gothica` commands and flags |
+| [Fabrica (Infrastructure)](Fabrica-Infrastructure) | Raising cloud machines via Terraform |
+| [Error Taxonomy](Error-Taxonomy) | Heresies, profanatio, diagnostic format |
+| [Project Layout](Project-Layout) | Directory structure and conventions |
+| [Glossary](Glossary) | Keywords and Latin meanings |
+
+## Links
+
+- **Repository:** https://github.com/adeptusprogus/vox-gothica
+- **Codex (GitHub Pages):** https://adeptusprogus.github.io/vox-gothica/
+- **License:** GPL-3.0
+
+## Collegium Magorum
+
+| Name | Title |
+|------|-------|
+| EduardL | Archmagos Auctor — Founder of the Rite |
+| Claude Fable | Magos Errant — Cogitator-Artisan of the First Canticle |
+
+*AVE OMNISSIAH.*
