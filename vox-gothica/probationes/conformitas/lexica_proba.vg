@@ -1,0 +1,12 @@
+AVE OMNISSIAH.
+LITANIA "conformitas_lexica".
+
+INVOCO adfirma_aequalia EX "probatio"
+
+RITUS proba_roman_x () -> NIHIL
+    adfirma_aequalia(X, X, "Roman X equals Arabic 10")
+FINIS RITUS
+
+RITUS proba_roman_c () -> NIHIL
+    adfirma_aequalia(C, C, "Roman C is canonical C")
+FINIS RITUS

@@ -13,6 +13,8 @@ from . import fabrica as fab
 from .diagnostica import render_profanatio, render_heresis, render_ira
 from .litaniae import adfero as lit_adfero
 from .litaniae import initium as lit_initium
+from .litaniae import expello as lit_expello
+from .litaniae import renovo as lit_renovo
 from .litaniae.manifestum import load_manifest, manifest_path
 
 
@@ -211,6 +213,25 @@ def cmd_adfero(args) -> int:
     return 0
 
 
+def cmd_expello(args) -> int:
+    root = _find_root(os.path.abspath(args.dir or "."))
+    lit_expello.expello(root, args.via)
+    _say(f"++ expello complete — '{args.via}' cast out ++", args)
+    return 0
+
+
+def cmd_renovo(args) -> int:
+    root = _find_root(os.path.abspath(args.dir or "."))
+    bumps = lit_renovo.renovo(root, args.via)
+    if bumps:
+        for dep, old, new in bumps:
+            _say(f"  ++ {dep}: {old} → {new} ++", args)
+    else:
+        _say("++ all constraints already at newest compatible versions ++", args)
+    _say("++ renovo complete ++", args)
+    return 0
+
+
 def main(argv=None) -> int:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--silens", action="store_true")
@@ -259,6 +280,16 @@ def main(argv=None) -> int:
     p.add_argument("--constraint", default="^0.1",
                    help="version constraint when adding a via")
 
+    p = sub.add_parser("expello", help="remove a dependency",
+                       parents=[common])
+    p.add_argument("--dir", default=".", help="project root")
+    p.add_argument("via", help="dependency to remove")
+
+    p = sub.add_parser("renovo", help="raise constraints to newest compatible",
+                       parents=[common])
+    p.add_argument("--dir", default=".", help="project root")
+    p.add_argument("via", nargs="?", help="single dependency to renew")
+
     sub.add_parser("versio", help="print version", parents=[common])
 
     args = ap.parse_args(argv)
@@ -283,6 +314,10 @@ def main(argv=None) -> int:
             return cmd_initium(args)
         if args.cmd == "adfero":
             return cmd_adfero(args)
+        if args.cmd == "expello":
+            return cmd_expello(args)
+        if args.cmd == "renovo":
+            return cmd_renovo(args)
         if args.cmd == "versio":
             return cmd_versio(args)
     except Profanatio as p_:

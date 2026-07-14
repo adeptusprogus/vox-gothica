@@ -1,0 +1,16 @@
+AVE OMNISSIAH.
+LITANIA "conformitas_heresiae".
+
+INVOCO adfirma_heresim EX "probatio"
+
+RITUS proba_divisio_nihili () -> NIHIL
+    adfirma_heresim("divisio_nihili", RITUS () -> NIHIL
+        DECLARO _q : NUMERUS = X / N
+    FINIS RITUS)
+FINIS RITUS
+
+RITUS proba_census_falsus_genus () -> NIHIL
+    adfirma_heresim("census_falsus", RITUS () -> NIHIL
+        PROCLAMO HERESIM "test" GENERIS "census_falsus"
+    FINIS RITUS)
+FINIS RITUS

@@ -17,7 +17,7 @@ def _git_url(via: str) -> str:
     if not m:
         raise Profanatio(
             "P-XIV", "via_innota",
-            f"remote resolution for '{via}' is not supported in v0.2.2 "
+            f"remote resolution for '{via}' is not supported yet "
             f"(github.com/owner/repo only).",
             str(manifest_path(".")), 0,
         )

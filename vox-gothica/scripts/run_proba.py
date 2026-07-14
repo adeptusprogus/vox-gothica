@@ -12,6 +12,7 @@ def run(argv: list[str]) -> None:
 
 def main() -> int:
     run(["-m", "gothica", "proba", "--dir", "demo/probationes"])
+    run(["-m", "gothica", "proba", "--dir", "probationes/conformitas"])
     run(["-m", "gothica", "invoco", "exempla/salutatio.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/litania_numerorum.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/census_servitorum.vg", "--silens"])
