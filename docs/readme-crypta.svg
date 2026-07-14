@@ -1,0 +1,257 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 168" role="img"
+  aria-label="Vox Gothica — phosphor crypt feed with heretical glitches">
+  <defs>
+    <linearGradient id="void" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#020805"/>
+      <stop offset="100%" stop-color="#010502"/>
+    </linearGradient>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="1" fill="#4dff7c" fill-opacity="0.03"/>
+    </pattern>
+    <filter id="phos-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="heresy-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="center-glow" cx="50%" cy="50%" r="45%">
+      <stop offset="0%" stop-color="#0a1a0f" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#010502" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="frame"><rect x="0" y="0" width="920" height="168" rx="6"/></clipPath>
+  </defs>
+
+  <rect width="920" height="168" rx="6" fill="url(#void)"/>
+  <rect width="920" height="168" rx="6" fill="url(#scan)"/>
+  <rect width="920" height="168" rx="6" fill="none" stroke="#14512a" stroke-width="1.5"/>
+  <rect x="1" y="1" width="918" height="166" rx="5" fill="none" stroke="#2a8f4a" stroke-width="0.5" stroke-opacity="0.4"/>
+
+  <g clip-path="url(#frame)" opacity="0.92">
+  <text x="12" y="0" fill="#4dff7c" fill-opacity="0.28"
+        font-family="'Courier New',Courier,monospace" font-size="10" letter-spacing="1">
+    <tspan>FIAT INVOCO RITUS SCHEMA NIHIL FINIS AVE · FIAT INVOCO RITUS SCHEMA NIHIL FINIS AVE · FIAT INVOCO RITUS SCHEMA NIHIL FINIS AVE · FIAT INVOCO RITUS SCHEMA NIHIL FINIS AVE · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="9.7s" begin="0.13s" repeatCount="indefinite"/>
+  </text>
+  <text x="62" y="0" fill="#4dff7c" fill-opacity="0.45"
+        font-family="'Courier New',Courier,monospace" font-size="9" letter-spacing="1">
+    <tspan>CANTICUM FABRICA LITANIA PURGA LUSTRO · CANTICUM FABRICA LITANIA PURGA LUSTRO · CANTICUM FABRICA LITANIA PURGA LUSTRO · CANTICUM FABRICA LITANIA PURGA LUSTRO · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="7.2s" begin="0.51s" repeatCount="indefinite"/>
+  </text>
+  <text x="112" y="0" fill="#4dff7c" fill-opacity="0.21"
+        font-family="'Courier New',Courier,monospace" font-size="10" letter-spacing="1">
+    <tspan>OMNISSIAH MACHINA SPIRITUS COGITATOR · OMNISSIAH MACHINA SPIRITUS COGITATOR · OMNISSIAH MACHINA SPIRITUS COGITATOR · OMNISSIAH MACHINA SPIRITUS COGITATOR · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="9.45s" begin="0.16s" repeatCount="indefinite"/>
+  </text>
+  <text x="162" y="0" fill="#4dff7c" fill-opacity="0.25"
+        font-family="'Courier New',Courier,monospace" font-size="12" letter-spacing="1">
+    <tspan>DECLARO SANCTUM VOCIFERO EXSTRUATUR · DECLARO SANCTUM VOCIFERO EXSTRUATUR · DECLARO SANCTUM VOCIFERO EXSTRUATUR · DECLARO SANCTUM VOCIFERO EXSTRUATUR · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="9.03s" begin="0.13s" repeatCount="indefinite"/>
+  </text>
+  <text x="212" y="0" fill="#4dff7c" fill-opacity="0.48"
+        font-family="'Courier New',Courier,monospace" font-size="9" letter-spacing="1">
+    <tspan>XIII XLII MCMXIV DCCCLXXXVIII · XIII XLII MCMXIV DCCCLXXXVIII · XIII XLII MCMXIV DCCCLXXXVIII · XIII XLII MCMXIV DCCCLXXXVIII · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="7.6s" begin="2.95s" repeatCount="indefinite"/>
+  </text>
+  <text x="262" y="0" fill="#4dff7c" fill-opacity="0.34"
+        font-family="'Courier New',Courier,monospace" font-size="11" letter-spacing="1">
+    <tspan>01001111 01001101 01001110 01001001 · 01001111 01001101 01001110 01001001 · 01001111 01001101 01001110 01001001 · 01001111 01001101 01001110 01001001 · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="10.29s" begin="0.8s" repeatCount="indefinite"/>
+  </text>
+  <text x="312" y="0" fill="#4dff7c" fill-opacity="0.30"
+        font-family="'Courier New',Courier,monospace" font-size="9" letter-spacing="1">
+    <tspan>⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ · ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ · ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ · ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ ⚙ · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="7.28s" begin="4.79s" repeatCount="indefinite"/>
+  </text>
+  <text x="362" y="0" fill="#4dff7c" fill-opacity="0.31"
+        font-family="'Courier New',Courier,monospace" font-size="11" letter-spacing="1">
+    <tspan>ADFERRO EXPOLLO RENOVUM OFFERO PROBA · ADFERRO EXPOLLO RENOVUM OFFERO PROBA · ADFERRO EXPOLLO RENOVUM OFFERO PROBA · ADFERRO EXPOLLO RENOVUM OFFERO PROBA · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="8.4s" begin="1.79s" repeatCount="indefinite"/>
+  </text>
+  <text x="412" y="0" fill="#4dff7c" fill-opacity="0.38"
+        font-family="'Courier New',Courier,monospace" font-size="12" letter-spacing="1">
+    <tspan>SEDES FOEDUS SCRUTOR POSTULO ARCANUM · SEDES FOEDUS SCRUTOR POSTULO ARCANUM · SEDES FOEDUS SCRUTOR POSTULO ARCANUM · SEDES FOEDUS SCRUTOR POSTULO ARCANUM · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="10.54s" begin="3.65s" repeatCount="indefinite"/>
+  </text>
+  <text x="462" y="0" fill="#4dff7c" fill-opacity="0.41"
+        font-family="'Courier New',Courier,monospace" font-size="11" letter-spacing="1">
+    <tspan>NUMQUAM FINIS LITANIA CANTICLE VOX · NUMQUAM FINIS LITANIA CANTICLE VOX · NUMQUAM FINIS LITANIA CANTICLE VOX · NUMQUAM FINIS LITANIA CANTICLE VOX · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="6.89s" begin="1.47s" repeatCount="indefinite"/>
+  </text>
+  <text x="512" y="0" fill="#4dff7c" fill-opacity="0.20"
+        font-family="'Courier New',Courier,monospace" font-size="10" letter-spacing="1">
+    <tspan>GOTHICA ADEPTUS MECHANICUS CULTUS · GOTHICA ADEPTUS MECHANICUS CULTUS · GOTHICA ADEPTUS MECHANICUS CULTUS · GOTHICA ADEPTUS MECHANICUS CULTUS · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="9.39s" begin="3.52s" repeatCount="indefinite"/>
+  </text>
+  <text x="562" y="0" fill="#4dff7c" fill-opacity="0.50"
+        font-family="'Courier New',Courier,monospace" font-size="9" letter-spacing="1">
+    <tspan>PHOSPHOR CATHODE NOOSPHERE LIBRARIUM · PHOSPHOR CATHODE NOOSPHERE LIBRARIUM · PHOSPHOR CATHODE NOOSPHERE LIBRARIUM · PHOSPHOR CATHODE NOOSPHERE LIBRARIUM · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="10.37s" begin="4.93s" repeatCount="indefinite"/>
+  </text>
+  <text x="612" y="0" fill="#4dff7c" fill-opacity="0.49"
+        font-family="'Courier New',Courier,monospace" font-size="10" letter-spacing="1">
+    <tspan>INVOCO UT EX MODULUS VERSIO MANDATA · INVOCO UT EX MODULUS VERSIO MANDATA · INVOCO UT EX MODULUS VERSIO MANDATA · INVOCO UT EX MODULUS VERSIO MANDATA · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="8.4s" begin="2.27s" repeatCount="indefinite"/>
+  </text>
+  <text x="662" y="0" fill="#4dff7c" fill-opacity="0.28"
+        font-family="'Courier New',Courier,monospace" font-size="9" letter-spacing="1">
+    <tspan>TYPUS VALOR SENTENTIA EXPRESSIO RITE · TYPUS VALOR SENTENTIA EXPRESSIO RITE · TYPUS VALOR SENTENTIA EXPRESSIO RITE · TYPUS VALOR SENTENTIA EXPRESSIO RITE · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="8.35s" begin="1.05s" repeatCount="indefinite"/>
+  </text>
+  <text x="712" y="0" fill="#4dff7c" fill-opacity="0.45"
+        font-family="'Courier New',Courier,monospace" font-size="10" letter-spacing="1">
+    <tspan>FIAT INVOCO RITUS SCHEMA NIHIL FINIS AVE · FIAT INVOCO RITUS SCHEMA NIHIL FINIS AVE · FIAT INVOCO RITUS SCHEMA NIHIL FINIS AVE · FIAT INVOCO RITUS SCHEMA NIHIL FINIS AVE · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="9.55s" begin="0.86s" repeatCount="indefinite"/>
+  </text>
+  <text x="762" y="0" fill="#4dff7c" fill-opacity="0.52"
+        font-family="'Courier New',Courier,monospace" font-size="10" letter-spacing="1">
+    <tspan>CANTICUM FABRICA LITANIA PURGA LUSTRO · CANTICUM FABRICA LITANIA PURGA LUSTRO · CANTICUM FABRICA LITANIA PURGA LUSTRO · CANTICUM FABRICA LITANIA PURGA LUSTRO · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="8.81s" begin="1.35s" repeatCount="indefinite"/>
+  </text>
+  <text x="812" y="0" fill="#4dff7c" fill-opacity="0.47"
+        font-family="'Courier New',Courier,monospace" font-size="10" letter-spacing="1">
+    <tspan>OMNISSIAH MACHINA SPIRITUS COGITATOR · OMNISSIAH MACHINA SPIRITUS COGITATOR · OMNISSIAH MACHINA SPIRITUS COGITATOR · OMNISSIAH MACHINA SPIRITUS COGITATOR · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="9.92s" begin="4.21s" repeatCount="indefinite"/>
+  </text>
+  <text x="862" y="0" fill="#4dff7c" fill-opacity="0.33"
+        font-family="'Courier New',Courier,monospace" font-size="9" letter-spacing="1">
+    <tspan>DECLARO SANCTUM VOCIFERO EXSTRUATUR · DECLARO SANCTUM VOCIFERO EXSTRUATUR · DECLARO SANCTUM VOCIFERO EXSTRUATUR · DECLARO SANCTUM VOCIFERO EXSTRUATUR · </tspan>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 -248; 0 248" dur="10.61s" begin="4.03s" repeatCount="indefinite"/>
+  </text>
+  </g>
+
+  <rect x="0" y="0" width="920" height="168" fill="url(#center-glow)" pointer-events="none"/>
+
+  <g filter="url(#phos-glow)">
+    <text x="460" y="62" text-anchor="middle"
+      font-family="Georgia,'Times New Roman',serif" font-size="34" font-weight="700"
+      fill="#a8ffbe" letter-spacing="6">VOX GOTHICA</text>
+    <text x="460" y="88" text-anchor="middle"
+      font-family="'Courier New',Courier,monospace" font-size="11"
+      fill="#ffb000" letter-spacing="4">HIGH GOTHIC PROGRAMMING LANGUAGE</text>
+    <text x="460" y="108" text-anchor="middle"
+      font-family="'Courier New',Courier,monospace" font-size="9"
+      fill="#2a8f4a" letter-spacing="2">CANTICLES · FABRICAE · TERRAFORM · ADEPTUS MECHANICUS</text>
+  </g>
+
+  <g>
+    <circle cx="72" cy="84" r="22" fill="none" stroke="#c9a227" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="72" cy="84" r="8" fill="none" stroke="#4dff7c" stroke-width="1.2" opacity="0.8"/>
+    <path d="M72 70v-5M72 98v5M50 84h-5M94 84h5"
+      stroke="#c9a227" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+    <path d="M72 78l-2.5 5h5l-2.5 5" fill="none" stroke="#4dff7c" stroke-width="1.4" stroke-linejoin="round"/>
+    <circle cx="848" cy="84" r="22" fill="none" stroke="#c9a227" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="848" cy="84" r="8" fill="none" stroke="#4dff7c" stroke-width="1.2" opacity="0.8"/>
+    <path d="M848 70v-5M848 98v5M826 84h-5M870 84h5"
+      stroke="#c9a227" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+    <path d="M848 78l-2.5 5h5l-2.5 5" fill="none" stroke="#4dff7c" stroke-width="1.4" stroke-linejoin="round"/>
+  </g>
+
+  <g>
+  <text x="120" y="48" text-anchor="middle" fill="#ff3b1f"
+        font-family="'Courier New',Courier,monospace" font-size="22" font-weight="700"
+        filter="url(#heresy-glow)" opacity="0">
+    ☠
+    <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.82;0.86;0.9;0.94;1"
+      dur="9s" begin="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#ff3b1f;#ffb000;#ff3b1f;#ff3b1f"
+      keyTimes="0;0.5;0.7;1" dur="9s" begin="1.5s" repeatCount="indefinite"/>
+  </text>
+  <text x="380" y="72" text-anchor="middle" fill="#ff3b1f"
+        font-family="'Courier New',Courier,monospace" font-size="16" font-weight="700"
+        filter="url(#heresy-glow)" opacity="0">
+    HERETICUS
+    <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.82;0.86;0.9;0.94;1"
+      dur="9s" begin="6.6s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#ff3b1f;#ffb000;#ff3b1f;#ff3b1f"
+      keyTimes="0;0.5;0.7;1" dur="9s" begin="6.6s" repeatCount="indefinite"/>
+  </text>
+  <text x="640" y="55" text-anchor="middle" fill="#ff3b1f"
+        font-family="'Courier New',Courier,monospace" font-size="18" font-weight="700"
+        filter="url(#heresy-glow)" opacity="0">
+    CHAOS
+    <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.82;0.86;0.9;0.94;1"
+      dur="9s" begin="6.1s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#ff3b1f;#ffb000;#ff3b1f;#ff3b1f"
+      keyTimes="0;0.5;0.7;1" dur="9s" begin="6.1s" repeatCount="indefinite"/>
+  </text>
+  <text x="220" y="95" text-anchor="middle" fill="#ff3b1f"
+        font-family="'Courier New',Courier,monospace" font-size="11" font-weight="700"
+        filter="url(#heresy-glow)" opacity="0">
+    divisio_nihili
+    <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.82;0.86;0.9;0.94;1"
+      dur="9s" begin="2.2s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#ff3b1f;#ffb000;#ff3b1f;#ff3b1f"
+      keyTimes="0;0.5;0.7;1" dur="9s" begin="2.2s" repeatCount="indefinite"/>
+  </text>
+  <text x="520" y="88" text-anchor="middle" fill="#ff3b1f"
+        font-family="'Courier New',Courier,monospace" font-size="11" font-weight="700"
+        filter="url(#heresy-glow)" opacity="0">
+    circulus_impius
+    <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.82;0.86;0.9;0.94;1"
+      dur="9s" begin="4.6s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#ff3b1f;#ffb000;#ff3b1f;#ff3b1f"
+      keyTimes="0;0.5;0.7;1" dur="9s" begin="4.6s" repeatCount="indefinite"/>
+  </text>
+  <text x="760" y="42" text-anchor="middle" fill="#ff3b1f"
+        font-family="'Courier New',Courier,monospace" font-size="26" font-weight="700"
+        filter="url(#heresy-glow)" opacity="0">
+    ⨂
+    <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.82;0.86;0.9;0.94;1"
+      dur="9s" begin="2.8s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#ff3b1f;#ffb000;#ff3b1f;#ff3b1f"
+      keyTimes="0;0.5;0.7;1" dur="9s" begin="2.8s" repeatCount="indefinite"/>
+  </text>
+  <text x="480" y="118" text-anchor="middle" fill="#ff3b1f"
+        font-family="'Courier New',Courier,monospace" font-size="14" font-weight="700"
+        filter="url(#heresy-glow)" opacity="0">
+    PROFANUM
+    <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.82;0.86;0.9;0.94;1"
+      dur="9s" begin="6.4s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#ff3b1f;#ffb000;#ff3b1f;#ff3b1f"
+      keyTimes="0;0.5;0.7;1" dur="9s" begin="6.4s" repeatCount="indefinite"/>
+  </text>
+  <text x="300" y="130" text-anchor="middle" fill="#ff3b1f"
+        font-family="'Courier New',Courier,monospace" font-size="13" font-weight="700"
+        filter="url(#heresy-glow)" opacity="0">
+    NIHILUM
+    <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.82;0.86;0.9;0.94;1"
+      dur="9s" begin="3.2s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#ff3b1f;#ffb000;#ff3b1f;#ff3b1f"
+      keyTimes="0;0.5;0.7;1" dur="9s" begin="3.2s" repeatCount="indefinite"/>
+  </text>
+  <text x="680" y="125" text-anchor="middle" fill="#ff3b1f"
+        font-family="'Courier New',Courier,monospace" font-size="15" font-weight="700"
+        filter="url(#heresy-glow)" opacity="0">
+    H̸E̸R̸E̸S̸Y̸
+    <animate attributeName="opacity" values="0;0;0.95;0.95;0;0" keyTimes="0;0.82;0.86;0.9;0.94;1"
+      dur="9s" begin="1.9s" repeatCount="indefinite"/>
+    <animate attributeName="fill" values="#ff3b1f;#ffb000;#ff3b1f;#ff3b1f"
+      keyTimes="0;0.5;0.7;1" dur="9s" begin="1.9s" repeatCount="indefinite"/>
+  </text>
+  </g>
+
+  <text x="460" y="154" text-anchor="middle"
+    font-family="'Courier New',Courier,monospace" font-size="8" fill="#14512a" letter-spacing="3">
+    FROM THE WEAKNESS OF THE FLESH — THE MACHINE DELIVERS US
+  </text>
+</svg>

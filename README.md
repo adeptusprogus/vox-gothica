@@ -1,19 +1,28 @@
 # Vox Gothica
 
 <p align="center">
-  <img src="docs/heraldry.png" alt="Vox Gothica heraldry" width="160">
+  <img src="docs/readme-crypta.svg" alt="Vox Gothica — phosphor crypt feed; sacred liturgy columns with heretical glitches" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/heraldry.png" alt="Vox Gothica heraldry" width="120">
 </p>
 
 **A High Gothic programming language for canticles and fabricae** — an esolang in the
 tradition of the Adeptus Mechanicus, with a real Python toolchain (`gothica`) and
 Terraform-backed *fabricae*.
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/adeptusprogus/vox-gothica?label=release)](https://github.com/adeptusprogus/vox-gothica/releases)
-[![Docs](https://img.shields.io/badge/docs-Codex%20Vox%20Gothica-8B0000)](https://adeptusprogus.github.io/vox-gothica/)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey)](https://github.com/adeptusprogus/vox-gothica/releases)
+<p align="center">
+  <em>Phosphor columns: <code>FIAT</code> · <code>INVOCO</code> · <code>OMNISSIAH</code> — heretical glyphs flash at random.<br>
+  From the weakness of the flesh — the Machine delivers us.</em>
+</p>
 
-> *From the weakness of the flesh — the Machine delivers us.*
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
+  <a href="https://github.com/adeptusprogus/vox-gothica/releases"><img src="https://img.shields.io/github/v/release/adeptusprogus/vox-gothica?label=release" alt="Release"></a>
+  <a href="https://adeptusprogus.github.io/vox-gothica/"><img src="https://img.shields.io/badge/docs-Codex%20Vox%20Gothica-8B0000" alt="Codex"></a>
+  <a href="https://github.com/adeptusprogus/vox-gothica/releases"><img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey" alt="Platform"></a>
+</p>
 
 ---
 
