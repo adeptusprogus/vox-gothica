@@ -284,6 +284,9 @@ gothica invoco meum.vg
 |---------|--------|
 | `gothica invoco file.vg` | Run a CANTICUM |
 | `gothica proba --dir probationes` | Run `*_proba.vg` test litanies |
+| `gothica initium --via <path>` | Scaffold project (`litania.toml`, `principium.vg`, `probationes/`) |
+| `gothica initium --litania --via <path>` | Scaffold publishable litania package |
+| `gothica adfero [--dir .]` | Resolve `[requirit]` → `litaniae/` + `litania.claustrum` |
 | `gothica scribe-solum fabrica.vg` | Emit `.tf.json` only |
 | `gothica auguro fabrica.vg` | `terraform plan` |
 | `gothica consecro fabrica.vg` | `terraform apply` — type **FIAT** (`--fiat` to skip) |
@@ -356,14 +359,16 @@ vox-gothica/
 
 ## Status
 
-**v0.2.0 — Second Canticle**
+**v0.2.2 — Second Canticle (M4 begun)**
 
-| ✅ Shipped | 🚧 Planned (M4–M6) |
-|-----------|-------------------|
-| Lexer, parser, interpreter | Litania package manager (`adfero` / `offero`) |
+| ✅ Shipped (M1–M3 + M4 start) | 🚧 Planned (M4–M6) |
+|-------------------------------|---------------------|
+| Lexer, parser, interpreter | `expello` / `renovo` / `offero` (full publish flow) |
 | Modules, stdlib, test runner | `purga` formatter, `lustro` linter |
-| Fabrica → Terraform JSON | Static checker, conformance suite |
+| Fabrica → Terraform JSON | Static checker (M5), full conformance suite |
 | Plan / apply / destroy driver | Go/Rust port |
+| **`gothica initium`** — project scaffold | Librarium search (`librarium quaere`) |
+| **`gothica adfero`** — lockfile + GitHub deps | Hosted registry UI (M6) |
 
 <p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 

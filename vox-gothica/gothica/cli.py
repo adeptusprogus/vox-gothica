@@ -11,6 +11,9 @@ from .interpres import Interpres
 from .valores import Rite
 from . import fabrica as fab
 from .diagnostica import render_profanatio, render_heresis, render_ira
+from .litaniae import adfero as lit_adfero
+from .litaniae import initium as lit_initium
+from .litaniae.manifestum import load_manifest, manifest_path
 
 
 def _say(msg, args):
@@ -173,6 +176,41 @@ def cmd_versio(args) -> int:
     return 0
 
 
+def cmd_initium(args) -> int:
+    root = os.path.abspath(args.dir or ".")
+    try:
+        created = lit_initium.scaffold(root, args.via, litania=args.litania)
+    except FileExistsError as exc:
+        print(f"⚙ initium refused: {exc} already exists", file=sys.stderr)
+        return 2
+    for name in created:
+        _say(f"  ++ inscribed {name}", args)
+    kind = "litania" if args.litania else "project"
+    _say(f"++ initium complete — {kind} scaffold at {root} ++", args)
+    _say("++ Next: gothica proba --dir probationes ++", args)
+    return 0
+
+
+def cmd_adfero(args) -> int:
+    root = _find_root(os.path.abspath(args.dir or "."))
+    if not os.path.isfile(manifest_path(root)):
+        print(f"⚙ no litania.toml under {root}", file=sys.stderr)
+        return 2
+    if args.via:
+        constraint = args.constraint or "^0.1"
+        lit_adfero.append_dependency(root, args.via, constraint)
+        _say(f"++ dependency recorded: {args.via} {constraint} ++", args)
+    load_manifest(manifest_path(root))
+    entries = lit_adfero.sync(root)
+    if entries:
+        for e in entries:
+            _say(f"  ++ materialized {e.via}@{e.versio} ++", args)
+    else:
+        _say("++ no remote dependencies — lockfile cleared ++", args)
+    _say(f"++ adfero complete — litania.claustrum updated ++", args)
+    return 0
+
+
 def main(argv=None) -> int:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--silens", action="store_true")
@@ -206,6 +244,21 @@ def main(argv=None) -> int:
     p.add_argument("--dir", default="probationes")
     p.add_argument("--unus")
 
+    p = sub.add_parser("initium", help="scaffold a project or litania",
+                       parents=[common])
+    p.add_argument("--dir", default=".", help="target directory")
+    p.add_argument("--via", required=True,
+                   help="litania.via (e.g. github.com/you/my-canticle)")
+    p.add_argument("--litania", action="store_true",
+                   help="scaffold a publishable litania (no principium.vg)")
+
+    p = sub.add_parser("adfero", help="resolve deps into litaniae/",
+                       parents=[common])
+    p.add_argument("--dir", default=".", help="project root")
+    p.add_argument("via", nargs="?", help="add dependency via before resolve")
+    p.add_argument("--constraint", default="^0.1",
+                   help="version constraint when adding a via")
+
     sub.add_parser("versio", help="print version", parents=[common])
 
     args = ap.parse_args(argv)
@@ -226,6 +279,10 @@ def main(argv=None) -> int:
             return _consecrate(args, emit_only=True)
         if args.cmd == "proba":
             return cmd_proba(args)
+        if args.cmd == "initium":
+            return cmd_initium(args)
+        if args.cmd == "adfero":
+            return cmd_adfero(args)
         if args.cmd == "versio":
             return cmd_versio(args)
     except Profanatio as p_:

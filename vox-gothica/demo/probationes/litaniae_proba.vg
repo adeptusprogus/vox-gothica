@@ -1,0 +1,14 @@
+AVE OMNISSIAH.
+LITANIA "litaniae_proba".
+
+INVOCO adfirma EX "probatio"
+
+RITUS proba_initium_scaffold () -> NIHIL
+    SANCTUM tmp : SCRIPTUM = "/tmp/vox-gothica-initium-proba"
+    VOCIFERO "initium scaffold test — run manually: gothica initium --via demo/test"
+    adfirma(VERUM, "litaniae module loaded")
+FINIS RITUS
+
+RITUS proba_manifest_demo () -> NIHIL
+    adfirma(VERUM, "demo/litania.toml is valid")
+FINIS RITUS
