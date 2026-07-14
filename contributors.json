@@ -3,15 +3,11 @@
   "default_title": "Magos — Contributor to the Rite",
   "pinned": [
     {
-      "github": "adeptusprogus",
-      "aliases": ["abyssmemes"],
+      "github": "abyssmemes",
+      "aliases": ["adeptusprogus"],
       "display": "EduardL",
       "url": "https://github.com/adeptusprogus",
       "title": "Archmagos Auctor — Founder of the Rite"
-    },
-    {
-      "display": "Claude Fable",
-      "title": "Magos Errant — Cogitator-Artisan of the First Canticle"
     }
   ]
 }

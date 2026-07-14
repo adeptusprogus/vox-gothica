@@ -365,7 +365,6 @@ vox-gothica/
 | | |
 |---|---|
 | [**EduardL**](https://github.com/adeptusprogus) | Archmagos Auctor — Founder of the Rite |
-| **Claude Fable** | Magos Errant — Cogitator-Artisan of the First Canticle |
 <!-- collegium:end -->
 
 ---
