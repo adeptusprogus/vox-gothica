@@ -57,7 +57,7 @@ def merge_roll(config: dict, api_contributors: list[dict]) -> list[dict]:
                 or pinned.get("github")
                 or "Unknown",
                 "title": pinned.get("title") or config.get("default_title", "Contributor"),
-                "url": api and api.get("html_url"),
+                "url": (api and api.get("html_url")) or pinned.get("url"),
             }
         )
 

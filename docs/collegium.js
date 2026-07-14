@@ -63,7 +63,7 @@
         display: p.display || (api && api.login) || p.github || "Unknown",
         title: p.title || config.default_title || "Contributor",
         avatar: api && api.avatar_url,
-        url: api && api.html_url,
+        url: (api && api.html_url) || p.url,
       });
     });
 
