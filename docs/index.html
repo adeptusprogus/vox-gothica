@@ -23,10 +23,17 @@
 </head><body>
 <div class='vox-banner'><span class='cog'>⚙</span>
 <a href='index.html'><span class='sigil'>++</span> LIBRARIUM SANCTUM <span class='sigil'>//</span> CODEX VOX GOTHICA <span class='sigil'>++</span></a>
+<nav class='banner-ancora'>
+<a href='https://github.com/adeptusprogus/vox-gothica' rel='noopener noreferrer'>Repositorium</a>
+<a href='https://github.com/adeptusprogus/vox-gothica/releases' rel='noopener noreferrer'>Releases</a>
+<a href='index.html#installatio'>Installatio</a>
+</nav>
 <span class='machina-spiritus'>MACHINA SPIRITUS: PLACATUS</span></div>
 <div class='templum'>
 <nav class='transectus'><h2>INDEX CODICIS</h2>
 <a class=' activa' href='index.html'><span class='num'>✠</span> Porta Librarii</a>
+<a class='' href='index.html#installatio' class='transectus-installatio'><span class='num'>⚙</span> Installatio</a>
+
 <a class='' href='prooemium.html'><span class='num'>⌂</span> Prooemium — Doctrine</a>
 <a class='' href='01-lexical.html'><span class='num'>I</span> Lexica Sacra</a>
 <a class='' href='02-types.html'><span class='num'>II</span> Typi et Valores</a>
@@ -56,6 +63,44 @@ From the lies of unversioned state — <span class='responsum'>the Lockfile prot
 From the heresy of the untyped — <span class='responsum'>the Codex guards us.</span><br>
 In the divide by naught — <span class='responsum'>we shall know the enemy.</span>
 </div></div>
+<h2 id='installatio'>Installatio — the <code>gothica</code> toolchain</h2>
+<p>Download a <strong>self-contained binary</strong> — no Python required on your machine.
+ Source, releases, and install scripts live in the
+ <a href='https://github.com/adeptusprogus/vox-gothica'>repositorium</a>.</p>
+<p>
+<a class='repositorium-ancora' href='https://github.com/adeptusprogus/vox-gothica' rel='noopener noreferrer'>⚙ GitHub — adeptusprogus/vox-gothica</a>
+<a class='repositorium-ancora' href='https://github.com/adeptusprogus/vox-gothica/releases' rel='noopener noreferrer'>⚙ Releases &amp; binaries</a>
+<a class='repositorium-ancora' href='https://github.com/adeptusprogus/vox-gothica/blob/main/CONTRIBUTING.md' rel='noopener noreferrer'>⚙ Contributing</a>
+</p>
+<div class='installatio-ordo'>
+<div class='installatio-carta'>
+<h3>macOS / Linux</h3>
+<p>One-liner — fetches the latest binary from GitHub Releases into <code>~/.local/bin</code>:</p>
+<pre><code>curl -fsSL https://raw.githubusercontent.com/adeptusprogus/vox-gothica/main/vox-gothica/install.sh | bash</code></pre>
+</div>
+<div class='installatio-carta'>
+<h3>Windows</h3>
+<p>PowerShell — installs to <code>%LOCALAPPDATA%\Programs\gothica\</code> and updates PATH:</p>
+<pre><code>irm https://raw.githubusercontent.com/adeptusprogus/vox-gothica/main/vox-gothica/install.ps1 | iex</code></pre>
+</div>
+<div class='installatio-carta'>
+<h3>Manual download</h3>
+<p>Pick your platform from <a href='https://github.com/adeptusprogus/vox-gothica/releases'>Releases</a>:</p>
+<pre><code>gothica-darwin-arm64      macOS Apple Silicon
+gothica-darwin-amd64      macOS Intel
+gothica-linux-amd64       Linux x86_64
+gothica-windows-amd64.exe Windows</code></pre>
+</div>
+<div class='installatio-carta'>
+<h3>Verify the rite</h3>
+<p>After install, anywhere on your PATH:</p>
+<pre><code>gothica versio
+gothica invoco salutatio.vg</code></pre>
+</div>
+</div>
+<p class='installatio-nota'>For *fabricae* (Terraform plan/apply) you also need <code>terraform</code> on PATH, or use the
+ <a href='https://github.com/adeptusprogus/vox-gothica#docker-all-platforms'>Docker image</a>.
+ CLI reference: <a href='12-cli.html'>Capitulum XII — Mandata</a>.</p>
 <h2>De Codice</h2>
 <p><strong>Vox Gothica</strong> is a programming language whose source reads as the High Gothic
  liturgy of the Adeptus Mechanicus — and it is not merely a jest. One syntax serves two rites:
