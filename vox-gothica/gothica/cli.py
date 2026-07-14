@@ -15,6 +15,7 @@ from .litaniae import adfero as lit_adfero
 from .litaniae import initium as lit_initium
 from .litaniae import expello as lit_expello
 from .litaniae import renovo as lit_renovo
+from .litaniae import offero as lit_offero
 from .litaniae.manifestum import load_manifest, manifest_path
 
 
@@ -232,6 +233,20 @@ def cmd_renovo(args) -> int:
     return 0
 
 
+def cmd_offero(args) -> int:
+    root = _find_root(os.path.abspath(args.dir or "."))
+    result = lit_offero.offero(
+        root, push=not args.no_push, fiat=args.fiat,
+    )
+    _say(f"++ offero sanctus — {result['via']}@{result['versio']} "
+         f"({result['tag']}) ++", args)
+    if not args.no_push:
+        _say(f"++ tag pushed to origin ++", args)
+    _say("++ Librarium: open a PR to index this litania ++", args)
+    _say(f"   {result['librarium']}", args)
+    return 0
+
+
 def main(argv=None) -> int:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--silens", action="store_true")
@@ -290,6 +305,14 @@ def main(argv=None) -> int:
     p.add_argument("--dir", default=".", help="project root")
     p.add_argument("via", nargs="?", help="single dependency to renew")
 
+    p = sub.add_parser("offero", help="publish litania (tag + Librarium PR)",
+                       parents=[common])
+    p.add_argument("--dir", default=".", help="litania repository root")
+    p.add_argument("--fiat", action="store_true",
+                   help="skip FIAT confirmation before git push")
+    p.add_argument("--no-push", action="store_true",
+                   help="validate and tag locally only")
+
     sub.add_parser("versio", help="print version", parents=[common])
 
     args = ap.parse_args(argv)
@@ -318,6 +341,8 @@ def main(argv=None) -> int:
             return cmd_expello(args)
         if args.cmd == "renovo":
             return cmd_renovo(args)
+        if args.cmd == "offero":
+            return cmd_offero(args)
         if args.cmd == "versio":
             return cmd_versio(args)
     except Profanatio as p_:

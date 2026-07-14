@@ -289,6 +289,7 @@ gothica invoco meum.vg
 | `gothica adfero [--dir .]` | Resolve `[requirit]` → `litaniae/` + `litania.claustrum` |
 | `gothica expello <via>` | Remove a direct dependency |
 | `gothica renovo [via]` | Raise constraints to newest compatible tags |
+| `gothica offero [--fiat] [--no-push]` | Publish litania: proba, tag, push, Librarium PR link |
 | `gothica scribe-solum fabrica.vg` | Emit `.tf.json` only |
 | `gothica auguro fabrica.vg` | `terraform plan` |
 | `gothica consecro fabrica.vg` | `terraform apply` — type **FIAT** (`--fiat` to skip) |
@@ -361,16 +362,16 @@ vox-gothica/
 
 ## Status
 
-**v0.2.3 — Second Canticle (M4 in progress)**
+**v0.2.4 — Second Canticle (M4 nearly complete)**
 
-| ✅ Shipped (M1–M3 + M4) | 🚧 Planned (M4–M6) |
-|-------------------------|---------------------|
-| Lexer, parser, interpreter | `offero` (publish to Librarium) |
+| ✅ Shipped (M1–M4) | 🚧 Planned (M4–M6) |
+|--------------------|---------------------|
+| Lexer, parser, interpreter | Full conformance coverage |
 | Modules, stdlib, test runner | `purga` formatter, `lustro` linter |
 | Fabrica → Terraform JSON | Static checker (M5) |
 | Plan / apply / destroy driver | Go/Rust port |
-| `initium` / `adfero` / `expello` / `renovo` | Librarium search (`librarium quaere`) |
-| Conformance suite (started) | Full conformance coverage |
+| `initium` / `adfero` / `expello` / `renovo` / **`offero`** | `librarium quaere` / `inspice` |
+| Conformance suite (started) | Hosted registry UI (M6) |
 
 <p align="center"><img src="docs/transectus-divider.svg" width="100%" alt="" /></p>
 
