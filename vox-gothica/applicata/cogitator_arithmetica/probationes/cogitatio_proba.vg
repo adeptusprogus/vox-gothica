@@ -1,0 +1,19 @@
+AVE OMNISSIAH.
+LITANIA "cogitatio_proba".
+
+INVOCO adfirma_aequalia, adfirma_heresim EX "probatio"
+INVOCO "fons/cogitatio"
+
+RITUS proba_additio () -> NIHIL
+    adfirma_aequalia(cogitatio.additio_sacra(VII, III).exitus, X, "VII+III=X")
+FINIS RITUS
+
+RITUS proba_tributum () -> NIHIL
+    adfirma_aequalia(cogitatio.tributum_ecclesiarchiae(C).exitus, XC, "tithe of C leaves XC")
+FINIS RITUS
+
+RITUS proba_divisio_nihili () -> NIHIL
+    adfirma_heresim("divisio_nihili", RITUS () -> NIHIL
+        DECLARO _r : responsum_sacrum = cogitatio.divisio_cohortis(I, N)
+    FINIS RITUS)
+FINIS RITUS

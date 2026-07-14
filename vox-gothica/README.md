@@ -79,10 +79,10 @@ Dockerfile          fabrica execution image (gothica + terraform)
 Makefile            proba / pyz / binarium / docker
 ```
 
-## Implemented (v0.2.11)
+## Implemented (v0.2.12)
 
 Core language: Roman & Arabic numerals, interpolation, DECLARO/SANCTUM/FIAT, SI/DUM/PRO OMNI, RITUS incl. anonymous rites & closures, SCHEMA records, TEMPTA/heresies per the Codex Hereticus, modules (`INVOCO`, `UT`, `EX`), stdlib (mathematica, scriptura, ordo_opera, tempus, archivum, imperium, machina_cogitans, codex_json, fortuna, notarius, probatio). Fabrica: FOEDUS/SEDES/EXSTRUATUR/SCRUTOR/POSTULO/PROFITEOR/ARCANUM, deferred references, alias table, Terraform JSON emission, plan/apply/destroy driver.
 
-M5 toolchain: `purga`, `lustro`, `censura` (schema fields, assign/condition/index/binop checks, TABULA key rules, stdlib stubs, RELATIO in FABRICA, preflight on `invoco`/`auguro`/`consecro`), `speculum` JSONL + `--stdio`, `codex`. Not yet: full LSP server, full conformance ch.01–10.
+M5 toolchain: `purga`, `lustro`, `censura` (schema fields, assign/condition/index/binop checks, TABULA key rules, stdlib stubs, RELATIO in FABRICA, preflight on `invoco`/`auguro`/`consecro`), `speculum` JSONL + `--stdio`, `codex`. Sample apps in `applicata/` (Cogitator Arithmetica, Auspex Impietatis). Not yet: full LSP server, full conformance ch.01–10.
 
 *The flesh is weak; the toolchain is versioned.*

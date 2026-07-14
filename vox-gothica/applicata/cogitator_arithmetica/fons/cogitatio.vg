@@ -1,0 +1,97 @@
+AVE OMNISSIAH.
+LITANIA "cogitatio".
+
+INVOCO potentia, fractio_integra, radix EX "mathematica"
+
+SCHEMA responsum_sacrum
+    ritus : SCRIPTUM
+    operandum_a : NUMERUS
+    operandum_b : NUMERUS
+    exitus : NUMERUS
+    nuntius : SCRIPTUM
+FINIS SCHEMA
+
+RITUS libera(s : SCRIPTUM) -> NUMERUS
+    REDDO numerus(s)
+FINIS RITUS
+
+RITUS additio_sacra(a : NUMERUS, b : NUMERUS) -> responsum_sacrum
+    DECLARO summa : NUMERUS = a + b
+    REDDO responsum_sacrum {
+        ritus: "ADDITIO",
+        operandum_a: a,
+        operandum_b: b,
+        exitus: summa,
+        nuntius: "The cogitator tallies {a} souls and {b} more — yield {summa}. The ledger accepts no dispute."
+    }
+FINIS RITUS
+
+RITUS subtractio_mortis(a : NUMERUS, b : NUMERUS) -> responsum_sacrum
+    DECLARO reliquiae : NUMERUS = a - b
+    REDDO responsum_sacrum {
+        ritus: "SUBTRACTIO",
+        operandum_a: a,
+        operandum_b: b,
+        exitus: reliquiae,
+        nuntius: "{b} were purged from the muster-roll of {a}. {reliquiae} remain to die for the Throne."
+    }
+FINIS RITUS
+
+RITUS multiplicatio_belli(a : NUMERUS, b : NUMERUS) -> responsum_sacrum
+    DECLARO productum : NUMERUS = a * b
+    REDDO responsum_sacrum {
+        ritus: "MULTIPLICATIO",
+        operandum_a: a,
+        operandum_b: b,
+        exitus: productum,
+        nuntius: "{a} cohorts, each of {b} las-rifles — {productum} barrels of promethium-faith unleashed."
+    }
+FINIS RITUS
+
+RITUS divisio_cohortis(a : NUMERUS, b : NUMERUS) -> responsum_sacrum
+    SI b == N TUNC
+        PROCLAMO HERESIM "Division by naught profanes the cogitator." GENERIS "divisio_nihili"
+    FINIS SI
+    DECLARO quota : NUMERUS = a / b
+    REDDO responsum_sacrum {
+        ritus: "DIVISIO",
+        operandum_a: a,
+        operandum_b: b,
+        exitus: quota,
+        nuntius: "The host of {a} is quartered into banners of {b}. Each banner receives {quota} wretches."
+    }
+FINIS RITUS
+
+RITUS tributum_ecclesiarchiae(census : NUMERUS) -> responsum_sacrum
+    DECLARO decima : NUMERUS = census / X
+    DECLARO reliquum : NUMERUS = census - decima
+    REDDO responsum_sacrum {
+        ritus: "TRIBUTUM",
+        operandum_a: census,
+        operandum_b: decima,
+        exitus: reliquum,
+        nuntius: "The Ecclesiarchy exacts {decima} from census {census}. {reliquum} souls may keep their rations."
+    }
+FINIS RITUS
+
+RITUS potentia_exterminatus(basis : NUMERUS, gradus : NUMERUS) -> responsum_sacrum
+    DECLARO exitus : NUMERUS = potentia(basis, gradus)
+    REDDO responsum_sacrum {
+        ritus: "POTENTIA",
+        operandum_a: basis,
+        operandum_b: gradus,
+        exitus: exitus,
+        nuntius: "Orbital yield: {basis} raised to the {gradus}th power of annihilation = {exitus}. The ground remembers."
+    }
+FINIS RITUS
+
+RITUS radix_reliquiae(radicandus : NUMERUS) -> responsum_sacrum
+    DECLARO radix_sacra : NUMERUS = fractio_integra(radix(radicandus))
+    REDDO responsum_sacrum {
+        ritus: "RADIX",
+        operandum_a: radicandus,
+        operandum_b: N,
+        exitus: radix_sacra,
+        nuntius: "The square reliquary of {radicandus} opens to reveal {radix_sacra} — if the Machine Spirit approves."
+    }
+FINIS RITUS

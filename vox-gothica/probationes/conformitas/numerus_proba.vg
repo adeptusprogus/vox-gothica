@@ -1,0 +1,12 @@
+AVE OMNISSIAH.
+LITANIA "conformitas_numerus".
+
+INVOCO adfirma_aequalia EX "probatio"
+
+RITUS proba_numerus_roman () -> NIHIL
+    adfirma_aequalia(numerus("XIV"), XIV, "numerus parses Roman XIV")
+FINIS RITUS
+
+RITUS proba_numerus_arabic () -> NIHIL
+    adfirma_aequalia(numerus("42"), XLII, "numerus parses Arabic 42")
+FINIS RITUS

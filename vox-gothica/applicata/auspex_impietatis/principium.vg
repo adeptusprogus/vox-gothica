@@ -1,0 +1,31 @@
+AVE OMNISSIAH.
+CANTICUM "principium".
+
+INVOCO "fons/canon" UT canon
+INVOCO argumenta EX "imperium"
+INVOCO coniunge EX "scriptura"
+
+DECLARO args : ORDO[SCRIPTUM] = argumenta()
+
+SI longitudo(args) < I TUNC
+    VOCIFERO "++ AUSPEX IMPIETATIS — purity scanner of the Adeptus Arbites ++"
+    VOCIFERO "Usage: gothica invoco principium.vg -- <nuntium or census>"
+    VOCIFERO "Examples:"
+    VOCIFERO "  auspex OMNISSIAH"
+    VOCIFERO "  auspex DCLXVI"
+    VOCIFERO "  auspex the WARP hungers"
+FINIS SI
+
+SI longitudo(args) >= I TUNC
+    DECLARO subiectum : SCRIPTUM = coniunge(args, " ")
+    DECLARO sent : sententia = canon.scrutor_automaticum(subiectum)
+    SI sent.purus TUNC
+        VOCIFERO "++ PURUS ++"
+    ALITER
+        VOCIFERO "++ IMPIUS — GRADUS {sent.gradus_impietatis} ++"
+    FINIS SI
+    VOCIFERO "{sent.nuntius}"
+    PRO OMNI delictum IN sent.delicta AGE
+        SUSURRO "  • {delictum}"
+    FINIS PRO
+FINIS SI

@@ -144,17 +144,20 @@ class _Checker:
             if isinstance(st, (A.Return, A.Raise)):
                 return True
             if isinstance(st, A.If):
-                for _, body in st.arms:
-                    if not self._block_must_return(body):
-                        return False
                 if st.els is not None:
+                    for _, body in st.arms:
+                        if not self._block_must_return(body):
+                            return False
                     if not self._block_must_return(st.els):
                         return False
-                elif not self._block_must_return(stmts[i + 1 :]):
+                    return True
+                if not self._block_must_return(stmts[i + 1 :]):
                     return False
                 return True
             if isinstance(st, (A.While, A.For)):
-                return False
+                if not self._block_must_return(stmts[i + 1 :]):
+                    return False
+                return True
             if isinstance(st, A.Try):
                 if st.fin is not None:
                     return False
@@ -211,9 +214,12 @@ class _Checker:
             self._require_veritas(st.cond, env)
             self._walk_block(st.body, env=dict(env), ret_type=ret_type)
         elif isinstance(st, A.For):
-            self._infer(st.it, env)
+            it_t = self._infer(st.it, env)
             child = dict(env)
-            child[st.var] = A.TName(line=st.line, name="NUMERUS")
+            elem = A.TName(line=st.line, name="NUMERUS")
+            if isinstance(it_t, A.TOrdo):
+                elem = it_t.inner
+            child[st.var] = elem
             self._walk_block(st.body, env=child, ret_type=ret_type)
         elif isinstance(st, A.Try):
             self._walk_block(st.body, env=dict(env), ret_type=ret_type)

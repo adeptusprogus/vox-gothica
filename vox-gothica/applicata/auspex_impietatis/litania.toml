@@ -1,0 +1,7 @@
+[litania]
+via = "applicata/auspex_impietatis"
+descriptio = "Auspex Impietatis — purity scanner for nuntia and census"
+gothica = ">=0.2"
+
+[canticum]
+principium = "principium.vg"

@@ -1,0 +1,7 @@
+[litania]
+via = "applicata/cogitator_arithmetica"
+descriptio = "Cogitator Arithmetica — the Administratum's sacred ledger"
+gothica = ">=0.2"
+
+[canticum]
+principium = "principium.vg"

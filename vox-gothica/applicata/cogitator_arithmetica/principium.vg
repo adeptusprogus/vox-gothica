@@ -1,0 +1,75 @@
+AVE OMNISSIAH.
+CANTICUM "principium".
+
+INVOCO "fons/cogitatio" UT cog
+INVOCO argumenta EX "imperium"
+INVOCO maiuscula EX "scriptura"
+
+DECLARO args : ORDO[SCRIPTUM] = argumenta()
+
+SI longitudo(args) < I TUNC
+    VOCIFERO "++ COGITATOR ARITHMETICA — Administratum ledger ++"
+    VOCIFERO "Usage: gothica invoco principium.vg -- <ritus> <operands...>"
+    VOCIFERO "Rites: ADDITIO SUBTRACTIO MULTIPLICATIO DIVISIO TRIBUTUM POTENTIA RADIX"
+    VOCIFERO "Example: additio VII III"
+FINIS SI
+
+SI longitudo(args) >= I TUNC
+    DECLARO ritus : SCRIPTUM = maiuscula(args[N])
+    SI ritus == "ADDITIO" TUNC
+        SI longitudo(args) < III TUNC
+            VOCIFERO "ADDITIO demands two operands."
+        ALITER
+            DECLARO r : responsum_sacrum = cog.additio_sacra(cog.libera(args[I]), cog.libera(args[II]))
+            VOCIFERO "++ {r.nuntius} ++"
+        FINIS SI
+    ALITER SI ritus == "SUBTRACTIO" TUNC
+        SI longitudo(args) < III TUNC
+            VOCIFERO "SUBTRACTIO demands two operands."
+        ALITER
+            DECLARO r : responsum_sacrum = cog.subtractio_mortis(cog.libera(args[I]), cog.libera(args[II]))
+            VOCIFERO "++ {r.nuntius} ++"
+        FINIS SI
+    ALITER SI ritus == "MULTIPLICATIO" TUNC
+        SI longitudo(args) < III TUNC
+            VOCIFERO "MULTIPLICATIO demands two operands."
+        ALITER
+            DECLARO r : responsum_sacrum = cog.multiplicatio_belli(cog.libera(args[I]), cog.libera(args[II]))
+            VOCIFERO "++ {r.nuntius} ++"
+        FINIS SI
+    ALITER SI ritus == "DIVISIO" TUNC
+        SI longitudo(args) < III TUNC
+            VOCIFERO "DIVISIO demands two operands."
+        ALITER
+            TEMPTA
+                DECLARO r : responsum_sacrum = cog.divisio_cohortis(cog.libera(args[I]), cog.libera(args[II]))
+                VOCIFERO "++ {r.nuntius} ++"
+            SI HERESIS (delictum)
+                VOCIFERO "++ HERESY: [{delictum.genus}] {delictum.nuntius} ++"
+            FINIS TEMPTA
+        FINIS SI
+    ALITER SI ritus == "TRIBUTUM" TUNC
+        SI longitudo(args) < II TUNC
+            VOCIFERO "TRIBUTUM demands one census operand."
+        ALITER
+            DECLARO r : responsum_sacrum = cog.tributum_ecclesiarchiae(cog.libera(args[I]))
+            VOCIFERO "++ {r.nuntius} ++"
+        FINIS SI
+    ALITER SI ritus == "POTENTIA" TUNC
+        SI longitudo(args) < III TUNC
+            VOCIFERO "POTENTIA demands basis and exponent."
+        ALITER
+            DECLARO r : responsum_sacrum = cog.potentia_exterminatus(cog.libera(args[I]), cog.libera(args[II]))
+            VOCIFERO "++ {r.nuntius} ++"
+        FINIS SI
+    ALITER SI ritus == "RADIX" TUNC
+        SI longitudo(args) < II TUNC
+            VOCIFERO "RADIX demands one radicandum."
+        ALITER
+            DECLARO r : responsum_sacrum = cog.radix_reliquiae(cog.libera(args[I]))
+            VOCIFERO "++ {r.nuntius} ++"
+        FINIS SI
+    ALITER
+        VOCIFERO "Unknown rite '{ritus}'. The cogitator weeps machine-oil."
+    FINIS SI
+FINIS SI

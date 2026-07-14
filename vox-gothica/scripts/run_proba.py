@@ -12,11 +12,20 @@ def run(argv: list[str]) -> None:
 
 def main() -> int:
     run(["-m", "gothica", "proba", "--dir", "demo/probationes"])
+    run(["-m", "gothica", "proba", "--dir", "applicata/cogitator_arithmetica/probationes"])
+    run(["-m", "gothica", "proba", "--dir", "applicata/auspex_impietatis/probationes"])
     run(["-m", "gothica", "proba", "--dir", "probationes/conformitas"])
     run(["-m", "gothica", "invoco", "exempla/salutatio.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/litania_numerorum.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/census_servitorum.vg", "--silens"])
     run(["-m", "gothica", "invoco", "exempla/auspex_lectio.vg", "--silens"])
+    run(["-m", "gothica", "invoco",
+         "applicata/cogitator_arithmetica/principium.vg", "--silens",
+         "additio", "VII", "III"])
+    run(["-m", "gothica", "invoco",
+         "applicata/auspex_impietatis/principium.vg", "--silens", "OMNISSIAH"])
+    run(["-m", "gothica", "censura", "applicata/cogitator_arithmetica", "--silens"])
+    run(["-m", "gothica", "censura", "applicata/auspex_impietatis", "--silens"])
     run(["-m", "gothica", "librarium", "quaere", "gothica", "--silens"])
     run(["-m", "gothica", "librarium", "inspice",
          "github.com/adeptusprogus/vox-gothica", "--silens"])

@@ -1,0 +1,73 @@
+AVE OMNISSIAH.
+LITANIA "canon".
+
+INVOCO continet, maiuscula EX "scriptura"
+
+SCHEMA sententia
+    purus : VERITAS
+    gradus_impietatis : NUMERUS
+    delicta : ORDO[SCRIPTUM]
+    nuntius : SCRIPTUM
+FINIS SCHEMA
+
+SANCTUM daemonicus : NUMERUS = DCLXVI
+SANCTUM tredecim : NUMERUS = XIII
+
+SANCTUM signa_profanata : ORDO[SCRIPTUM] = ["CHAOS", "WARP", "HERETIC", "MUTANT", "XENOS", "NULL", "ABOMINATUS"]
+
+RITUS impietas_numeri(n : NUMERUS) -> ORDO[SCRIPTUM]
+    DECLARO delicta : ORDO[SCRIPTUM] = []
+    SI n < N TUNC
+        adde(delicta, "census negativus — the Administratum rejects deficit souls")
+    FINIS SI
+    SI n == N TUNC
+        adde(delicta, "nihil census — the void peers back")
+    FINIS SI
+    SI n == daemonicus TUNC
+        adde(delicta, "numerus daemonicus DCLXVI — witchmark of the Ruinous Powers")
+    FINIS SI
+    SI n == tredecim TUNC
+        adde(delicta, "tredecim — the unlucky ordination of Saint Sabbat's fall")
+    FINIS SI
+    REDDO delicta
+FINIS RITUS
+
+RITUS impietas_scripti(s : SCRIPTUM) -> ORDO[SCRIPTUM]
+    DECLARO magnus : SCRIPTUM = maiuscula(s)
+    DECLARO delicta : ORDO[SCRIPTUM] = []
+    PRO OMNI sigillum IN signa_profanata AGE
+        SI continet(magnus, sigillum) TUNC
+            adde(delicta, "signum profanum: {sigillum}")
+        FINIS SI
+    FINIS PRO
+    REDDO delicta
+FINIS RITUS
+
+RITUS scrutor_numeri(n : NUMERUS) -> sententia
+    DECLARO delicta : ORDO[SCRIPTUM] = impietas_numeri(n)
+    DECLARO gradus : NUMERUS = longitudo(delicta)
+    DECLARO purus : VERITAS = gradus == N
+    DECLARO nuntius : SCRIPTUM = elige(purus,
+        "The auspex finds no stain upon census {n}. Approach the reliquary with head bowed.",
+        "WITCHMARK DETECTED in census {n}. Gradus impietatis {gradus}. Servitor purge advised.")
+    REDDO sententia { purus: purus, gradus_impietatis: gradus, delicta: delicta, nuntius: nuntius }
+FINIS RITUS
+
+RITUS scrutor_nuntium(s : SCRIPTUM) -> sententia
+    DECLARO delicta : ORDO[SCRIPTUM] = impietas_scripti(s)
+    DECLARO gradus : NUMERUS = longitudo(delicta)
+    DECLARO purus : VERITAS = gradus == N
+    DECLARO nuntius : SCRIPTUM = elige(purus,
+        "The vox-caster resonates pure. No heresy stains: \"{s}\".",
+        "IMPIUS TRANSMISSION. Gradus {gradus}. The Ordos suspect this nuntium: \"{s}\".")
+    REDDO sententia { purus: purus, gradus_impietatis: gradus, delicta: delicta, nuntius: nuntius }
+FINIS RITUS
+
+RITUS scrutor_automaticum(s : SCRIPTUM) -> sententia
+    TEMPTA
+        DECLARO n : NUMERUS = numerus(s)
+        REDDO scrutor_numeri(n)
+    SI HERESIS (impietas)
+        REDDO scrutor_nuntium(s)
+    FINIS TEMPTA
+FINIS RITUS

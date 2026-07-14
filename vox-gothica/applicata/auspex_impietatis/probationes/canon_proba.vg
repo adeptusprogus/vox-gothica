@@ -1,0 +1,22 @@
+AVE OMNISSIAH.
+LITANIA "canon_proba".
+
+INVOCO adfirma, adfirma_aequalia EX "probatio"
+INVOCO "fons/canon"
+
+RITUS proba_purus_nuntium () -> NIHIL
+    adfirma(canon.scrutor_nuntium("OMNISSIAH").purus, "Omniissiah is pure")
+FINIS RITUS
+
+RITUS proba_impius_warp () -> NIHIL
+    adfirma(canon.scrutor_nuntium("the WARP beckons").purus == FALSUM, "Warp is impious")
+FINIS RITUS
+
+RITUS proba_daemonicus () -> NIHIL
+    adfirma(canon.scrutor_numeri(DCLXVI).purus == FALSUM, "666 is witchmarked")
+    adfirma_aequalia(canon.scrutor_numeri(DCLXVI).gradus_impietatis, I, "one delict for 666")
+FINIS RITUS
+
+RITUS proba_nihil_census () -> NIHIL
+    adfirma(canon.scrutor_numeri(N).purus == FALSUM, "zero census is void")
+FINIS RITUS

@@ -42,13 +42,14 @@ _STDLIB: dict[str, dict[str, Any]] = {
     "mathematica": {
         "fractio_integra": _rt([(None, _FR)], _NUM),
         "radix": _rt([(None, _NUM)], _FR),
+        "potentia": _rt([(None, _NUM), (None, _NUM)], _NUM),
         "minimus": _rt([(None, _NUM)], _NUM),
         "maximus": _rt([(None, _NUM)], _NUM),
     },
     "probatio": {
-        "adfirma": _rt([(None, _VR), (None, _NH)], _NH),
-        "adfirma_aequalia": _rt([(None, _NUM), (None, _NUM), (None, _NH)], _NH),
-        "adfirma_heresim": _rt([(None, _NH), (None, _RT)], _NH),
+        "adfirma": _rt([(None, _VR), (None, _STR)], _NH),
+        "adfirma_aequalia": _rt([(None, _NUM), (None, _NUM), (None, _STR)], _NH),
+        "adfirma_heresim": _rt([(None, _STR), (None, _RT)], _NH),
         "praetermitte": _rt([(None, _NH)], _NH),
     },
     "ordo_opera": {
