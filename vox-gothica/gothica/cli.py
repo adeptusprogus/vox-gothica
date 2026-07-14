@@ -18,6 +18,8 @@ from .litaniae import renovo as lit_renovo
 from .litaniae import offero as lit_offero
 from .litaniae import librarium as lit_librarium
 from .litaniae.manifestum import load_manifest, manifest_path
+from . import purga as lit_purga
+from . import lustro as lit_lustro
 
 
 def _say(msg, args):
@@ -271,6 +273,39 @@ def cmd_librarium(args) -> int:
     return 2
 
 
+def cmd_purga(args) -> int:
+    target = args.path or "."
+    changed, total = lit_purga.purga(
+        target,
+        check_only=args.proba,
+        latinizat=args.latinizat,
+    )
+    if total == 0:
+        print(f"⚙ no .vg scrolls at '{target}'", file=sys.stderr)
+        return 2
+    if args.proba:
+        if changed:
+            _say(f"++ purga would reform {changed} of {total} scroll(s) ++", args)
+            return 1
+        _say(f"++ {total} scroll(s) already canonical ++", args)
+        return 0
+    _say(f"++ purga cleansed {changed} of {total} scroll(s) ++", args)
+    return 0
+
+
+def cmd_lustro(args) -> int:
+    target = args.path or "."
+    hits = lit_lustro.lustro(target, serius=args.serius)
+    if not hits:
+        _say("++ lustro finds no blemish — the scrolls are worthy ++", args)
+        return 0
+    for h in hits:
+        loc = f"{h.archivum}:{h.line}" if h.archivum else str(h.line)
+        _say(f"  ⚠ {h.code}  {loc} — {h.message}", args)
+    _say(f"++ lustro: {len(hits)} admonition(s) ++", args)
+    return 1
+
+
 def main(argv=None) -> int:
     common = argparse.ArgumentParser(add_help=False)
     common.add_argument("--silens", action="store_true")
@@ -351,6 +386,19 @@ def main(argv=None) -> int:
     p.add_argument("--renova", action="store_true",
                    help="refresh remote index cache before inspect")
 
+    p = sub.add_parser("purga", help="format .vg to canonical style",
+                       parents=[common])
+    p.add_argument("path", nargs="?", help="file or directory")
+    p.add_argument("--proba", action="store_true",
+                   help="check-only — exit I if reform would be needed")
+    p.add_argument("--latinizat", action="store_true",
+                   help="rewrite Terraform attr names to Latin aliases (FABRICA)")
+
+    p = sub.add_parser("lustro", help="lint .vg scrolls", parents=[common])
+    p.add_argument("path", nargs="?", help="file or directory")
+    p.add_argument("--serius", action="store_true",
+                   help="enable jocular rules (L-VII) and strict elige (L-X)")
+
     sub.add_parser("versio", help="print version", parents=[common])
 
     args = ap.parse_args(argv)
@@ -383,6 +431,10 @@ def main(argv=None) -> int:
             return cmd_offero(args)
         if args.cmd == "librarium":
             return cmd_librarium(args)
+        if args.cmd == "purga":
+            return cmd_purga(args)
+        if args.cmd == "lustro":
+            return cmd_lustro(args)
         if args.cmd == "versio":
             return cmd_versio(args)
     except Profanatio as p_:

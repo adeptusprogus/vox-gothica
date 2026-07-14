@@ -8,17 +8,13 @@ SCHEMA servitor
     gradus : NUMERUS = I
 FINIS SCHEMA
 
-RITUS promotio_facta (minimus_gradus : NUMERUS) -> RITUS
-    REDDO RITUS (s : servitor) -> VERITAS
+RITUS promotio_facta(minimus_gradus : NUMERUS) -> RITUS
+    REDDO RITUS(s : servitor) -> VERITAS
         REDDO s.gradus >= minimus_gradus
     FINIS RITUS
 FINIS RITUS
 
-DECLARO cohors : ORDO[servitor] = [
-    servitor { nomen: "Kane", gradus: VII },
-    servitor { nomen: "Vex" },
-    servitor { nomen: "Ohm", gradus: IV },
-]
+DECLARO cohors : ORDO[servitor] = [servitor { nomen: "Kane", gradus: VII }, servitor { nomen: "Vex" }, servitor { nomen: "Ohm", gradus: IV }]
 
 DECLARO digni : ORDO[servitor] = oo.excerne(cohors, promotio_facta(IV))
 PRO OMNI s IN digni AGE

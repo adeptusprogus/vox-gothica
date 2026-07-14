@@ -2,28 +2,24 @@ AVE OMNISSIAH.
 FABRICA "fabrica_interretialis".
 
 FOEDUS "aws"
-    regio: "eu-west-1"
+    regio          : "eu-west-1"
     versio_foederis: "~> 5.0"
 FINIS FOEDUS
-
 POSTULO numerus_servorum : NUMERUS = III
-
 SCRUTOR imago_recens "ubuntu"
-    genus: "aws_ami"
+    genus      : "aws_ami"
     most_recent: VERUM
-    owners: ["099720109477"]
+    owners     : ["099720109477"]
 FINIS SCRUTOR
-
 PRO OMNI i IN series(N, numerus_servorum) AGE
     EXSTRUATUR machina "serv_{i}"
-        genus: "aws_instance"
-        imago: scrutinium.ubuntu.id
+        genus         : "aws_instance"
+        imago         : scrutinium.ubuntu.id
         genus_machinae: elige(i == N, "t3.medium", "t3.micro")
-        tags:
+        tags          :
             "Name": "servitor-{i}"
             "Cohors": "fabrica-interretialis"
         FINIS
     FINIS EXSTRUATUR
 FINIS PRO
-
 PROFITEOR primus_ip = machina.serv_0.public_ip
